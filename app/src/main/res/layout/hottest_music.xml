@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/track_image_field"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/images_album"/>
 
     <TextView

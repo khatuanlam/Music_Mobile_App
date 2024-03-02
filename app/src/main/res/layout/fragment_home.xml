@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                    <include layout="@layout/recently_played_music"></include>
+<!--                    <include layout="@layout/recently_played_music"></include>-->
                 </LinearLayout>
 
             </LinearLayout>
@@ -94,7 +94,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                    <include layout="@layout/recently_played_music"></include>
+<!--                    <include layout="@layout/recently_played_music"></include>-->
+<!--                    <include layout="@layout/recently_played_music"></include>-->
 
                 </LinearLayout>
 
@@ -128,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                    <include layout="@layout/recently_played_music"></include>
+<!--                    <include layout="@layout/recently_played_music"></include>-->
 
                 </LinearLayout>
 
