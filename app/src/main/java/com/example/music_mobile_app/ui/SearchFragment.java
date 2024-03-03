@@ -64,12 +64,12 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    if (!manager.isDestroyed()) {
+
                         SubSearchFragment subSearchFragment = new SubSearchFragment(manager);
                         manager.beginTransaction()
                                 .replace(R.id.fragment, subSearchFragment)
                                 .commit();
-                    }
+
 
                 }
             }

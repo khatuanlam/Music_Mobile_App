@@ -50,7 +50,6 @@ public class SubSearchFragment extends Fragment {
 
     private SubSearchInformationFragment subSearchInformationFragment;
     private SubSearchRecyclerViewFoundSongFragment subSearchRecyclerViewFoundSongFragment;
-    private Timer timer;
 
 
     public SubSearchFragment(FragmentManager manager) {
@@ -77,10 +76,11 @@ public class SubSearchFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchFragment searchFragment = new SearchFragment(getChildFragmentManager());
+                SearchFragment searchFragment = new SearchFragment(manager);
                 manager.beginTransaction()
                         .replace(R.id.fragment, searchFragment)
                         .commit();
+
             }
         });
         editText.addTextChangedListener(new TextWatcher() {
@@ -96,10 +96,10 @@ public class SubSearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (timer != null) {
-                    timer.cancel();
-                }
-                timer = new Timer();
+//                if (timer != null) {
+//                    timer.cancel();
+//                }
+                Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -124,9 +124,9 @@ public class SubSearchFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (timer != null) {
-            timer.cancel();
-        }
+//        if (timer != null) {
+//            timer.cancel();
+//        }
     }
     public void getTrack(String q)
     {

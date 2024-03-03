@@ -33,6 +33,7 @@ public class MainFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getFragmentManager();
+        manager = getChildFragmentManager();
     }
 
     @Nullable
@@ -57,8 +58,8 @@ public class MainFragment extends Fragment {
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchFragment searchFragment = new SearchFragment(getChildFragmentManager());
-                getChildFragmentManager().beginTransaction()
+                SearchFragment searchFragment = new SearchFragment(manager);
+                manager.beginTransaction()
                         .replace(R.id.fragment, searchFragment)
                         .commit();
 
