@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,7 +54,16 @@ public class MainFragment extends Fragment {
 
         homeLayout.setOnClickListener(mListener);
         browseLayout.setOnClickListener(mListener);
-        searchLayout.setOnClickListener(mListener);
+        searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchFragment searchFragment = new SearchFragment(getChildFragmentManager());
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, searchFragment)
+                        .commit();
+
+            }
+        });
         radioLayout.setOnClickListener(mListener);
         libraryLayout.setOnClickListener(mListener);
 

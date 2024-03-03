@@ -1,0 +1,6 @@
+package com.example.music_mobile_app.ui.vanthong.constant;
+
+public class ConstantVariable {
+    public static String ACCESS_TOKEN = "BQB6DVtLemmlcULDr1_0kI6VNctsxjRHeT6jnH4YbAY2-C3-ImV4hIEXJXLnDXvQqzLby4Pgg2hAGekE3G87zjvjLyYdvyDMz1ojIxjGwTA8fjoGLIZsjnmMC3s1swHzwdbwvWwwgGWooeN8TmcL_zGdDV8qsXnpK2YIW4Tl-KQEw9INldnaeziZyNSlTorWdDdAzPTuwN2F3seyMukiCg";
+
+}
