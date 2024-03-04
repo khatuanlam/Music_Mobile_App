@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_register"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="109dp"
+        android:layout_height="94dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        app:srcCompat="@drawable/spotify_white_icon_login" />
+
+    <TextView
+        android:id="@+id/textViewSlogan"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Hàng triệu bài hát. Miễn phí trên Spotify."
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="26dp"
+        android:lineSpacingExtra="20dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/gotham_medium"
+        android:layout_marginTop="65dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
+
+    <Button
+        android:id="@+id/buttonRegisterFree"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:background="@drawable/button_green"
+        android:text="Đăng ký miễn phí"
+        android:fontFamily="@font/gotham_medium"
+        android:textSize="18dp"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:layout_marginTop="65dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSlogan" />
+
+    <Button
+        android:id="@+id/buttonRegisterPhone"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:background="@drawable/button_black"
+        android:text="Tiếp tục bằng số điện thoại"
+        android:fontFamily="@font/gotham_medium"
+        android:textSize="18dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:drawableLeft="@drawable/cellphone_32"
+        android:paddingRight="18dp"
+        android:paddingLeft="18dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegisterFree" />
+
+    <Button
+        android:id="@+id/buttonRegisterGoogle"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:background="@drawable/button_black"
+        android:text="Tiếp tục bằng Google"
+        android:fontFamily="@font/gotham_medium"
+        android:drawableLeft="@drawable/google_32"
+        android:paddingHorizontal="18dp"
+        android:paddingRight="18dp"
+        android:paddingLeft="18dp"
+        android:textSize="18dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegisterPhone" />
+
+    <Button
+        android:id="@+id/buttonRegisterFb"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:background="@drawable/button_black"
+        android:text="Tiếp tục bằng Facebook"
+        android:fontFamily="@font/gotham_medium"
+        android:drawableLeft="@drawable/facebook_32"
+        android:paddingHorizontal="18dp"
+        android:paddingRight="18dp"
+        android:paddingLeft="18dp"
+        android:textSize="18dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegisterGoogle" />
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:background="@android:color/transparent"
+        android:text="Đăng nhập"
+        android:fontFamily="@font/gotham_medium"
+        android:textSize="18dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegisterFb" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

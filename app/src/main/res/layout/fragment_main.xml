@@ -6,13 +6,10 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-        <include layout="@layout/fragment_home"/>
 
         <FrameLayout
             android:id="@+id/fragment"
@@ -25,13 +22,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorBottomNavBar"
-            android:gravity="center"
-            android:text="PLAYER FIELD"
-            android:textColor="#ffffff" />
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="50dp"-->
+        <!--            android:background="@color/colorBottomNavBar"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="PLAYER FIELD"-->
+        <!--            android:textColor="#ffffff" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +36,7 @@
             android:layout_marginTop="1dp"
             android:background="@color/colorBottomNavBar"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="50dp"
@@ -74,13 +71,13 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/nav_browse"
+                    android:id="@+id/nav_favorite"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_like_black_24dp" />
 
                 <TextView
-                    android:id="@+id/nav_browse_text"
+                    android:id="@+id/nav_favorite_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -124,50 +121,22 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/nav_radio"
+                    android:id="@+id/nav_download"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_download_black_24dp" />
 
                 <TextView
-                    android:id="@+id/nav_radio_text"
+                    android:id="@+id/nav_download_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="-4dp"
-                    android:text="Radio"
+                    android:text="Download"
                     android:textAlignment="center"
                     android:textColor="@color/colorNavIcon"
                     android:textSize="12sp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/nav_library"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/ic_library_music_black_24dp" />
-
-                <TextView
-                    android:id="@+id/nav_library_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-4dp"
-                    android:text="Your Library"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorNavIcon"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-
 </LinearLayout>

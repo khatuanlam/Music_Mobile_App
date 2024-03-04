@@ -3,6 +3,7 @@ package com.example.music_mobile_app.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,8 @@ public class MainFragment extends Fragment {
     private FragmentManager manager;
 
     private TextView homeText;
+    private TextView favoriteText;
     private TextView searchText;
-    private TextView browseText;
-    private TextView radioText;
     private TextView downloadText;
 
 
@@ -42,48 +42,70 @@ public class MainFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         Button homeLayout = view.findViewById(R.id.nav_home);
-        Button browseLayout = view.findViewById(R.id.nav_browse);
+        Button favoriteLayout = view.findViewById(R.id.nav_favorite);
         Button searchLayout = view.findViewById(R.id.nav_search);
-        Button radioLayout = view.findViewById(R.id.nav_radio);
-        Button libraryLayout = view.findViewById(R.id.nav_library);
+        Button downloadLayout = view.findViewById(R.id.nav_download);
 
         homeText = view.findViewById(R.id.nav_home_text);
-        browseText = view.findViewById(R.id.nav_browse_text);
+        favoriteText = view.findViewById(R.id.nav_favorite_text);
         searchText = view.findViewById(R.id.nav_search_text);
-        radioText = view.findViewById(R.id.nav_radio_text);
-        downloadText = view.findViewById(R.id.nav_library_text);
+        downloadText = view.findViewById(R.id.nav_download_text);
 
         homeLayout.setOnClickListener(mListener);
-        browseLayout.setOnClickListener(mListener);
+        favoriteLayout.setOnClickListener(mListener);
         searchLayout.setOnClickListener(mListener);
-        radioLayout.setOnClickListener(mListener);
-        libraryLayout.setOnClickListener(mListener);
+        downloadLayout.setOnClickListener(mListener);
 
         return view;
     }
 
     View.OnClickListener mListener = new View.OnClickListener() {
+
         @Override
         public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.nav_home:
+                    Log.d(TAG, "HOME");
+                    if (view.isActivated()) break;
+                    manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
+                    break;
+                case R.id.nav_favorite:
+                    Log.d(TAG, "FAVORITE");
+                    manager.beginTransaction().replace(R.id.fragment, new FavoriteFragment()).commit();
+                    break;
+                case R.id.nav_search:
+                    Log.d(TAG, "SEARCH");
+                    manager.beginTransaction().replace(R.id.fragment, new SearchFragment()).commit();
+                    break;
+                case R.id.nav_download:
+                    Log.d(TAG, "DOWNLOAD");
+                    manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
+                    break;
+            }
         }
     };
+
+    void actionTransaction(Fragment fragment, int nav_icon) {
+        manager.beginTransaction().replace(R.id.fragment, fragment).commit();
+    }
+
+
     Drawable home;
-    Drawable browse;
+    Drawable favorite;
     Drawable search;
-    Drawable radio;
-    Drawable library;
+
+    Drawable download;
     int focusMode;
     int defocusMode;
-    
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         home = getResources().getDrawable(R.drawable.ic_home_black_24dp, null);
-        browse = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
+        favorite = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
         search = getResources().getDrawable(R.drawable.ic_search_black_24dp, null);
-        radio = getResources().getDrawable(R.drawable.ic_radio_black_24dp, null);
-        library = getResources().getDrawable(R.drawable.ic_library_music_black_24dp, null);
+        download = getResources().getDrawable(R.drawable.ic_download_black_24dp, null);
 
         focusMode = getResources().getColor(R.color.colorWhite, null);
         defocusMode = getResources().getColor(R.color.colorNavIcon, null);

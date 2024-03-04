@@ -1,4 +1,7 @@
 package com.example.music_mobile_app.ui;
 
-public class SearchFragment {
+import androidx.fragment.app.Fragment;
+
+public class SearchFragment extends Fragment {
+
 }

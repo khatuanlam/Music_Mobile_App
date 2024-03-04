@@ -12,17 +12,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".SplashActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterFreeActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".RegisterPhoneActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".EditAccountActivity"
+            android:theme="@style/Theme.AppCompat"></activity>
+
+        <activity
+            android:name=".AccountActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true"></activity>
+
     </application>
 
 </manifest>
