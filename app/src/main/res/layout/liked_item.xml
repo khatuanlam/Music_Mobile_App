@@ -60,7 +60,7 @@
         android:onClick="showOverflowMenu"
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/ic_like_black_24dp"
+        android:background="@drawable/ic_like_green"
         android:layout_gravity="center"
         android:contentDescription="TODO" />
     <Button

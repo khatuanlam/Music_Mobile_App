@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <!-- header_layout.xml -->
-<RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:background="#000000"
-android:elevation="4dp">
+<?xml version="1.0" encoding="utf-8"?><!-- header_layout.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:alpha="0.6"
+    android:background="#000000"
+    android:elevation="4dp">
 
-<!-- Back button -->
-<ImageView
-    android:id="@+id/backButton"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_margin="8dp"
-    android:src="@drawable/ic_arrow"
-    android:layout_alignParentStart="true"
-    android:layout_centerVertical="true"/>
+    <!-- Back button -->
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_arrow"
+        android:alpha="1"/>
 
-<!-- Download button -->
+    <!-- Download button -->
     <ImageView
         android:id="@+id/downloadButton"
         android:layout_width="40dp"
@@ -28,9 +28,9 @@ android:elevation="4dp">
         android:layout_toStartOf="@+id/searchButton"
         android:src="@drawable/ic_download_white" />
 
-<!-- Search button -->
+    <!-- Search button -->
 
-<!-- Overflow menu button -->
+    <!-- Overflow menu button -->
     <ImageView
         android:id="@+id/searchButton"
         android:layout_width="40dp"
@@ -40,13 +40,13 @@ android:elevation="4dp">
         android:layout_toStartOf="@+id/overflowButton"
         android:src="@drawable/ic_search_white" />
 
-<ImageView
-    android:id="@+id/overflowButton"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_margin="8dp"
-    android:src="@drawable/ic_overflow"
-    android:layout_alignParentEnd="true"
-    android:layout_centerVertical="true"/>
+    <ImageView
+        android:id="@+id/overflowButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_overflow" />
 
 </RelativeLayout>
