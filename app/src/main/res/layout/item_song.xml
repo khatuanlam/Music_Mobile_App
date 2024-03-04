@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/item_song.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="@color/black">
+
+
+    <TextView
+        android:id="@+id/textViewPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="bottom"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/sontungmtp" />
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="16dp"
+        android:layout_weight="2"
+        android:text="Em của ngày hôm qua"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_overflow"
+        android:layout_gravity="center"
+        android:background="@color/black"/>
+</LinearLayout>
