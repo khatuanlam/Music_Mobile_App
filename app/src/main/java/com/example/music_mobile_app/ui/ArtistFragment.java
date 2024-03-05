@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.music_mobile_app.R;
 
@@ -32,11 +35,14 @@ public class ArtistFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private FragmentManager manager;
-    private RecyclerView recyclerView;
+    private TextView artistName;
+    private TextView listeners;
+    private ImageView artistImage;
+    private Button followButton;
+    private Button overflowMenu;
+    private Button playMusic;
+
     private SongAdapter SongAdapter;
     public ArtistFragment() {
         // Required empty public constructor
@@ -64,7 +70,7 @@ public class ArtistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager = getFragmentManager();
+        FragmentManager manager = getFragmentManager();
 
     }
 
@@ -73,11 +79,19 @@ public class ArtistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
+        artistName = view.findViewById(R.id.textArtistName);
+        artistImage = view.findViewById(R.id.artistAvatar);
+        listeners = view.findViewById(R.id.followerNumber);
+        overflowMenu = view.findViewById(R.id.overflowArtistButton);
+        playMusic = view.findViewById(R.id.playAristButton);
+
+
+
         List<Song> songList = new ArrayList<>();
         songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
         songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
 
-        recyclerView = view.findViewById(R.id.recyclerMusicView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerMusicView);
         SongAdapter = new SongAdapter();
         recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

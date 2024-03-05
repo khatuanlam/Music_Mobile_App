@@ -6,5 +6,5 @@
     <stroke
         android:width="2dp"
         android:color="#FFFFFF" />
-    <corners android:radius="10dpdp" /> <!-- Độ cong của góc -->
+    <corners android:radius="10dp" /> <!-- Độ cong của góc -->
 </shape>
