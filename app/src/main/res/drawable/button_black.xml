@@ -5,7 +5,7 @@
     <corners android:radius="40dp" /> <!-- Điều chỉnh giá trị radius để có góc bo tròn mong muốn -->
 
     <!-- Màu nền của button -->
-    <solid android:color="@android:color/transparent" />
+    <solid android:color="@android:color/black" />
 
     <!-- Đường viền của button -->
     <stroke

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Music_Mobile_App" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
@@ -17,3 +18,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 </resources>
+

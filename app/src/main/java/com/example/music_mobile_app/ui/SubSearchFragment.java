@@ -1,6 +1,6 @@
 package com.example.music_mobile_app.ui;
 
-import static com.example.music_mobile_app.manager.SearchManager.constant.ConstantVariable.ACCESS_TOKEN;
+import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
 
 import android.os.Bundle;
 
@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.ui.SearchFragment;
 
 import java.util.List;
 import java.util.Objects;

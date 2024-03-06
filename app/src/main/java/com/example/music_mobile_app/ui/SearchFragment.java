@@ -3,7 +3,7 @@ package com.example.music_mobile_app.ui;
 
 import androidx.fragment.app.Fragment;
 
-import static com.example.music_mobile_app.manager.SearchManager.constant.ConstantVariable.ACCESS_TOKEN;
+import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.ui.SubSearchFragment;
 import com.example.music_mobile_app.manager.SearchManager.adapter.SearchAlbumAdapter;
 
 import java.util.ArrayList;

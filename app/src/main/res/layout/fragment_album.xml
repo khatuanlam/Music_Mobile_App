@@ -1,71 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/album_fragment"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".ui.AlbumFragment">
 
-    <!-- Header -->
-    <ImageView
-        android:id="@+id/albumCover"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="16dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/hinh_album" />
+    <include layout="@layout/header" />
 
-    <!-- Icon -->
-
-    <!-- Danh sách Album -->
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/icon_down"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_down" />
-
-        <ImageView
-            android:id="@+id/icon_add"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_add" />
-
-        <ImageView
-            android:id="@+id/icon_op"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="130dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_option" />
-
-        <ImageView
-            android:id="@+id/icon_play"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="300dp"
-            android:src="@drawable/ic_play" />
+        <include layout="@layout/header" />
 
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="163dp"
+            android:orientation="vertical">
 
-    <!-- Footer -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recently_played_music_RecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sontungmtp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@color/black"
+                android:text="Chúng ta của hiện tại"
+                android:textColor="@color/white"
+                android:textSize="32dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@color/black"
+                android:text="Sơn Tùng M-TP"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@color/black"
+                android:text="Album-2019"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/black">
 
 
-</LinearLayout>
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="50dp"
+
+                android:background="@drawable/ic_add_circle_white" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="59dp"
+                android:layout_marginBottom="42dp"
+                android:background="@drawable/ic_download_white" />
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="45dp"
+                android:layout_height="43dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="94dp"
+                android:layout_marginBottom="43dp"
+                android:background="@drawable/ic_like_black_24dp" />
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="270dp"
+                android:layout_marginBottom="45dp"
+                android:background="@drawable/ic_overflow" />
+
+            <Button
+                android:id="@+id/button12"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/ic_play" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,18 +1,24 @@
 package com.example.music_mobile_app.ui;
 
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.music_mobile_app.AccountActivity;
 import com.example.music_mobile_app.R;
 
 public class HomeFragment extends Fragment {
     public static final String TAG = "Spotify HomFragment";
+
+    private Button account;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,6 +29,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        account = view.findViewById(R.id.avt);
+        Intent intent = new Intent(getActivity(), AccountActivity.class);
+        account.setOnClickListener(view1 -> {
+            startActivity(intent);
+        });
         return view;
     }
 }

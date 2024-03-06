@@ -22,8 +22,8 @@
                 android:id="@+id/titleLikedSong"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="115dp"
-                android:text="Bài hát yêu thích"
+                android:layout_marginStart="165dp"
+                android:text="Đã tải"
                 android:textColor="@color/white"
                 android:textSize="25dp"/>
 
@@ -32,20 +32,59 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="150dp"
-                android:text="100 bài hát"
+                android:text="253 bài hát"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
 
-            <Button
-                android:id="@+id/randomPlay"
-                android:layout_width="156dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="120dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/custom_random_btn"
-                android:text="Phát ngẫu nhiên"
-                android:textColor="@color/white"
-                android:textSize="15dp" />
+
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="75dp">
+
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bài hát"
+                    android:gravity="center"
+                    android:background="@drawable/left_button_bg"
+
+                    style="?attr/materialButtonOutlinedStyle"
+                    />
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="playlist"
+                    android:gravity="center"
+                    android:background="@drawable/custom_middle_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    />
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="album"
+                    android:gravity="center"
+
+                    android:background="@drawable/right_button_bg"
+                    style="?attr/materialButtonOutlinedStyle"
+                    />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+<!--            <Button-->
+<!--                android:id="@+id/randomPlay"-->
+<!--                android:layout_width="156dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginStart="120dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:background="@drawable/custom_random_btn"-->
+<!--                android:text="Phát ngẫu nhiên"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="15dp" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -55,7 +94,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="80dp"
                 android:background="@color/black"
                 android:orientation="horizontal">
 
@@ -74,10 +113,10 @@
                     android:layout_weight="0"
                     android:background="@color/black"
                     android:drawableLeft="@drawable/ic_filter_white"
-                    android:drawablePadding="-20dp"
+                    android:drawablePadding="-10dp"
                     android:text="Lọc"
                     android:textColor="@color/white"
-                    android:textSize="13dp"
+                    android:textSize="15dp"
                     tools:ignore="TextSizeCheck" />
 
                 <Button
