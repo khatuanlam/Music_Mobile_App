@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:ignore="UselessParent">
-        <include layout="@layout/header"/>
+
+        <include layout="@layout/header" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +26,7 @@
                 android:layout_marginStart="165dp"
                 android:text="Đã tải"
                 android:textColor="@color/white"
-                android:textSize="25dp"/>
+                android:textSize="25dp" />
 
             <TextView
                 android:id="@+id/songNumber"
@@ -37,54 +38,52 @@
                 android:textSize="18dp" />
 
 
-
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/toggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="75dp">
-
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="15dp">
                 <Button
-                    android:id="@+id/button1"
+                    android:id="@+id/buttonSong"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bài hát"
-                    android:gravity="center"
                     android:background="@drawable/left_button_bg"
+                    android:gravity="center"
 
-                    style="?attr/materialButtonOutlinedStyle"
-                    />
+                    android:text="Bài hát" />
+
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/buttonPlaylist"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="playlist"
-                    android:gravity="center"
                     android:background="@drawable/custom_middle_btn"
-                    style="?attr/materialButtonOutlinedStyle"
-                    />
+                    android:gravity="center"
+                    android:text="playlist" />
+
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/buttonAlbum"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="album"
-                    android:gravity="center"
-
                     android:background="@drawable/right_button_bg"
-                    style="?attr/materialButtonOutlinedStyle"
-                    />
+
+                    android:gravity="center"
+                    android:text="album" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-<!--            <Button-->
-<!--                android:id="@+id/randomPlay"-->
-<!--                android:layout_width="156dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginStart="120dp"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:background="@drawable/custom_random_btn"-->
-<!--                android:text="Phát ngẫu nhiên"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="15dp" />-->
+            <!--            <Button-->
+            <!--                android:id="@+id/randomPlay"-->
+            <!--                android:layout_width="156dp"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                android:layout_marginStart="120dp"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:background="@drawable/custom_random_btn"-->
+            <!--                android:text="Phát ngẫu nhiên"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="15dp" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -139,12 +138,13 @@
                     android:textColor="@color/white"
                     android:textSize="15dp" />
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerSong"
+                    android:id="@+id/recyclerSongDownload"
                     android:layout_width="410dp"
                     android:layout_height="491dp" />
             </LinearLayout>

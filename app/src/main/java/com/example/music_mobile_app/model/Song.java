@@ -6,7 +6,7 @@ public class Song {
     private int id;
     private int songImage;
     private String title;
-
+//    private String artistName;
     public Song(int id, int songImage, String title) {
         this.id = id;
         this.songImage = songImage;

@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+
     compileSdk 30
     buildToolsVersion '30.0.2'
+
     defaultConfig {
         applicationId "com.example.music_mobile_app"
         minSdkVersion 27
