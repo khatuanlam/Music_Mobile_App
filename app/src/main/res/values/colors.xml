@@ -24,5 +24,7 @@
     <color name="colorNavIcon">#ABABAB</color>
 
     <color name="colorWhite">#ffffff</color>
+
     <color name="colorTransparent">#00FFFFFF</color>
+
 </resources>

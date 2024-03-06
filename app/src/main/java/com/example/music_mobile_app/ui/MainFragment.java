@@ -42,6 +42,7 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         manager = getFragmentManager();
+        manager = getChildFragmentManager();
     }
 
     @Nullable
