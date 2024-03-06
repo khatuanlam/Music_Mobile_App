@@ -10,17 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
-        <activity
-            android:name=".download"
-            android:exported="false"
-            android:label="@string/title_activity_download"
-            android:theme="@style/Theme.Music_Mobile_App" />
-        <activity
-            android:name=".Album"
-            android:exported="false" />
-        <activity
-            android:name=".likedSong"
-            android:exported="false" />
+
         <activity
             android:name=".SplashActivity"
             android:exported="false" />

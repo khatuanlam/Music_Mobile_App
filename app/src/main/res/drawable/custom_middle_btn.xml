@@ -8,7 +8,7 @@
     </item>
     <item>
         <shape>
-            <solid android:color="@android:color/holo_blue_bright" /> <!-- Màu nền mặc định của button -->
+            <solid android:color="#1fdf64" /> <!-- Màu nền mặc định của button -->
 <!--            <corners android:radius="16dp" /> &lt;!&ndash; Bán kính bo tròn của nút &ndash;&gt;-->
         </shape>
     </item>

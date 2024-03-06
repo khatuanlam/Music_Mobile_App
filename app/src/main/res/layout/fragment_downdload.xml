@@ -42,10 +42,11 @@
                 android:id="@+id/toggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="75">
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="15dp">
 
                 <Button
-                    android:id="@+id/button1"
+                    android:id="@+id/buttonSong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bài hát"
@@ -55,7 +56,7 @@
                     style="?attr/materialButtonOutlinedStyle"
                     />
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/buttonPlaylist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="playlist"
@@ -64,7 +65,7 @@
                     style="?attr/materialButtonOutlinedStyle"
                     />
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/buttonAlbum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="album"
@@ -144,7 +145,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerSong"
+                    android:id="@+id/recyclerSongDownload"
                     android:layout_width="410dp"
                     android:layout_height="491dp" />
             </LinearLayout>

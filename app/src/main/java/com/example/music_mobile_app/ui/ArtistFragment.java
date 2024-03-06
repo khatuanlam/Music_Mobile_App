@@ -42,7 +42,7 @@ public class ArtistFragment extends Fragment {
     private Button followButton;
     private Button overflowMenu;
     private Button playMusic;
-
+    private RecyclerView recyclerView;
     private SongAdapter SongAdapter;
     public ArtistFragment() {
         // Required empty public constructor
@@ -78,25 +78,25 @@ public class ArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         artistName = view.findViewById(R.id.textArtistName);
         artistImage = view.findViewById(R.id.artistAvatar);
         listeners = view.findViewById(R.id.followerNumber);
         overflowMenu = view.findViewById(R.id.overflowArtistButton);
         playMusic = view.findViewById(R.id.playAristButton);
-
-
-
         List<Song> songList = new ArrayList<>();
-        songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
-        songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
-
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerMusicView);
-        SongAdapter = new SongAdapter();
+        songList.add(new Song(1, R.drawable.sontungmtp, "Em của ngày hôm qua"));
+        songList.add(new Song(2, R.drawable.sontungmtp, "Chúng ta của hiện tại"));
+        songList.add(new Song(3, R.drawable.sontungmtp, "Cơn mưa ngang qua"));
+        songList.add(new Song(4, R.drawable.sontungmtp, "Nắng ấm xa dần"));
+        songList.add(new Song(5, R.drawable.sontungmtp, "Vết mưa"));
+        songList.add(new Song(6, R.drawable.sontungmtp, "Mơ"));
+        recyclerView = view.findViewById(R.id.recyclerMusicView);
+        SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
         recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
 
         return view;
 

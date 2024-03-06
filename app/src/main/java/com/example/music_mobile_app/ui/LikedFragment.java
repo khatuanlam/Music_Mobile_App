@@ -76,14 +76,12 @@ public class LikedFragment extends Fragment {
         songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
         songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
 
-        recyclerView = view.findViewById(R.id.recyclerMusicView);
-        SongAdapter = new SongAdapter();
+        recyclerView = view.findViewById(R.id.recyclerMusicViewLiked);
+        SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
         recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-
         return view;
-
     }
+
 }

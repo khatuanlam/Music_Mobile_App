@@ -75,7 +75,8 @@
                     android:id="@+id/nav_browse"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/ic_like_black_24dp" />
+                    android:background="@drawable/ic_like_black_24dp"
+                    />
 
                 <TextView
                     android:id="@+id/nav_browse_text"

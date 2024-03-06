@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="tải xuống"
-        android:id="downloadItem"/>
+        android:id="@+id/downloadItem"/>
     <item android:title="xoá bài hát"
-        android:id="deletedItem"/>
+        android:id="@+id/deletedItem"/>
 </menu>

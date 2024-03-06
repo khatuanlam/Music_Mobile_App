@@ -41,8 +41,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, final int position) {
         Song song = songList.get(position);
         holder.textViewPosition.setText(String.valueOf(song.getId()));
-        holder.imageView.setImageResource(song.getSongImage());
-        holder.textViewTitle.setText(song.getTitle());
+        holder.imageSong.setImageResource(song.getSongImage());
+        holder.songTitle.setText(song.getTitle());
 
         holder.overflowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,16 +81,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        ImageView imageSong;
         TextView textViewPosition;
-        TextView textViewTitle;
+        TextView songTitle;
         ImageButton overflowButton;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageSong = itemView.findViewById(R.id.imageSong);
             textViewPosition = itemView.findViewById(R.id.textViewPosition);
-            textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            overflowButton = itemView.findViewById(R.id.overflowButton);
+            songTitle = itemView.findViewById(R.id.songTitle);
+            overflowButton = itemView.findViewById(R.id.overflowSongmenu);
         }
     }
 

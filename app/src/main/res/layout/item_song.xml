@@ -19,13 +19,13 @@
         android:layout_gravity="bottom"/>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageSong"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/sontungmtp" />
 
     <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/songTitle"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
@@ -37,6 +37,7 @@
         />
 
     <ImageButton
+        android:id="@+id/overflowSongmenu"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:src="@drawable/ic_overflow"

@@ -31,21 +31,22 @@
                 android:id="@+id/songNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="150dp"
+                android:layout_marginStart="160dp"
                 android:text="100 bài hát"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
 
             <Button
                 android:id="@+id/randomPlay"
-                android:layout_width="156dp"
+                android:layout_width="160dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="120dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/custom_random_btn"
                 android:text="Phát ngẫu nhiên"
-                android:textColor="@color/white"
-                android:textSize="15dp" />
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -105,7 +106,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerSong"
+                    android:id="@+id/recyclerMusicViewLiked"
                     android:layout_width="410dp"
                     android:layout_height="491dp" />
             </LinearLayout>
