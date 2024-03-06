@@ -38,7 +38,7 @@ public class FavoriteFragment extends Fragment {
     private String mParam2;
     private FragmentManager manager;
     private RecyclerView recyclerView;
-    private SongAdapter songAdapter;
+    private SongAdapter SongAdapter;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -80,10 +80,11 @@ public class FavoriteFragment extends Fragment {
         songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
         songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
 
-        recyclerView = view.findViewById(R.id.recyclerSong);
-        songAdapter = new SongAdapter(songList, getActivity());
-        recyclerView.setAdapter(songAdapter);
+        recyclerView = view.findViewById(R.id.recyclerMusicViewLiked);
+        SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
+        recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
     }
+
 }

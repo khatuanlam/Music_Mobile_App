@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+
+import com.example.music_mobile_app.ui.ArtistFragment;
+import com.example.music_mobile_app.ui.HomeFragment;
 import com.example.music_mobile_app.ui.MainFragment;
 
 import java.util.Objects;

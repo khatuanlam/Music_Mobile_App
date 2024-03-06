@@ -5,15 +5,33 @@
       <entry key="app">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <State />
 =======
         <State>
           <targetSelectedWithDropDown>
+=======
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="R3CM60A6ANH" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-06T09:52:07.624585900Z" />
+          <targetsSelectedWithDialog>
+>>>>>>> e3732466b9b269a8b3933d3201432913d01c3d72
             <Target>
               <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
+<<<<<<< HEAD
                   <value value="C:\Users\ADMIN\.android\avd\Pixel_5_Demo_API_29.avd" />
                 </Key>
               </deviceKey>
@@ -25,6 +43,14 @@
 =======
         <State />
 >>>>>>> e3d0028cfe27ddf877e0802048b403e943ca9b5c
+=======
+                  <value value="C:\Users\haile\.android\avd\Pixel_7_API_31.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetsSelectedWithDialog>
+        </State>
+>>>>>>> e3732466b9b269a8b3933d3201432913d01c3d72
       </entry>
     </value>
   </component>
