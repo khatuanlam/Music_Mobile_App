@@ -76,7 +76,7 @@ public class MainFragment extends Fragment {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
 //                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
+                    manager.beginTransaction().replace(R.id.fragment, new AlbumFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
                     setFocusMode(current_view);
                     if (prev_view != null) {

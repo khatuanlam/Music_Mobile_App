@@ -1,22 +1,22 @@
 package com.example.music_mobile_app;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.music_mobile_app.ui.AlbumFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +66,15 @@ public class AccountActivity extends AppCompatActivity {
         adapter = new ArrayAdapter(this, R.layout.custom_list_playlist, R.id.textViewName, arrItem);
         listView.setAdapter(adapter);
 
+        // Bộ lắng nghe sự kiện cho ListView
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Gọi phương thức goToAlbumFragment() khi item được chọn
+                goToAlbumFragment();
+            }
+        });
+
         buttonEditAccount = (Button) findViewById(R.id.buttonEditAccount);
         //Onclick RegisterFree
         buttonEditAccount.setOnClickListener(new View.OnClickListener() {
@@ -88,4 +97,21 @@ public class AccountActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    private void goToAlbumFragment() {
+        // Tạo đối tượng FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // Bắt đầu một giao dịch Fragment
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // Thay thế Fragment hiện tại bằng Fragment đích
+        fragmentTransaction.replace(R.id.layout_account, new AlbumFragment());
+
+        // Thêm transaction vào ngăn xếp để có thể quay lại Fragment trước đó (nếu cần)
+        fragmentTransaction.addToBackStack(null);
+
+        // Thực hiện giao dịch
+        fragmentTransaction.commit();
+    }
+
 }

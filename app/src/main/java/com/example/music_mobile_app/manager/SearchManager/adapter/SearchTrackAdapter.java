@@ -51,6 +51,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
         return mDataList.size();
     }
 
+
     public class FoundSongViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewSingerName;
         public TextView textViewSongName;

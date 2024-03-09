@@ -44,6 +44,7 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
 
 
+
         return view;
     }
 
@@ -52,4 +53,6 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         mAdapter.setmDataList(trackList);
 
     }
+
+
 }

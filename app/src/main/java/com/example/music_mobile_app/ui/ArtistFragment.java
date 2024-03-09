@@ -1,7 +1,11 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.music_mobile_app.R;
@@ -20,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Adapter.SongAdapter;
+
+import com.example.music_mobile_app.HandleBackground;
 import com.example.music_mobile_app.model.Song;
 
 /**
@@ -28,6 +35,9 @@ import com.example.music_mobile_app.model.Song;
  * create an instance of this fragment.
  */
 public class ArtistFragment extends Fragment {
+    ImageView artistAvatar;
+    LinearLayout content_container;
+    private Drawable backgroundDrawable;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,8 +49,6 @@ public class ArtistFragment extends Fragment {
     private TextView artistName;
     private TextView listeners;
     private ImageView artistImage;
-    private Button followButton;
-    private Button overflowMenu;
     private Button playMusic;
     private RecyclerView recyclerView;
     private SongAdapter SongAdapter;
@@ -84,7 +92,6 @@ public class ArtistFragment extends Fragment {
         artistName = view.findViewById(R.id.textArtistName);
         artistImage = view.findViewById(R.id.artistAvatar);
         listeners = view.findViewById(R.id.followerNumber);
-        overflowMenu = view.findViewById(R.id.overflowArtistButton);
         playMusic = view.findViewById(R.id.playAristButton);
         List<Song> songList = new ArrayList<>();
 
@@ -96,8 +103,27 @@ public class ArtistFragment extends Fragment {
         recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        // Find the ImageView within the fragment's layout
+        artistAvatar = view.findViewById(R.id.artistAvatar);
+        //get background framelayout
+        content_container = view.findViewById(R.id.content_container);
+        backgroundDrawable = content_container.getBackground();
+
         return view;
 
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Create an instance of HandleBackground and call handleBackground method
+        HandleBackground backgroundHandler = new HandleBackground();
+        backgroundHandler.handleBackground(artistImage, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+            @Override
+            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                // Set the updated Drawable as the background of your view
+                content_container.setBackground(updatedDrawable);
+            }
+        });
     }
 
 

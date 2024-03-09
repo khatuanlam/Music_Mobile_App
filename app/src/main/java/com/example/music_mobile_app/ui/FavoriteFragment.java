@@ -1,12 +1,17 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +89,26 @@ public class FavoriteFragment extends Fragment {
         SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
         recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // Set custom action bar
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            ActionBar actionBar = activity.getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+                View customView = inflater.inflate(R.layout.custom_actionbar_title, null);
+                ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER);
+                actionBar.setCustomView(customView, params);
+                actionBar.setDisplayShowCustomEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(activity, R.color.colorPrimary)));
+            }
+        }
+
+
         return view;
     }
 

@@ -1,118 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_container"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.FavoriteFragment">
+    tools:context=".ui.AlbumFragment"
+    android:background="@drawable/background">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-        <include layout="@layout/header"/>
+        android:orientation="vertical">
+
+        <include layout="@layout/header" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/titleLikedSong"
-                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="115dp"
-                android:text="Bài hát yêu thích"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="Bài hát đã thích"
                 android:textColor="@color/white"
-                android:textSize="25dp"/>
+                android:fontFamily="@font/gotham_bold"
+                android:textSize="32dp" />
 
             <TextView
-                android:id="@+id/songNumber"
-                android:layout_width="wrap_content"
+                android:id="@+id/quantity"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="160dp"
-                android:text="100 bài hát"
-                android:textColor="@color/white"
-                android:textSize="18dp" />
-
-            <Button
-                android:id="@+id/randomPlay"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="120dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/custom_random_btn"
-                android:text="Phát ngẫu nhiên"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                />
+                android:text="10 bài hát"
+                android:textColor="@color/white"
+                android:fontFamily="@font/gotham_medium"
+                android:textSize="20dp" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="20dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@color/black"
-                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/filterButton"
-                    android:layout_width="62dp"
-                    android:layout_height="16dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="31dp"
-                    android:layout_marginEnd="337dp"
-                    android:layout_marginBottom="24dp"
-                    android:layout_weight="0"
-                    android:background="@color/black"
-                    android:drawableLeft="@drawable/ic_filter_white"
-                    android:drawablePadding="-20dp"
-                    android:text="Lọc"
-                    android:textColor="@color/white"
-                    android:textSize="13dp"
-                    tools:ignore="TextSizeCheck" />
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text=""
+                android:background="@drawable/ic_download" />
 
-                <Button
-                    android:id="@+id/newestButton"
-                    android:layout_width="100dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="299dp"
-                    android:layout_marginTop="27dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="25dp"
-                    android:layout_weight="0"
-                    android:background="@color/black"
-                    android:drawableRight="@drawable/ic_arrow_small_white"
-                    android:drawablePadding="-5dp"
-                    android:text="Mới nhất"
-                    android:textColor="@color/white"
-                    android:textSize="15dp" />
-            </RelativeLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerMusicViewLiked"
-                    android:layout_width="410dp"
-                    android:layout_height="491dp" />
-            </LinearLayout>
-
+            <Button
+                android:id="@+id/button12"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/ic_play" />
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMusicViewLiked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"/>
 
     </LinearLayout>
 </FrameLayout>
