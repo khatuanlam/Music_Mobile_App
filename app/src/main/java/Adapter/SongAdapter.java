@@ -47,7 +47,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         holder.songTitle.setText(song.getTitle());
 
         holder.overflowButton.setOnClickListener((View v) -> {
-            int adapterPosition = holder.getAbsoluteAdapterPosition();
+            int adapterPosition = holder.getAdapterPosition();
             if (adapterPosition != RecyclerView.NO_POSITION) {
                 showOverflowMenu(v, adapterPosition);
             }
