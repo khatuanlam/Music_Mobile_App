@@ -1,57 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <value>
-      <entry key="app">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <State />
-=======
-        <State>
-          <targetSelectedWithDropDown>
-=======
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="R3CM60A6ANH" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-06T09:52:07.624585900Z" />
-          <targetsSelectedWithDialog>
->>>>>>> e3732466b9b269a8b3933d3201432913d01c3d72
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-<<<<<<< HEAD
-                  <value value="C:\Users\ADMIN\.android\avd\Pixel_5_Demo_API_29.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-03T15:23:50.044361900Z" />
-        </State>
->>>>>>> 478462720550d460b4cb296d1c87bf014ae9f4d7
-=======
-        <State />
->>>>>>> e3d0028cfe27ddf877e0802048b403e943ca9b5c
-=======
-                  <value value="C:\Users\haile\.android\avd\Pixel_7_API_31.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetsSelectedWithDialog>
-        </State>
->>>>>>> e3732466b9b269a8b3933d3201432913d01c3d72
-      </entry>
-    </value>
+    <runningDeviceTargetSelectedWithDropDown>
+      <Target>
+        <type value="RUNNING_DEVICE_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\thuyn\.android\avd\Pixel_6_API_33_1.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </runningDeviceTargetSelectedWithDropDown>
+    <timeTargetWasSelectedWithDropDown value="2024-03-13T14:02:01.383093300Z" />
   </component>
 </project>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.music_mobile_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,24 +15,12 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity
             android:name=".SplashActivity"
             android:exported="false" />
-        <activity
-            android:name=".RegisterFreeActivity"
-            android:theme="@style/Theme.AppCompat" />
-        <activity
-            android:name=".RegisterPhoneActivity"
-            android:theme="@style/Theme.AppCompat" />
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".EditAccountActivity"
             android:theme="@style/Theme.AppCompat"></activity>
@@ -42,8 +29,17 @@
             android:name=".AccountActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name=".RegisterActivity"
-            android:exported="true"></activity>
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+           />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

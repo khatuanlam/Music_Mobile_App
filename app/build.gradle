@@ -63,6 +63,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
+    implementation 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
+//    implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     implementation 'androidx.palette:palette:1.0.0'
