@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdk 30
-    buildToolsVersion '30.0.2'
 
     defaultConfig {
         applicationId "com.example.music_mobile_app"
@@ -35,6 +34,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    namespace 'com.example.music_mobile_app'
 
 }
 
@@ -44,9 +44,10 @@ repositories {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.aar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:2.1.0'
-    implementation 'com.google.android.material:material:1.4.0'
 
+    implementation 'com.google.android.material:material:1.4.0'
     testImplementation 'junit:junit:4.12'
 
     implementation 'com.github.bumptech.glide:glide:4.14.2'
@@ -64,6 +65,9 @@ dependencies {
     implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    //Van thong
+
 
 
 }

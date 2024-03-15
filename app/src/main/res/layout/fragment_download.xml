@@ -97,46 +97,61 @@
                 android:background="@color/black"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/filterButton"
-                    android:layout_width="62dp"
-                    android:layout_height="16dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="31dp"
-                    android:layout_marginEnd="337dp"
-                    android:layout_marginBottom="24dp"
-                    android:layout_weight="0"
-                    android:background="@color/black"
-                    android:drawableLeft="@drawable/ic_filter_white"
-                    android:drawablePadding="-10dp"
-                    android:text="Lọc"
-                    android:textColor="@color/white"
-                    android:textSize="15dp"
-                    tools:ignore="TextSizeCheck" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/newestButton"
-                    android:layout_width="100dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="299dp"
-                    android:layout_marginTop="27dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="25dp"
-                    android:layout_weight="0"
-                    android:background="@color/black"
-                    android:drawableRight="@drawable/ic_arrow_small_white"
-                    android:drawablePadding="-5dp"
-                    android:text="Mới nhất"
-                    android:textColor="@color/white"
-                    android:textSize="15dp" />
+                    <Button
+                        android:id="@+id/filterButton"
+                        android:layout_width="62dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="337dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_weight="0"
+                        android:background="@color/black"
+                        android:drawableLeft="@drawable/ic_filter_white"
+                        android:drawablePadding="-10dp"
+                        android:text="Lọc"
+                        android:textColor="@color/white"
+                        android:textSize="15dp"
+                        tools:ignore="TextSizeCheck" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_alignParentEnd="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawableLeft="@drawable/ic_arrow_small_white"
+                        android:textSize="15sp"/>
+
+                    <Spinner
+                        android:id="@+id/download_spinner_filter"
+                        android:layout_width="100dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="27dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="25dp"
+                        android:background="@color/black"
+                        android:drawablePadding="-5dp"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
             </RelativeLayout>
 
             <LinearLayout

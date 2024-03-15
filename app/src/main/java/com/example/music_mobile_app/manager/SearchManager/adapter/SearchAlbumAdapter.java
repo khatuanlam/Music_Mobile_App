@@ -1,5 +1,6 @@
 package com.example.music_mobile_app.manager.SearchManager.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -46,17 +47,17 @@ public class SearchAlbumAdapter extends RecyclerView.Adapter<SearchAlbumAdapter.
             "#FFDFBA",
             "#FFB3BA"
     };
-    private Context context;
+
 
     public SearchAlbumAdapter(Context context, Fragment fragment, List<AlbumSimple> dataList) {
-        this.context = context;
         this.fragment = fragment;
         mDataList = dataList;
     }
 
+
     public void setmDataList(List<AlbumSimple> mDataList) {
         this.mDataList = mDataList;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @NonNull

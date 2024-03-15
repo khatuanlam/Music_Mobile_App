@@ -10,54 +10,70 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
-
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.FoundSongViewHolder> {
-    private Fragment fragment;
-    public List<Track> mDataList;
+public class CombinedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final Fragment fragment;
+    private List<Track> trackList;
+    private List<Artist> artistList;
 
-    public SearchTrackAdapter(Fragment fragment, List<Track> dataList) {
+    public CombinedRecyclerViewAdapter(Fragment fragment, List<Track> trackList, List<Artist> artistList) {
         this.fragment = fragment;
-        mDataList = dataList;
-    }
-
-    public void setmDataList(List<Track> mDataList) {
-        this.mDataList = mDataList;
-        notifyDataSetChanged();
-    }
-
-    @NonNull
-    @Override
-    public FoundSongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_search_found_song, parent, false);
-        return new FoundSongViewHolder(view);
+        this.trackList = trackList;
+        this.artistList = artistList;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FoundSongViewHolder holder, int position) {
-        Track track = mDataList.get(position);
-        holder.bind(track);
+    public int getItemViewType(int position) {
+        if (position < trackList.size()) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == 0) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_search_found_song, parent, false);
+            return new FoundSongViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_search_found_artist, parent, false);
+            return new FoundArtistViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof FoundSongViewHolder) {
+
+            Track track = trackList.get(position);
+            ((FoundSongViewHolder) holder).bind(track);
+        } else {
+
+            Artist artist = artistList.get(position - trackList.size());
+            ((FoundArtistViewHolder) holder).bind(artist);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mDataList.size();
+        return trackList.size() + artistList.size();
     }
 
     public class FoundSongViewHolder extends RecyclerView.ViewHolder {
@@ -166,4 +182,42 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
     }
 
+    public class FoundArtistViewHolder extends RecyclerView.ViewHolder {
+        public TextView textViewArtistType;
+
+        public Artist artist;
+        public TextView textViewArtistName;
+        public ImageView imageView;
+        public CardView cardView;
+
+        public ImageView optionsImageView;
+
+        public PopupMenu optionsPopupMenu;
+
+        public FoundArtistViewHolder(View itemView) {
+            super(itemView);
+            textViewArtistName = itemView.findViewById(R.id.list_item_search_found_artist_name);
+            textViewArtistType = itemView.findViewById(R.id.list_item_search_found_artist_type);
+            imageView = itemView.findViewById(R.id.list_item_search_found_artist_image);
+            cardView = itemView.findViewById(R.id.list_item_search_found_artist_cardview);
+            optionsImageView = itemView.findViewById(R.id.list_item_search_found_artist_options);
+
+
+
+        }
+
+        public void bind(Artist artist) {
+            this.artist = artist;
+            textViewArtistName.setText(artist.name);
+            textViewArtistType.setText(artist.type);
+
+            if (artist.images.size() > 0) {
+                Glide.with(fragment)
+                        .load(artist.images.get(0).url)
+                        .into(imageView);
+            }
+
+        }
+
+    }
 }

@@ -57,14 +57,15 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.search_recyclerViewGenres);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new SearchAlbumAdapter(getActivity(), this, new ArrayList<AlbumSimple>());
+
+        mAdapter = new SearchAlbumAdapter(getActivity(), this, new ArrayList<>());
         recyclerView.setAdapter(mAdapter);
+        Log.i("vao get 0", "GET THANH CONG");
         getAlbum("k-pop");
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-
                     manager.beginTransaction()
                             .replace(R.id.fragment, new SubSearchFragment())
                             .commit();
@@ -78,6 +79,7 @@ public class SearchFragment extends Fragment {
         spotifyApi = new SpotifyApi();
         spotifyApi.setAccessToken(ACCESS_TOKEN);
         SpotifyService spotify = spotifyApi.getService();
+        Log.i("vao get", "GET THANH CONG");
         spotify.searchAlbums(q, new Callback<AlbumsPager>() {
             @Override
             public void success(AlbumsPager albumsPager, Response response) {
