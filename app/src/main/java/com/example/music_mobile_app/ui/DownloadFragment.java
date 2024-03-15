@@ -33,7 +33,7 @@ public class DownloadFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_download, container, false);
         Spinner spinner = view.findViewById(R.id.download_spinner_filter);
 
-        String[] options = {"Mới nhất", "Cũ nhất", "Vu to nhat"};
+        String[] options = {"Mới nhất", "Cũ nhất"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, options);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
