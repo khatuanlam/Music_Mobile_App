@@ -2,5 +2,5 @@ package com.example.music_mobile_app.manager.AuthManager.constant;
 
 public class ConstantVariable {
     public static String ACCESS_TOKEN = "BQChea9mx0ZuPwl8VbtqRe_7aht_ddCl2K7P447b6SNqoAULB7maeVzbKQHLUPqntp7FM4xiBCeYrULExFqyuV4BetfkFfOuQqv0aDhYG9sZMxWM7B1kqU8T81S_vwkX9ywy6Tjv2K3VfUCpqvlyIqlBGa5NGKFO4z8ywaUdfCqdABYOAb_jx38j9dEF2zCy7ltWmDpVS8FtfEx1fxs-W1o0Tj5Zuv4o1uGap_qF-Qk00Apgwhav_d8cWMNwsZcL4isll6S-J6ismkDUAYHwyr8j";
-
+    public static Boolean NAP_VJP = false;
 }

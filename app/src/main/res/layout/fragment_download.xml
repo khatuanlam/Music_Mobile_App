@@ -159,11 +159,11 @@
 <!--                    android:layout_width="410dp"-->
 <!--                    android:layout_height="491dp" />-->
 
-<!--                <Button-->
-<!--                    android:id="@+id/download_testRemote"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="KET NOI REMOTE"/>-->
+                <Button
+                    android:id="@+id/download_testLoadAds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOAD ADS"/>
 
             </LinearLayout>
 

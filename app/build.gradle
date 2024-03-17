@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdk 30
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.music_mobile_app"
         minSdkVersion 27
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -69,7 +69,8 @@ dependencies {
     //Van thong
     implementation "com.google.code.gson:gson:2.6.1"
     implementation 'com.spotify.android:auth:1.2.5' // Maven dependency
-    implementation 'androidx.browser:browser:1.0.0'
+
+    implementation 'com.google.android.gms:play-services-ads:21.1.0'
 
 
 }
