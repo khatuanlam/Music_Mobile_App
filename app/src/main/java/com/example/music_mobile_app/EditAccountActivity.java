@@ -17,9 +17,7 @@ public class EditAccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.acitvity_edit_account);
-
 
         // Căn giữa tiêu đề
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -33,9 +31,6 @@ public class EditAccountActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
         getSupportActionBar().setTitle("Chỉnh sửa hồ sơ");
-
-
-
 
     }
     // Xử lý sự kiện khi nút quay lại được nhấn

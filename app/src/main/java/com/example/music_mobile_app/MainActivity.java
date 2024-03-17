@@ -14,7 +14,11 @@ import com.example.music_mobile_app.ui.MainFragment;
 
 import java.util.Objects;
 
+import kaaes.spotify.webapi.android.SpotifyService;
+
 public class MainActivity extends AppCompatActivity {
+
+    public static SpotifyService spotifyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

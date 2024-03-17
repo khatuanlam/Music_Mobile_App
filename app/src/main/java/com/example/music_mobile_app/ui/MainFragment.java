@@ -75,47 +75,31 @@ public class MainFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
-//                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new AlbumFragment()).commit();
+                    if (view.isActivated()) break;
+                    manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
                     setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
                     break;
                 case R.id.nav_favorite:
                     Log.d(TAG, "FAVORITE");
-//                    if (view.isActivated()) break;
+                    if (view.isActivated()) break;
                     manager.beginTransaction().replace(R.id.fragment, new FavoriteFragment()).commit();
                     current_view = new IconNavbar(favoriteLayout, view, favoriteText, favorite);
                     setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
                     break;
                 case R.id.nav_search:
                     Log.d(TAG, "SEARCH");
-//                    if (view.isActivated()) break;
+                    if (view.isActivated()) break;
                     manager.beginTransaction().replace(R.id.fragment, new SearchFragment()).commit();
                     current_view = new IconNavbar(searchLayout, view, searchText, search);
                     setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
                     break;
                 case R.id.nav_download:
                     Log.d(TAG, "DOWNLOAD");
-//                    if (view.isActivated()) break;
+                    if (view.isActivated()) break;
                     manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
                     current_view = new IconNavbar(downloadLayout, view, downloadText, download);
                     setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
                     break;
             }
         }
@@ -130,6 +114,11 @@ public class MainFragment extends Fragment {
     }
 
     private void setFocusMode(IconNavbar iconNavbar) {
+        // Replace prev and current view
+        if (prev_view != null) {
+            setDefocusMode(prev_view);
+        }
+        prev_view = current_view;
         iconNavbar.getDrawable().setTint(focusMode);
         iconNavbar.getView().setBackground(iconNavbar.getDrawable());
         iconNavbar.getTextView().setTextColor(focusMode);

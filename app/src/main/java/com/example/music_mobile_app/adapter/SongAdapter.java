@@ -1,4 +1,4 @@
-package Adapter;
+package com.example.music_mobile_app.adapter;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;

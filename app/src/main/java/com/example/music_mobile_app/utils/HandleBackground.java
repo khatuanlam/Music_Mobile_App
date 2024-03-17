@@ -1,4 +1,4 @@
-package com.example.music_mobile_app;
+package com.example.music_mobile_app.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.widget.ImageView;
 
 import androidx.palette.graphics.Palette;
+
 
 public class HandleBackground {
     // Generate palette synchronously and return it.

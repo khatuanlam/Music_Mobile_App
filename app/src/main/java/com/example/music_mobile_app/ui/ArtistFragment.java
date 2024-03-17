@@ -24,9 +24,9 @@ import com.example.music_mobile_app.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapter.SongAdapter;
+import com.example.music_mobile_app.adapter.SongAdapter;
 
-import com.example.music_mobile_app.HandleBackground;
+import com.example.music_mobile_app.utils.HandleBackground;
 import com.example.music_mobile_app.model.Song;
 
 /**

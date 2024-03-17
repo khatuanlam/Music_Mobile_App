@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.HandleBackground;
+import com.example.music_mobile_app.utils.HandleBackground;
 
 /**
  * A simple {@link Fragment} subclass.
