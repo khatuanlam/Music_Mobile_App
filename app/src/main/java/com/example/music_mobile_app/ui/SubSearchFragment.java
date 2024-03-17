@@ -1,6 +1,6 @@
 package com.example.music_mobile_app.ui;
 
-import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
+import static com.example.music_mobile_app.backend.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
 
 import android.os.Bundle;
 

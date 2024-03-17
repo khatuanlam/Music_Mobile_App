@@ -1,6 +1,8 @@
 package com.example.music_mobile_app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         Button mLoginButton = (Button)findViewById(R.id.buttonStart);
         mLoginButton.setOnClickListener(mListener);
 
+
+
     }
 
 
@@ -69,15 +73,18 @@ public class LoginActivity extends AppCompatActivity {
             switch (response.getType()) {
                 // Response was successful and contains auth token
                 case TOKEN:
-
+                    String accessToken = response.getAccessToken();
                     Intent intent = new Intent(LoginActivity.this,
                             MainActivity.class);
-
-                    intent.putExtra(AUTH_TOKEN, response.getAccessToken());
-
+                    intent.putExtra(AUTH_TOKEN, accessToken);
                     startActivity(intent);
-
                     destroy();
+
+                    //set auth_token
+                    SharedPreferences sharedPreferences = getSharedPreferences("AuthToken", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("AUTH_TOKEN", accessToken);
+                    editor.apply();
 
                     break;
 

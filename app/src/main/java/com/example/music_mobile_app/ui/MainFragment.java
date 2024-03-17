@@ -3,14 +3,12 @@ package com.example.music_mobile_app.ui;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.model.IconNavbar;
+import com.example.music_mobile_app.backend.model.IconNavbar;
 
 public class MainFragment extends Fragment {
 
@@ -76,7 +74,7 @@ public class MainFragment extends Fragment {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
 //                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new AlbumFragment()).commit();
+                    manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
                     setFocusMode(current_view);
                     if (prev_view != null) {

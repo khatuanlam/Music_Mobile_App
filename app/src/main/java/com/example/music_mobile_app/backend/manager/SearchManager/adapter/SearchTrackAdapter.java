@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.manager.SearchManager.adapter;
+package com.example.music_mobile_app.backend.manager.SearchManager.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

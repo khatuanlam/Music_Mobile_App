@@ -17,7 +17,7 @@ import com.example.music_mobile_app.R;
 
 import java.util.List;
 
-import com.example.music_mobile_app.model.Song;
+import com.example.music_mobile_app.backend.model.Song;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     private List<Song> songList;

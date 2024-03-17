@@ -27,7 +27,7 @@ import java.util.List;
 import Adapter.SongAdapter;
 
 import com.example.music_mobile_app.HandleBackground;
-import com.example.music_mobile_app.model.Song;
+import com.example.music_mobile_app.backend.model.Song;
 
 /**
  * A simple {@link Fragment} subclass.

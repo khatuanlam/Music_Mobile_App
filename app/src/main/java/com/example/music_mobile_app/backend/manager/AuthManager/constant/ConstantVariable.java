@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.manager.AuthManager.constant;
+package com.example.music_mobile_app.backend.manager.AuthManager.constant;
 
 public class ConstantVariable {
     public static String ACCESS_TOKEN = "BQD1lLLYTfGQJA2rX7DmH5A8UvG6lPMwdSD2v0D9gzjj8FjjjJ2pMf2slD8vmGvsmtHR3hxudIsFhShn7BUGNw9b_eyR2nzYX7Yr5Hf_IV9I1kuyEEbppmbLkdTmjoQEgDxpvkXD6KeA3kG9FeWBMz2i0iM-f6HWswGSjR1DhsRZEgHPXncHmK2lpKFISQ4yiuLxGGrF8IpqWxTSbzFORy0nII-ajBnj4OfkCZaVdYQ7WcjThZIUSFwcwDdHuSk6ZzPIb4_r1kd77muICsjQmIDV";

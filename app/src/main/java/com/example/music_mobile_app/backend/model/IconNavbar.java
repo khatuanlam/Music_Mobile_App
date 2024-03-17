@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.model;
+package com.example.music_mobile_app.backend.model;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
