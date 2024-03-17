@@ -67,7 +67,9 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     //Van thong
-
+    implementation "com.google.code.gson:gson:2.6.1"
+    implementation 'com.spotify.android:auth:1.2.5' // Maven dependency
+    implementation 'androidx.browser:browser:1.0.0'
 
 
 }

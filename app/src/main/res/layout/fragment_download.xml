@@ -26,7 +26,7 @@
                 android:layout_marginStart="165dp"
                 android:text="Đã tải"
                 android:textColor="@color/white"
-                android:textSize="25dp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/songNumber"
@@ -35,44 +35,44 @@
                 android:layout_marginStart="150dp"
                 android:text="253 bài hát"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
 
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/toggleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="75dp"
-                android:layout_marginTop="15dp">
-                <Button
-                    android:id="@+id/buttonSong"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/left_button_bg"
-                    android:gravity="center"
+<!--            <com.google.android.material.button.MaterialButtonToggleGroup-->
+<!--                android:id="@+id/toggleButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="75dp"-->
+<!--                android:layout_marginTop="15dp">-->
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/buttonSong"-->
+<!--                    style="?attr/materialButtonOutlinedStyle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@drawable/left_button_bg"-->
+<!--                    android:gravity="center"-->
 
-                    android:text="Bài hát" />
+<!--                    android:text="Bài hát" />-->
 
-                <Button
-                    android:id="@+id/buttonPlaylist"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/custom_middle_btn"
-                    android:gravity="center"
-                    android:text="playlist" />
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/buttonPlaylist"-->
+<!--                    style="?attr/materialButtonOutlinedStyle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@drawable/custom_middle_btn"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="playlist" />-->
 
-                <Button
-                    android:id="@+id/buttonAlbum"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/right_button_bg"
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/buttonAlbum"-->
+<!--                    style="?attr/materialButtonOutlinedStyle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@drawable/right_button_bg"-->
 
-                    android:gravity="center"
-                    android:text="album" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
+<!--                    android:gravity="center"-->
+<!--                    android:text="album" />-->
+<!--            </com.google.android.material.button.MaterialButtonToggleGroup>-->
 
             <!--            <Button-->
             <!--                android:id="@+id/randomPlay"-->
@@ -105,11 +105,7 @@
                     <Button
                         android:id="@+id/filterButton"
                         android:layout_width="62dp"
-                        android:layout_height="16dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="31dp"
                         android:layout_marginEnd="337dp"
@@ -140,7 +136,7 @@
                     <Spinner
                         android:id="@+id/download_spinner_filter"
                         android:layout_width="100dp"
-                        android:layout_height="18dp"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="27dp"
                         android:layout_marginEnd="12dp"
@@ -158,10 +154,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerSongDownload"
-                    android:layout_width="410dp"
-                    android:layout_height="491dp" />
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/recyclerSongDownload"-->
+<!--                    android:layout_width="410dp"-->
+<!--                    android:layout_height="491dp" />-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/download_testRemote"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="KET NOI REMOTE"/>-->
+
             </LinearLayout>
 
         </LinearLayout>
