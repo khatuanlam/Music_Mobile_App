@@ -45,6 +45,8 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:2.1.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.12'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
@@ -53,7 +55,8 @@ dependencies {
 
 
     implementation 'com.github.iammert:ScalingLayout:1.1'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
@@ -66,6 +69,11 @@ dependencies {
     implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
 
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
 
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
 }

@@ -1,8 +1,6 @@
 package com.example.music_mobile_app.model;
 
 public class Song {
-
-
     private int id;
     private int songImage;
     private String title;

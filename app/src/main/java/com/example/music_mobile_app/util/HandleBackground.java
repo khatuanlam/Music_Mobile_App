@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.utils;
+package com.example.music_mobile_app.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;

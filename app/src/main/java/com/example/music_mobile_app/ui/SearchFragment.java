@@ -3,7 +3,6 @@ package com.example.music_mobile_app.ui;
 
 import androidx.fragment.app.Fragment;
 
-import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +15,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.manager.SearchManager.adapter.SearchAlbumAdapter;
+import com.example.music_mobile_app.adapter.SearchAlbumAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment {
 
     public void getAlbum(String q) {
         spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ACCESS_TOKEN);
+        spotifyApi.setAccessToken(MainActivity.authToken);
         SpotifyService spotify = spotifyApi.getService();
         spotify.searchAlbums(q, new Callback<AlbumsPager>() {
             @Override

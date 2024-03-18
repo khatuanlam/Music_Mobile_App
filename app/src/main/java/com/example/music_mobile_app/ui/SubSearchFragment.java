@@ -1,6 +1,5 @@
 package com.example.music_mobile_app.ui;
 
-import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
 
 import android.os.Bundle;
 
@@ -16,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.music_mobile_app.LoginActivity;
+import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 
 import java.util.List;
@@ -116,7 +117,7 @@ public class SubSearchFragment extends Fragment {
 
     public void getTrack(String q) {
         spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ACCESS_TOKEN);
+        spotifyApi.setAccessToken(MainActivity.authToken);
         SpotifyService spotify = spotifyApi.getService();
         spotify.searchTracks(q, new Callback<TracksPager>() {
             @Override

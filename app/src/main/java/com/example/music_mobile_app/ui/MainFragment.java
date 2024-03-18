@@ -3,14 +3,12 @@ package com.example.music_mobile_app.ui;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,8 +38,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        manager = getFragmentManager();
         manager = getChildFragmentManager();
     }
 
@@ -69,7 +65,6 @@ public class MainFragment extends Fragment {
     }
 
     View.OnClickListener mListener = new View.OnClickListener() {
-
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
@@ -141,7 +136,7 @@ public class MainFragment extends Fragment {
 
         home = getResources().getDrawable(R.drawable.ic_home_black_24dp, null);
         favorite = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
-        search = getResources().getDrawable(R.drawable.ic_search_black_24dp, null);
+        search = getResources().getDrawable(R.drawable.ic_search_white_24dp, null);
         download = getResources().getDrawable(R.drawable.ic_download_black_24dp, null);
 
         focusMode = getResources().getColor(R.color.colorWhite, null);
