@@ -1,5 +1,7 @@
 package Adapter;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.example.music_mobile_app.R;
 import java.util.List;
 
 import com.example.music_mobile_app.model.Song;
+import com.example.music_mobile_app.AddToPlaylistActivity;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     private List<Song> songList;
@@ -70,6 +73,24 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                 // Xử lý các sự kiện menu ở đây
                 switch (item.getItemId()) {
 
+                    //================================================================
+//                    case R.id.add_list:
+//                        // Mở giao diện add_to_playlist khi mục menu được chọn
+//                        Intent intent = new Intent(context, AddToPlaylistActivity.class);
+//                        context.startActivity(intent);
+//                        Log.d("SongAdapter", "Add to playlist clicked");
+//                        return true;
+
+                    case R.id.add_list:
+                        // Mở giao diện add_to_playlist khi mục menu được chọn
+                        Intent intent = new Intent(context, AddToPlaylistActivity.class);
+                        // Gửi vị trí của mục nhạc được chọn đến AddToPlaylistActivity
+                        intent.putExtra("selectedSongPosition", position);
+                        context.startActivity(intent);
+                        return true;
+                    //================================================================
+
+
                     default:
                         return false;
                 }
@@ -94,6 +115,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             overflowButton = itemView.findViewById(R.id.overflowSongmenu);
 
         }
+
     }
 
 }

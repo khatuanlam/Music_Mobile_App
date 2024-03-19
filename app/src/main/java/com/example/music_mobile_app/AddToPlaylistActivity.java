@@ -1,90 +1,104 @@
 package com.example.music_mobile_app;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import Adapter.PlaylistAdapter;
 
 import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
 import com.example.music_mobile_app.model.PlaylistItem;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import Adapter.AccountAdapter;
-import Adapter.PlaylistAdapter;
-import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class AccountActivity extends AppCompatActivity {
+public class AddToPlaylistActivity extends AppCompatActivity {
 
-    CircleImageView imageAvt;
-    RecyclerView listView;
-    ArrayList<String> arrItem;
-    PlaylistAdapter adapter;
-    Button buttonEditAccount;
-    ArrayList<PlaylistItem> playlistItems = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private PlaylistAdapter adapter;
+    private ArrayList<PlaylistItem> playlistItems = new ArrayList<>();
     private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_to_playlist);
 
-        setContentView(R.layout.activity_account);
-
-        // Căn giữa tiêu đề
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.purple_50)));
 
-        //View Logo
-        imageAvt = (CircleImageView) findViewById(R.id.imageAvt);
+        recyclerView = findViewById(R.id.listAddPlaylist);
+        adapter = new PlaylistAdapter(playlistItems);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         loadSpotifyPlaylists();
 
-        //Inner List Item
-        listView = (RecyclerView) findViewById(R.id.listViewPlaylist);
-        adapter = new PlaylistAdapter(playlistItems);
-        listView.setLayoutManager(new LinearLayoutManager(this));
-        listView.setAdapter(adapter);
-
-        buttonEditAccount = (Button) findViewById(R.id.buttonEditAccount);
-        //Onclick RegisterFree
-        buttonEditAccount.setOnClickListener(new View.OnClickListener() {
+        Button buttonAddPlaylist = findViewById(R.id.buttonAddPlaylist);
+        buttonAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AccountActivity.this, EditAccountActivity.class);
-                startActivity(intent);
+            public void onClick(View v) {
+                Intent intent = new Intent(AddToPlaylistActivity.this, NewPlaylistActivity.class);
+                startActivityForResult(intent, 1);
             }
         });
 
+        Button buttonOK = findViewById(R.id.buttonOK);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Thực hiện các xử lý khi nhấn nút OK
+            }
+        });
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish(); // Kết thúc Activity và quay lại màn hình trước đó
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            String playlistID = data.getStringExtra("playlistID");
+            String playlistName = data.getStringExtra("playlistName");
+            if (playlistName != null && playlistID != null) {
+                PlaylistItem item = new PlaylistItem(playlistID, null, playlistName);
+                playlistItems.add(item);
+                adapter.notifyDataSetChanged();
+
+                // Add new playlist to Spotify
+//                addPlaylistToSpotify(playlistName);
+            }
+        }
     }
 
     // Load danh sách playlist từ Spotify
@@ -118,23 +132,9 @@ public class AccountActivity extends AppCompatActivity {
             public void failure(RetrofitError error) {
                 // Xử lý khi gặp lỗi
                 Log.e("AddToPlaylistActivity", "Error loading playlists from Spotify: " + error.getMessage());
-                Toast.makeText(AccountActivity.this, "Failed to load playlists from Spotify", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddToPlaylistActivity.this, "Failed to load playlists from Spotify", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-
-
-
-    // Xử lý sự kiện khi nút quay lại được nhấn
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

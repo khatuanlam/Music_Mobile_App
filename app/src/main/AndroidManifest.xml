@@ -45,6 +45,13 @@
             android:name=".RegisterActivity"
             android:exported="true"></activity>
 
+        <activity
+            android:name=".AddToPlaylistActivity"
+            android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name=".NewPlaylistActivity"
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>

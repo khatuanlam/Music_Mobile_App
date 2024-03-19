@@ -64,6 +64,7 @@
         android:layout_gravity="center"
         android:contentDescription="TODO" />
     <Button
+        android:id="@+id/ic_option_song"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="20dp"
