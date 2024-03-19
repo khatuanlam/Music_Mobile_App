@@ -45,11 +45,10 @@ import retrofit.client.Response;
 public class AccountActivity extends AppCompatActivity {
 
     CircleImageView imageAvt;
-    RecyclerView listView;
-    ArrayList<String> arrItem;
-    PlaylistAdapter adapter;
+    ListView listView;
+    ArrayList<PlaylistItem> playlistItems;
+    AccountAdapter adapter;
     Button buttonEditAccount;
-    ArrayList<PlaylistItem> playlistItems = new ArrayList<>();
     private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
 
     @Override
@@ -67,16 +66,13 @@ public class AccountActivity extends AppCompatActivity {
         //View Logo
         imageAvt = (CircleImageView) findViewById(R.id.imageAvt);
 
-        loadSpotifyPlaylists();
-
-        //Inner List Item
-        listView = (RecyclerView) findViewById(R.id.listViewPlaylist);
-        adapter = new PlaylistAdapter(playlistItems);
-        listView.setLayoutManager(new LinearLayoutManager(this));
+        listView = findViewById(R.id.listViewPlaylist);
+        playlistItems = new ArrayList<>();
+        adapter = new AccountAdapter(this, playlistItems);
         listView.setAdapter(adapter);
 
-        buttonEditAccount = (Button) findViewById(R.id.buttonEditAccount);
-        //Onclick RegisterFree
+        // Set up buttonEditAccount onClickListener
+        buttonEditAccount = findViewById(R.id.buttonEditAccount);
         buttonEditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +81,8 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+        // Load Spotify playlists
+        loadSpotifyPlaylists();
     }
 
     // Load danh sách playlist từ Spotify
@@ -93,36 +91,27 @@ public class AccountActivity extends AppCompatActivity {
         spotifyApi.setAccessToken(ACCESS_TOKEN);
         SpotifyService spotifyService = spotifyApi.getService();
 
-        // Gọi API để lấy danh sách playlist
         spotifyService.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {
             @Override
             public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-                // Xử lý kết quả thành công
-                // Lấy danh sách playlist từ kết quả và hiển thị lên RecyclerView hoặc ListView
-                ArrayList<PlaylistItem> spotifyPlaylists = new ArrayList<>();
-                for (PlaylistSimple playlist : playlistSimplePager.items) {
-                    // Tạo đối tượng PlaylistItem từ dữ liệu playlist
+                List<PlaylistSimple> playlists = playlistSimplePager.items;
+                for (PlaylistSimple playlist : playlists) {
                     List<Image> images = playlist.images;
                     String id = playlist.id;
                     String name = playlist.name;
                     PlaylistItem item = new PlaylistItem(id, images, name);
-                    spotifyPlaylists.add(item);
+                    playlistItems.add(item);
                 }
-
-                // Hiển thị danh sách playlist lên RecyclerView
-                playlistItems.addAll(spotifyPlaylists);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                // Xử lý khi gặp lỗi
-                Log.e("AddToPlaylistActivity", "Error loading playlists from Spotify: " + error.getMessage());
+                Log.e("AccountActivity", "Error loading playlists from Spotify: " + error.getMessage());
                 Toast.makeText(AccountActivity.this, "Failed to load playlists from Spotify", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 
 
 
