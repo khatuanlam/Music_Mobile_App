@@ -107,9 +107,9 @@ public class MainFragment extends Fragment {
                     prev_view = current_view;
                     break;
                 case R.id.nav_download:
-                    Log.d(TAG, "DOWNLOAD");
+                    Log.d(TAG, "ARTISTS");
 //                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
+                    manager.beginTransaction().replace(R.id.fragment, new ArtistFragment()).commit();
                     current_view = new IconNavbar(downloadLayout, view, downloadText, download);
                     setFocusMode(current_view);
                     if (prev_view != null) {

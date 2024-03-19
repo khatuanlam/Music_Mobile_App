@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Music_Mobile_App</string>
     <string name="welcome">Welcome</string>
+    <string name="spotify_client_id">f09cc2ccfa174f6d80c0b49050d83751</string>
+    <string name="spotify_client_secret">aec94366366d4450a357ca963600731c</string>
+
 </resources>

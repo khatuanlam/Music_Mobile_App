@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.music_mobile_app.R;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AlbumFragment#newInstance} factory method to

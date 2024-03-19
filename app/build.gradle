@@ -2,17 +2,21 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdk 30
+    compileSdk 31
     buildToolsVersion '30.0.2'
-
+    namespace 'com.example.music_mobile_app'
     defaultConfig {
         applicationId "com.example.music_mobile_app"
         minSdkVersion 27
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        manifestPlaceholders = [
+                redirectHostName: "example.com",
+                redirectSchemeName: "https"
+        ]
     }
     compileOptions {
         encoding "UTF-8"
@@ -28,6 +32,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
         debug {}
     }
@@ -43,27 +48,30 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.aar','*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:2.1.0'
     implementation 'com.google.android.material:material:1.4.0'
-
+    implementation files('C:\\Users\\haile\\Downloads\\spotify-app-remote-release-0.8.0.aar')
     testImplementation 'junit:junit:4.12'
-
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
     implementation 'com.github.iammert:ScalingLayout:1.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
-
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.2.0' //
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1' // Hoặc bản mới nhất
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.spotify.android:auth:2.1.0'
+    implementation 'com.squareup.picasso:picasso:2.8'
 
 
 }

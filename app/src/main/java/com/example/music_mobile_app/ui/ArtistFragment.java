@@ -19,7 +19,9 @@ import com.example.music_mobile_app.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapter.SongAdapter;
+
+
+
 import com.example.music_mobile_app.model.Song;
 
 /**
@@ -43,7 +45,7 @@ public class ArtistFragment extends Fragment {
     private Button overflowMenu;
     private Button playMusic;
     private RecyclerView recyclerView;
-    private SongAdapter SongAdapter;
+
     public ArtistFragment() {
         // Required empty public constructor
     }
@@ -86,14 +88,12 @@ public class ArtistFragment extends Fragment {
         listeners = view.findViewById(R.id.followerNumber);
         overflowMenu = view.findViewById(R.id.overflowArtistButton);
         playMusic = view.findViewById(R.id.playAristButton);
-        List<Song> songList = new ArrayList<>();
 
-        songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
-        songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
+
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerMusicView);
-        SongAdapter = new SongAdapter(songList, getContext());
-        recyclerView.setAdapter(SongAdapter);
+//        SongAdapter = new SongAdapter(songList, getContext());
+//        recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;

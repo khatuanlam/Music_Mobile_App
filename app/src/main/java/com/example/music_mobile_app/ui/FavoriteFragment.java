@@ -1,5 +1,7 @@
 package com.example.music_mobile_app.ui;
 
+import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +19,28 @@ import com.example.music_mobile_app.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import Adapter.SongAdapter;
 
+import Adapter.TrackAdapter;
+
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.TrackSimple;
+import kaaes.spotify.webapi.android.models.Tracks;
+import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.RetrofitError;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
+import com.example.music_mobile_app.manager.Service.RetrofitClient;
+import com.example.music_mobile_app.manager.Service.SpotifyApiService;
 import com.example.music_mobile_app.model.Song;
+import com.example.music_mobile_app.model.Track;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,63 +49,78 @@ import com.example.music_mobile_app.model.Song;
  */
 public class FavoriteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+//    private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private SpotifyApiService spotifyApiService;
     private FragmentManager manager;
     private RecyclerView recyclerView;
-    private SongAdapter SongAdapter;
+    private TrackAdapter trackAdapter;
+    private SpotifyApi spotifyApi;
 
+
+    public List<Track> trackList = new ArrayList<>();
+    private RetrofitClient retrofitClient;
     public FavoriteFragment() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LikedFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static FavoriteFragment newInstance(String param1, String param2) {
         FavoriteFragment fragment = new FavoriteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        manager = getParentFragmentManager();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
-        List<Song> songList = new ArrayList<Song>();
-        songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
-        songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
+        retrofitClient = new RetrofitClient();
+        spotifyApiService = retrofitClient.getClient();
 
         recyclerView = view.findViewById(R.id.recyclerMusicViewLiked);
-        SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
-        recyclerView.setAdapter(SongAdapter);
+        trackAdapter = new TrackAdapter(trackList, getContext());
+        recyclerView.setAdapter(trackAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        getTrackData( "014DA3BdnmD3kI5pBogH7c?si=9d31304d0c4c4977");
         return view;
     }
 
+
+    public void getTrackData(String trackId) {
+        Call<Track> call = spotifyApiService.getTrack(trackId);
+        call.enqueue(new Callback<Track>() {
+            @Override
+            public void onResponse(Call<Track> call, Response<Track> response) {
+                if(response.isSuccessful()){
+                    Track track = response.body();
+                    String a = track.getArtists().get(0).getName();
+                    String b = track.getAlbum().getRelease_date();
+                    trackList.add(track);
+                    trackAdapter.notifyDataSetChanged();
+                    Log.i("ok", a+b);
+                }
+                else {
+                    Log.i("ko 0 ok", "ko ok");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Track> call, Throwable t) {
+                Log.i("ko 1 ok", t.getMessage());
+            }
+        });
+
+    }
+
+
 }
+

@@ -18,7 +18,7 @@
 <!--        android:textColor="@color/white"/>-->
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/TrackImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/sontungmtp" />
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/TrackTitleLiked"
             android:layout_width="227dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -40,7 +40,7 @@
             />
 
         <TextView
-            android:id="@+id/artistname"
+            android:id="@+id/artistnameLiked"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -57,7 +57,7 @@
         android:id="@+id/overflowButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:onClick="showOverflowMenu"
+
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="10dp"
         android:background="@drawable/ic_like_black_24dp"
