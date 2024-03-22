@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.model.Album;
 import com.example.music_mobile_app.model.Track;
 import com.squareup.picasso.Picasso;
 
@@ -42,9 +43,21 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         if (trackList != null) {
             Track track = trackList.get(position);
             holder.trackName.setText(track.getName());
-            holder.artistName.setText(track.getArtists().get(1).getName());
-            String imageurl = track.getAlbum().getImageUrl().get(0).getUrl();
-            Picasso.get().load(imageurl).into(holder.trackImage);
+            holder.artistName.setText(track.getArtists().get(0).getName());
+//            String imageurl = track.getAlbum().getImageUrl().get(0).getUrl();
+//            Picasso.get().load(imageurl).into(holder.trackImage);
+
+            Album album = track.getAlbum();
+            if (album != null && album.getImageUrl() != null && !album.getImageUrl().isEmpty()) {
+                String imageUrl = album.getImageUrl().get(0).getUrl();
+                Picasso.get().load(imageUrl).into(holder.trackImage);
+            } else {
+                // Nếu không có hình ảnh, có thể đặt hình ảnh mặc định hoặc ẩn ImageView
+                // Ví dụ:
+                // holder.trackImage.setImageResource(R.drawable.default_image);
+                // hoặc
+                 holder.trackImage.setVisibility(View.GONE);
+            }
 
         }
     }

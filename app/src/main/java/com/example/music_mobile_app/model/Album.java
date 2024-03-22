@@ -17,8 +17,10 @@ public class Album {
     private String name;
     @SerializedName("album_type")
     private String album_type;
-    @SerializedName("artist")
-    private Artist artist;
+    @SerializedName("artists")
+    private List<Artist> artists;
+    @SerializedName("tracks")
+    private Page<Track> tracks;
     @SerializedName("images")
     private List<Images> imageUrl;
     @SerializedName("href")
@@ -30,11 +32,13 @@ public class Album {
     @SerializedName("genres")
     private List<String> genres;
 
-    public Album(String id, String name, String album_type, Artist artist, List<Images> imageUrl, String href, String release_date, String type, List<String> genres) {
+    public Album(String id, Integer total_tracks, String name, String album_type, List<Artist> artists, Page<Track> tracks, List<Images> imageUrl, String href, String release_date, String type, List<String> genres) {
         this.id = id;
+        this.total_tracks = total_tracks;
         this.name = name;
         this.album_type = album_type;
-        this.artist = artist;
+        this.artists = artists;
+        this.tracks = tracks;
         this.imageUrl = imageUrl;
         this.href = href;
         this.release_date = release_date;
@@ -48,6 +52,14 @@ public class Album {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getTotal_tracks() {
+        return total_tracks;
+    }
+
+    public void setTotal_tracks(Integer total_tracks) {
+        this.total_tracks = total_tracks;
     }
 
     public String getName() {
@@ -66,12 +78,20 @@ public class Album {
         this.album_type = album_type;
     }
 
-    public Artist getArtist() {
-        return artist;
+    public List<Artist> getArtists() {
+        return artists;
     }
 
-    public void setArtist(Artist artist) {
-        this.artist = artist;
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
+    }
+
+    public Page<Track> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(Page<Track> tracks) {
+        this.tracks = tracks;
     }
 
     public List<Images> getImageUrl() {
@@ -113,6 +133,5 @@ public class Album {
     public void setGenres(List<String> genres) {
         this.genres = genres;
     }
-
 }
 

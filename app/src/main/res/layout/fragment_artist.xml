@@ -5,135 +5,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.ArtistFragment">
-
+    <include layout="@layout/header" />
     <LinearLayout
+        android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background">
 
-        <ImageView
-            android:id="@+id/artistAvatar"
-            android:layout_width="match_parent"
-            android:layout_height="229dp"
-            tools:ignore="ImageContrastCheck"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="250dp">
 
-            android:src="@drawable/sontungmtp"
-            android:scaleType="centerCrop"/>
-
-        <LinearLayout
-            android:id="@+id/artistNamelayout"
-            android:layout_width="match_parent"
-            android:layout_height="67dp"
-            android:background="@color/black"
-            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/artistAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="@drawable/overlay_dark"
+                android:foregroundGravity="fill"
+                android:scaleType="centerCrop"
+                android:cropToPadding="true"
+                android:src="@drawable/sontungmtp" />
 
             <TextView
                 android:id="@+id/textArtistName"
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:text="Sơn Tùng M-TP"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
-                android:background="@color/black"
-                android:textSize="95px" />
-        </LinearLayout>
+                android:fontFamily="@font/gotham_bold"
+                android:textSize="120px" />
+        </FrameLayout>
+
 
         <LinearLayout
-            android:id="@+id/MiddelButton"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="vertical"
-            android:background="@color/black">
-
-            <LinearLayout
-                android:id="@+id/followView"
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:orientation="horizontal"
-                android:background="@color/black">
-
-                <TextView
-                    android:id="@+id/followerNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="20dp"
-                    android:text="1,1 Tr người nghe hàng tháng"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/followAndPlay"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/black"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/followLayout"
-                    android:layout_width="111dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    tools:ignore="DuplicateIds">
-
-                    <Button
-                        android:id="@+id/followButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bolder_button"
-                        android:text="Theo Dõi"
-                        android:textColor="@color/white"
-                        tools:ignore="DuplicateSpeakableTextCheck" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/otherchooseButton"
-                    android:layout_width="78dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/overflowArtistButton"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="13dp"
-                        android:background="@drawable/ic_overflow">
-
-                    </Button>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="218dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/black"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/playAristButton"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="150dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/ic_play" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerMusicView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white" />
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/followerNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:text="1,1 Tr người nghe hàng tháng"
+                android:textColor="@color/colorGrayLight"
+                />
+            <Button
+                android:id="@+id/playAristButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="end"
+                android:background="@drawable/ic_play" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerArtistMusicView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

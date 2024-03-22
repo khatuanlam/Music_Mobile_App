@@ -9,8 +9,10 @@ public class Artist {
     private String id;
 @SerializedName("genres")
     private List<String> genres;
+@SerializedName("followers")
+private Followers followers;
 @SerializedName("images")
-    private Images images;
+    private List<Images> images;
 @SerializedName("name")
     private String name;
 @SerializedName("uri")
@@ -19,16 +21,6 @@ public class Artist {
     private String type;
 @SerializedName("href")
     private String href;
-
-    public Artist(String id, List<String> genres, Images images, String name, String uri, String type, String href) {
-        this.id = id;
-        this.genres = genres;
-        this.images = images;
-        this.name = name;
-        this.uri = uri;
-        this.type = type;
-        this.href = href;
-    }
 
     public String getId() {
         return id;
@@ -46,11 +38,19 @@ public class Artist {
         this.genres = genres;
     }
 
-    public Images getImages() {
+    public Followers getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Followers followers) {
+        this.followers = followers;
+    }
+
+    public List<Images> getImages() {
         return images;
     }
 
-    public void setImages(Images images) {
+    public void setImages(List<Images> images) {
         this.images = images;
     }
 
@@ -83,6 +83,17 @@ public class Artist {
     }
 
     public void setHref(String href) {
+        this.href = href;
+    }
+
+    public Artist(String id, List<String> genres, Followers followers, List<Images> images, String name, String uri, String type, String href) {
+        this.id = id;
+        this.genres = genres;
+        this.followers = followers;
+        this.images = images;
+        this.name = name;
+        this.uri = uri;
+        this.type = type;
         this.href = href;
     }
 }

@@ -65,7 +65,7 @@ public class FavoriteFragment extends Fragment {
     }
 
 
-    public static FavoriteFragment newInstance(String param1, String param2) {
+    public static FavoriteFragment newInstance() {
         FavoriteFragment fragment = new FavoriteFragment();
         return fragment;
     }
@@ -89,7 +89,7 @@ public class FavoriteFragment extends Fragment {
         recyclerView.setAdapter(trackAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        getTrackData( "014DA3BdnmD3kI5pBogH7c?si=9d31304d0c4c4977");
+        getTrackData( "1J3SmWwlYAG68LGKr86MVH?si=f01feeb87adb4273");
         return view;
     }
 
