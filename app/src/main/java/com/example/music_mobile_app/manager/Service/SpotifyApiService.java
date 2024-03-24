@@ -5,6 +5,7 @@ import com.example.music_mobile_app.model.Albums;
 import com.example.music_mobile_app.model.Artist;
 
 import com.example.music_mobile_app.model.Page;
+import com.example.music_mobile_app.model.Playlist;
 import com.example.music_mobile_app.model.Track;
 import com.example.music_mobile_app.model.Tracks;
 
@@ -42,7 +43,15 @@ public interface SpotifyApiService {
     @GET("tracks/")
     Call<Tracks> getTracks(@Query("ids") String trackId);
 
-    //    @GET("playlists/{id}")
-//    Call<Playlist> getPlaylist(@Path("id")String playlistId);
+    @GET("playlists/{id}")
+    Call<Playlist> getPlaylist(
+            @Path("id") String playlistId,
+            @Query("fields") String fields
+    );
+    @GET("playlists/{id}/tracks")
+    Call<Page<Track>> getPlaylistTracks(
+            @Path("id") String playlistId,
+            @Query("fields") String fields
+    );
 }
 

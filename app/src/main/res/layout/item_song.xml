@@ -11,16 +11,16 @@
 
     android:background="@color/cardview_dark_background">
 
-    <TextView
-        android:id="@+id/textViewPosition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="1"
-        android:textSize="20dp"
-        android:textColor="@color/white"
-        android:layout_marginRight="10dp"
-        android:layout_marginStart="4dp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/textViewPosition"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        android:text="1"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:layout_marginStart="4dp"/>-->
 
     <ImageView
         android:id="@+id/TrackImageSong"
@@ -65,7 +65,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center|end"
-        android:layout_marginStart="10dp"
+        android:layout_marginRight="10dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_option"
         tools:ignore="TouchTargetSizeCheck" />
