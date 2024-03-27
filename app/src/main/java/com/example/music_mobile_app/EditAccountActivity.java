@@ -18,19 +18,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
+import com.example.music_mobile_app.network.mSpotifyService;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.Picasso;
-import com.example.music_mobile_app.network.SpotifyService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditAccountActivity extends AppCompatActivity {
+public class EditAccountActivity extends FragmentActivity {
 
     private static final String TAG = "EditAccountActivity";
     ShapeableImageView imageViewAvt;
@@ -40,6 +41,8 @@ public class EditAccountActivity extends AppCompatActivity {
     Uri uri = null;
     String authToken;
 
+    private mSpotifyService spotifyService = MainActivity.mSpotifyService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,18 +50,18 @@ public class EditAccountActivity extends AppCompatActivity {
         setContentView(R.layout.acitvity_edit_account);
 
 
-        // Căn giữa tiêu đề
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
-        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER);
-        getSupportActionBar().setCustomView(customView, params);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
-        getSupportActionBar().setTitle("Chỉnh sửa hồ sơ");
+//        // Căn giữa tiêu đề
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
+//        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+//                ActionBar.LayoutParams.WRAP_CONTENT,
+//                ActionBar.LayoutParams.MATCH_PARENT,
+//                Gravity.CENTER);
+//        getSupportActionBar().setCustomView(customView, params);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
+//        getSupportActionBar().setTitle("Chỉnh sửa hồ sơ");
 
         //retrieve a reference to a View with the ID
         imageViewAvt = findViewById(R.id.imageAvt);
@@ -71,18 +74,17 @@ public class EditAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ImagePicker.with(EditAccountActivity.this)
-                        .crop()	    			//Crop image(Optional), Check Customization for more option
-                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .crop()                    //Crop image(Optional), Check Customization for more option
+                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
                         .start();
             }
         });
 
 
         //get authToken
-        SharedPreferences sharedPreferencesAuthToken = getSharedPreferences("AuthToken", Context.MODE_PRIVATE);
-        authToken = sharedPreferencesAuthToken.getString("AUTH_TOKEN", "");
-
+        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
+        authToken = sharedPreferences.getString("AUTH_TOKEN", "");
 
 
         //get Name and avatar
@@ -98,13 +100,13 @@ public class EditAccountActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateProfileOnSpotify(sharedPreferencesUserData,displayName);
+                updateProfileOnSpotify(sharedPreferencesUserData, displayName);
             }
         });
 
 
-
     }
+
     // Xử lý sự kiện khi nút quay lại được nhấn
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,14 +146,13 @@ public class EditAccountActivity extends AppCompatActivity {
             // Tạo một đối tượng User mới với thông tin cập nhật
             User updatedUser = new User();
             updatedUser.setDisplayName(editTextName.getText().toString());
-            if(uri != null){
+            if (uri != null) {
                 UserImage userImage = new UserImage(uri.toString(), 0, 0); // Không có thông tin kích thước, có thể cập nhật sau
                 updatedUser.getImages().add(0, userImage);
             }
 
             // Gọi phương thức updateProfile của SpotifyService
-            SpotifyService spotifyService = new SpotifyService();
-            spotifyService.updateUserProfile(authToken, updatedUser, new Callback<Void>() {
+            spotifyService.updateUserProfile(updatedUser, new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     System.out.println(authToken);

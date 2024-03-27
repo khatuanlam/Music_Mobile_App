@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/avt"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/ic_avt_24"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp">
-        </Button>
-
-    </LinearLayout>
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -37,8 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:padding="5dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -48,20 +31,20 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="1dp"
+                        android:text="Recently Played Music"
                         android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textStyle="bold"
                         android:textSize="18sp"
-                        android:padding="1dp"
-                        android:text="Recently Played Music"/>
+                        android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recently_played_music_RecyclerView"
-                        android:layout_margin="5dp"
+                        android:id="@+id/recentlyTracks"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp" />
 
-<!--                    <include layout="@layout/recently_played_music"></include>-->
+                    <!--                    <include layout="@layout/recently_played_music"></include>-->
                 </LinearLayout>
 
             </LinearLayout>
@@ -70,8 +53,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:padding="5dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,21 +64,21 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="1dp"
+                        android:text="Make For You"
                         android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textStyle="bold"
                         android:textSize="18sp"
-                        android:padding="1dp"
-                        android:text="Make For You"/>
+                        android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/make_for_you_RecyclerView"
-                        android:layout_margin="5dp"
+                        android:id="@+id/recommendation"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp" />
 
-<!--                    <include layout="@layout/recently_played_music"></include>-->
-<!--                    <include layout="@layout/recently_played_music"></include>-->
+                    <!--                    <include layout="@layout/recently_played_music"></include>-->
+                    <!--                    <include layout="@layout/recently_played_music"></include>-->
 
                 </LinearLayout>
 
@@ -105,8 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:padding="5dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,20 +99,20 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="1dp"
+                        android:text="Your Top Collection"
                         android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textStyle="bold"
                         android:textSize="18sp"
-                        android:padding="1dp"
-                        android:text="Hottest Music"/>
+                        android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/hottest_music_RecyclerView"
-                        android:layout_margin="5dp"
+                        android:id="@+id/top_tracks"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp" />
 
-<!--                    <include layout="@layout/recently_played_music"></include>-->
+                    <!--                    <include layout="@layout/recently_played_music"></include>-->
 
                 </LinearLayout>
 

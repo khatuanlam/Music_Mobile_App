@@ -40,6 +40,8 @@ public class SearchFragment extends Fragment {
     private SearchAlbumAdapter mAdapter;
     private FragmentManager manager;
 
+    private SpotifyService spotify = MainActivity.spotifyService;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,9 +77,6 @@ public class SearchFragment extends Fragment {
     }
 
     public void getAlbum(String q) {
-        spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(MainActivity.authToken);
-        SpotifyService spotify = spotifyApi.getService();
         spotify.searchAlbums(q, new Callback<AlbumsPager>() {
             @Override
             public void success(AlbumsPager albumsPager, Response response) {

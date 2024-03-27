@@ -26,6 +26,9 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         this.trackList = trackList;
     }
 
+    public SubSearchRecyclerViewFoundSongFragment() {
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -24,8 +24,6 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
     private Fragment fragment;
     public List<Track> mDataList;
 
-    public static Track track;
-
 
     public SearchTrackAdapter(Fragment fragment, List<Track> dataList) {
         this.fragment = fragment;
@@ -47,8 +45,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull FoundSongViewHolder holder, int position) {
-        track = mDataList.get(position);
-        holder.bind(track);
+        holder.bind(mDataList.get(position));
     }
 
     @Override
@@ -57,11 +54,13 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
     }
 
 
-    public class FoundSongViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewSingerName;
-        public TextView textViewSongName;
-        public ImageView imageView;
-        public CardView cardView;
+    protected class FoundSongViewHolder extends RecyclerView.ViewHolder {
+
+        private Track mTrack;
+        private TextView textViewSingerName;
+        private TextView textViewSongName;
+        private ImageView imageView;
+        private CardView cardView;
 
         public FoundSongViewHolder(View itemView) {
             super(itemView);
@@ -72,12 +71,13 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
             itemView.setOnClickListener((View v) -> {
                 Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
-                intent.putExtra("Track", track);
+                intent.putExtra("Track", mTrack);
                 fragment.getActivity().startActivity(intent);
             });
         }
 
         public void bind(Track track) {
+            this.mTrack = track;
             textViewSongName.setText(track.album.name);
             if (track.artists.size() > 0) {
                 textViewSingerName.setText(track.artists.get(0).name);

@@ -10,12 +10,12 @@
     android:paddingBottom="5dp">
 
     <ImageView
-        android:id="@+id/track_image_field"
+        android:id="@+id/top_track_image"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
     <TextView
-        android:id="@+id/track_name"
+        android:id="@+id/top_track_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
@@ -26,6 +26,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/top_track_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"

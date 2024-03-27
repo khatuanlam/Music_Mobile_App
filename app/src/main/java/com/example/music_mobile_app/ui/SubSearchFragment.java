@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.example.music_mobile_app.LoginActivity;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 
@@ -35,6 +34,8 @@ import retrofit.client.Response;
 
 
 public class SubSearchFragment extends Fragment {
+    public SubSearchFragment() {
+    }
 
     private EditText editText;
     private ImageView imageView;
@@ -131,7 +132,7 @@ public class SubSearchFragment extends Fragment {
                 if (subSearchRecyclerViewFoundSongFragment.isAdded()) {
                     subSearchRecyclerViewFoundSongFragment.setTrackList(trackList);
                 } else {
-                    getChildFragmentManager().beginTransaction()
+                    getParentFragmentManager().beginTransaction()
                             .replace(R.id.search_subSearchMainFragmentContainer, subSearchRecyclerViewFoundSongFragment)
                             .commit();
                 }

@@ -1,6 +1,8 @@
 package com.example.music_mobile_app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -69,7 +71,6 @@ public class AccountActivity extends AppCompatActivity {
                 goToAlbumFragment();
             }
         });
-
         buttonEditAccount = (Button) findViewById(R.id.buttonEditAccount);
         //Onclick RegisterFree
         buttonEditAccount.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +82,7 @@ public class AccountActivity extends AppCompatActivity {
         });
 
     }
+
     // Xử lý sự kiện khi nút quay lại được nhấn
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -92,6 +94,7 @@ public class AccountActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     private void goToAlbumFragment() {
         // Tạo đối tượng FragmentManager
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -107,6 +110,12 @@ public class AccountActivity extends AppCompatActivity {
 
         // Thực hiện giao dịch
         fragmentTransaction.commit();
+    }
+
+    private void prepareData() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+
     }
 
 }

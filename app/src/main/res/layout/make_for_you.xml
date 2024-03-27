@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recommendation_item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark"
@@ -10,12 +11,12 @@
     android:paddingBottom="5dp">
 
     <ImageView
-        android:id="@+id/track_image_field"
+        android:id="@+id/recommendation_item_image"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
     <TextView
-        android:id="@+id/track_name"
+        android:id="@+id/recommendation_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
@@ -26,6 +27,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/recommendation_item_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"

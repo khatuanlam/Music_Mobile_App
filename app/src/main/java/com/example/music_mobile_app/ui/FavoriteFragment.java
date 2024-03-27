@@ -18,61 +18,18 @@ import android.view.ViewGroup;
 
 import com.example.music_mobile_app.R;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import com.example.music_mobile_app.adapter.SongAdapter;
-
-import com.example.music_mobile_app.model.Song;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoriteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FavoriteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private FragmentManager manager;
-    private RecyclerView recyclerView;
-    private SongAdapter SongAdapter;
 
     public FavoriteFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LikedFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoriteFragment newInstance(String param1, String param2) {
-        FavoriteFragment fragment = new FavoriteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -80,33 +37,6 @@ public class FavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
-        List<Song> songList = new ArrayList<Song>();
-        songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
-        songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
-
-        recyclerView = view.findViewById(R.id.recyclerMusicViewLiked);
-        SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
-        recyclerView.setAdapter(SongAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        // Set custom action bar
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (activity != null) {
-            ActionBar actionBar = activity.getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-                View customView = inflater.inflate(R.layout.custom_actionbar_title, null);
-                ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                        ActionBar.LayoutParams.WRAP_CONTENT,
-                        ActionBar.LayoutParams.MATCH_PARENT,
-                        Gravity.CENTER);
-                actionBar.setCustomView(customView, params);
-                actionBar.setDisplayShowCustomEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(activity, R.color.colorPrimary)));
-            }
-        }
-
 
         return view;
     }
