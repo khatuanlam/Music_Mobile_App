@@ -88,6 +88,7 @@ public class HomeFragment extends Fragment {
 
     private void setRecentlyTracks() {
 
+        List<Track> listTracks = listManager.getRecentlyTracks();
         mSpotifyService.getRecentlyTracks(new Callback<Pager<Track>>() {
 
             @Override

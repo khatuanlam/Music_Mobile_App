@@ -18,13 +18,19 @@ import android.widget.ImageView;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
@@ -40,7 +46,7 @@ public class SubSearchFragment extends Fragment {
     private EditText editText;
     private ImageView imageView;
     private FragmentManager manager;
-    private SpotifyApi spotifyApi;
+    private SpotifyService spotifyService = MainActivity.spotifyService;
 
     private SubSearchInformationFragment subSearchInformationFragment;
     private SubSearchRecyclerViewFoundSongFragment subSearchRecyclerViewFoundSongFragment;
@@ -50,6 +56,7 @@ public class SubSearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         subSearchInformationFragment = new SubSearchInformationFragment();
+        subSearchRecyclerViewFoundSongFragment = new SubSearchRecyclerViewFoundSongFragment();
         manager = getParentFragmentManager();
     }
 
@@ -86,9 +93,6 @@ public class SubSearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-//                if (timer != null) {
-//                    timer.cancel();
-//                }
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -98,7 +102,16 @@ public class SubSearchFragment extends Fragment {
                                     .replace(R.id.search_subSearchMainFragmentContainer, subSearchInformationFragment)
                                     .commit();
                         } else {
-                            getTrack(editText.getText().toString());
+
+                            List<Track> trackList = getTrack(editText.getText().toString());
+                            List<Artist> artistList = getArtist(editText.getText().toString());
+
+                            subSearchRecyclerViewFoundSongFragment = new SubSearchRecyclerViewFoundSongFragment(trackList, artistList);
+                            getChildFragmentManager().beginTransaction()
+                                    .replace(R.id.search_subSearchMainFragmentContainer, subSearchRecyclerViewFoundSongFragment)
+                                    .commit();
+
+
                         }
 
                     }
@@ -111,23 +124,18 @@ public class SubSearchFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        if (timer != null) {
-//            timer.cancel();
-//        }
     }
 
-    public void getTrack(String q) {
-        spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(MainActivity.authToken);
-        SpotifyService spotify = spotifyApi.getService();
-        spotify.searchTracks(q, new Callback<TracksPager>() {
+    public List<Track> getTrack(String q) {
+
+        spotifyService.searchTracks(q, new Callback<TracksPager>() {
             @Override
             public void success(TracksPager tracksPager, Response response) {
                 Log.i("GET DATA", "GET THANH CONG");
                 Pager<Track> tracks = tracksPager.tracks;
                 List<Track> trackList = tracks.items;
                 if (subSearchRecyclerViewFoundSongFragment == null) {
-                    subSearchRecyclerViewFoundSongFragment = new SubSearchRecyclerViewFoundSongFragment(trackList);
+                    subSearchRecyclerViewFoundSongFragment = new SubSearchRecyclerViewFoundSongFragment();
                 }
                 if (subSearchRecyclerViewFoundSongFragment.isAdded()) {
                     subSearchRecyclerViewFoundSongFragment.setTrackList(trackList);
@@ -144,6 +152,17 @@ public class SubSearchFragment extends Fragment {
                 Log.i("GET DATA LOI", Objects.requireNonNull(error.getMessage()));
             }
         });
+        Map<String, Object> options = new HashMap<>();
+        options.put("limit", 10);
+        TracksPager tracksPager = spotifyService.searchTracks(q, options);
+        return tracksPager.tracks.items;
+    }
+
+    public List<Artist> getArtist(String q) {
+        Map<String, Object> options = new HashMap<>();
+        options.put("limit", 10);
+        ArtistsPager artistsPager = spotifyService.searchArtists(q, options);
+        return artistsPager.artists.items;
 
     }
 }

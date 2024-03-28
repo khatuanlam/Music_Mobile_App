@@ -64,7 +64,7 @@ public class MainFragment extends Fragment {
         homeText = view.findViewById(R.id.nav_home_text);
         favoriteText = view.findViewById(R.id.nav_favorite_text);
         searchText = view.findViewById(R.id.nav_search_text);
-        downloadText = view.findViewById(R.id.nav_download_text);
+        downloadText = view.findViewById(R.id.nav_extension_text);
 
         homeLayout.setOnClickListener(mListener);
         favoriteLayout.setOnClickListener(mListener);

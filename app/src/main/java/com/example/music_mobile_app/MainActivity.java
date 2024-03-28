@@ -8,12 +8,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
 import com.example.music_mobile_app.network.mSpotifyService;
 import com.example.music_mobile_app.ui.MainFragment;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.List;
 
@@ -34,6 +38,15 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.i("KHOI TAO ADS SDK", "THANH CONG");
+            }
+        });
+
+
+
         setContentView(R.layout.activity_main);
 
         FragmentManager manager = getSupportFragmentManager();
