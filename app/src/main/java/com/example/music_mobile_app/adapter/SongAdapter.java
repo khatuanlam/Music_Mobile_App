@@ -1,7 +1,6 @@
-package Adapter;
+package com.example.music_mobile_app.adapter;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.example.music_mobile_app.R;
 import java.util.List;
 
 import com.example.music_mobile_app.model.Song;
-import com.example.music_mobile_app.AddToPlaylistActivity;
+import com.example.music_mobile_app.PlaylistActivity;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     private List<Song> songList;
@@ -83,7 +82,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
                     case R.id.add_list:
                         // Mở giao diện add_to_playlist khi mục menu được chọn
-                        Intent intent = new Intent(context, AddToPlaylistActivity.class);
+                        Intent intent = new Intent(context, PlaylistActivity.class);
                         // Gửi vị trí của mục nhạc được chọn đến AddToPlaylistActivity
                         intent.putExtra("selectedSongPosition", position);
                         context.startActivity(intent);

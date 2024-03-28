@@ -22,7 +22,7 @@
         android:textColor="@color/black"
         android:textStyle="bold" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/listAddPlaylist"
         android:layout_width="match_parent"
         android:layout_height="0dp"

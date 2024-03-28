@@ -1,37 +1,26 @@
 package com.example.music_mobile_app;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
 import com.example.music_mobile_app.model.PlaylistItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import Adapter.AccountAdapter;
-import Adapter.PlaylistAdapter;
+import com.example.music_mobile_app.adapter.AccountAdapter;
 import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;

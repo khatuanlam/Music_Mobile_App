@@ -46,11 +46,15 @@
             android:exported="true"></activity>
 
         <activity
-            android:name=".AddToPlaylistActivity"
+            android:name=".PlaylistActivity"
             android:theme="@style/Theme.AppCompat" />
 
         <activity
             android:name=".NewPlaylistActivity"
+            android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name=".AddSongPlaylistActivity"
             android:theme="@style/Theme.AppCompat" />
     </application>
 
