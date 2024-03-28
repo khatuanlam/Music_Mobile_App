@@ -1,7 +1,16 @@
 package com.example.music_mobile_app.ui;
 
+<<<<<<< HEAD
 import android.os.Bundle;
 
+=======
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+>>>>>>> origin/main
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,10 +21,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+<<<<<<< HEAD
+=======
+import android.widget.LinearLayout;
+>>>>>>> origin/main
 import android.widget.TextView;
 
 import com.example.music_mobile_app.R;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +49,17 @@ public class ArtistFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+=======
+public class ArtistFragment extends Fragment {
+    ImageView artistAvatar;
+    LinearLayout content_container;
+    private Drawable backgroundDrawable;
+>>>>>>> origin/main
 
     private TextView artistName;
     private TextView listeners;
     private ImageView artistImage;
+<<<<<<< HEAD
     private Button followButton;
     private Button overflowMenu;
     private Button playMusic;
@@ -67,6 +88,15 @@ public class ArtistFragment extends Fragment {
         return fragment;
     }
 
+=======
+    private Button playMusic;
+    private RecyclerView recyclerView;
+
+    public ArtistFragment() {
+    }
+
+
+>>>>>>> origin/main
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +108,7 @@ public class ArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+<<<<<<< HEAD
 
 
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
@@ -101,4 +132,10 @@ public class ArtistFragment extends Fragment {
     }
 
 
+=======
+        View view = inflater.inflate(R.layout.fragment_artist, container, false);
+        return view;
+    }
+
+>>>>>>> origin/main
 }

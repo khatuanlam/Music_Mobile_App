@@ -3,7 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.music_mobile_app">
 
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.INTERNET" />
+=======
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+>>>>>>> origin/main
 
     <application
         android:allowBackup="true"
@@ -13,14 +21,29 @@
         android:supportsRtl="true">
 
         <activity
+<<<<<<< HEAD
             android:name=".MainActivity"
             android:exported="true"
+=======
+            android:name=".PlayTrackActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat"></activity>
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+>>>>>>> origin/main
             android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
 
         <activity
             android:name=".SplashActivity"
@@ -38,10 +61,16 @@
             android:name=".EditAccountActivity"
             android:theme="@style/Theme.AppCompat"></activity>
 
+=======
+        <activity
+            android:name=".EditAccountActivity"
+            android:theme="@style/Theme.AppCompat" />
+>>>>>>> origin/main
         <activity
             android:name=".AccountActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity
+<<<<<<< HEAD
             android:name=".RegisterActivity"
             android:exported="true"></activity>
 
@@ -56,6 +85,24 @@
         <activity
             android:name=".AddSongPlaylistActivity"
             android:theme="@style/Theme.AppCompat" />
+=======
+            android:name=".AuthLoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.VIEW" />-->
+
+            <!--                <category android:name="android.intent.category.DEFAULT" />-->
+            <!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+            <!--                <data-->
+            <!--                    android:host="localhost"-->
+            <!--                    android:pathPrefix="/callback"-->
+            <!--                    android:scheme="http" />-->
+            <!--            </intent-filter>-->
+        </activity>
+
+>>>>>>> origin/main
     </application>
 
 </manifest>

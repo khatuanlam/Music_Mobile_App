@@ -2,11 +2,20 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+<<<<<<< HEAD
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.AlbumFragment">
 
     <include layout="@layout/header" />
+=======
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".ui.AlbumFragment">
+
+>>>>>>> origin/main
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,16 +24,30 @@
 
         <include layout="@layout/header" />
 
+<<<<<<< HEAD
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="163dp"
+=======
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+>>>>>>> origin/main
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/albumImage"
+<<<<<<< HEAD
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+=======
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="15dp"
+>>>>>>> origin/main
                 android:scaleType="centerCrop"
                 android:src="@drawable/sontungmtp" />
         </LinearLayout>
@@ -32,7 +55,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:background="@color/black"
+=======
+>>>>>>> origin/main
             android:orientation="vertical">
 
             <TextView
@@ -40,9 +66,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+<<<<<<< HEAD
                 android:background="@color/black"
                 android:text="Chúng ta của hiện tại"
                 android:textColor="@color/white"
+=======
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/gotham_bold"
+                android:text="Chúng ta của hiện tại"
+>>>>>>> origin/main
                 android:textSize="32dp" />
 
             <TextView
@@ -50,9 +82,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+<<<<<<< HEAD
                 android:background="@color/black"
                 android:text="Sơn Tùng M-TP"
                 android:textColor="@color/white"
+=======
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/gotham_medium"
+                android:text="Sơn Tùng M-TP"
+>>>>>>> origin/main
                 android:textSize="20dp" />
 
             <TextView
@@ -60,6 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+<<<<<<< HEAD
                 android:background="@color/black"
                 android:text="Album-2019"
                 android:textColor="@color/white"
@@ -131,5 +170,41 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+=======
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/gotham_medium"
+                android:text="Album - 2019"
+                android:textColor="@color/colorNavIcon"
+                android:textSize="13dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="43dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ic_like_black_24dp" />
+
+            <Button
+                android:id="@+id/button12"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/ic_play" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+>>>>>>> origin/main
     </LinearLayout>
 </FrameLayout>

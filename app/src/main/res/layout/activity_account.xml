@@ -2,11 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+<<<<<<< HEAD
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="start"
     android:orientation="vertical"
     android:background="@drawable/background_account">
+=======
+    android:id="@+id/layout_account"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_account"
+    android:gravity="start"
+    android:orientation="vertical">
+>>>>>>> origin/main
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,27 +26,42 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageAvt"
             android:layout_width="96dp"
+<<<<<<< HEAD
             android:layout_height="96dp"
             android:src="@drawable/avt" />
+=======
+            android:layout_height="96dp" />
+>>>>>>> origin/main
 
         <TextView
             android:id="@+id/textViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
+=======
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            android:fontFamily="@font/gotham_medium"
+>>>>>>> origin/main
             android:text="Nguyễn Văn A"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="30dp"
+<<<<<<< HEAD
             android:textStyle="bold"
             android:fontFamily="@font/gotham_medium"
             android:layout_marginHorizontal="20dp"
             android:layout_gravity="center" />
+=======
+            android:textStyle="bold" />
+>>>>>>> origin/main
     </LinearLayout>
 
     <Button
         android:id="@+id/buttonEditAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:paddingVertical="15dp"
         android:background="@drawable/button_black"
         android:text="Chỉnh sửa"
@@ -70,6 +94,33 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+=======
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/button_black"
+        android:fontFamily="@font/gotham_medium"
+        android:paddingVertical="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Chỉnh sửa"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/gotham_medium"
+        android:text="Danh sách phát"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+>>>>>>> origin/main
 
     <ListView
         android:id="@+id/listViewPlaylist"
@@ -77,5 +128,9 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="20dp" />
+<<<<<<< HEAD
 
 </LinearLayout>
+=======
+</LinearLayout>
+>>>>>>> origin/main

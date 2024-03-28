@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.music_mobile_app.R;
 
+<<<<<<< HEAD
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DownloadFragment#newInstance} factory method to
@@ -25,11 +26,16 @@ public class DownloadFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+=======
+public class DownloadFragment extends Fragment {
+
+>>>>>>> origin/main
 
     public DownloadFragment() {
         // Required empty public constructor
     }
 
+<<<<<<< HEAD
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -55,6 +61,12 @@ public class DownloadFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+=======
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+>>>>>>> origin/main
     }
 
     @Override

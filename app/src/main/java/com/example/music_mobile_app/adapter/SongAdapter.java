@@ -64,22 +64,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     private void showOverflowMenu(View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.inflate(R.menu.threedot); // Thay đổi thành menu của bạn
+        popupMenu.inflate(R.menu.threedot);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 // Xử lý các sự kiện menu ở đây
                 switch (item.getItemId()) {
-
-                    //================================================================
-//                    case R.id.add_list:
-//                        // Mở giao diện add_to_playlist khi mục menu được chọn
-//                        Intent intent = new Intent(context, AddToPlaylistActivity.class);
-//                        context.startActivity(intent);
-//                        Log.d("SongAdapter", "Add to playlist clicked");
-//                        return true;
-
                     case R.id.add_list:
                         // Mở giao diện add_to_playlist khi mục menu được chọn
                         Intent intent = new Intent(context, PlaylistActivity.class);
@@ -87,9 +78,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                         intent.putExtra("selectedSongPosition", position);
                         context.startActivity(intent);
                         return true;
-                    //================================================================
-
-
                     default:
                         return false;
                 }

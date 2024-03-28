@@ -1,18 +1,32 @@
 package com.example.music_mobile_app.ui;
 
+<<<<<<< HEAD
 import android.os.Bundle;
 
+=======
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+>>>>>>> origin/main
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+<<<<<<< HEAD
+=======
+import android.view.Gravity;
+>>>>>>> origin/main
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.music_mobile_app.R;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +52,17 @@ public class FavoriteFragment extends Fragment {
     private FragmentManager manager;
     private RecyclerView recyclerView;
     private SongAdapter SongAdapter;
+=======
+
+public class FavoriteFragment extends Fragment {
+
+>>>>>>> origin/main
 
     public FavoriteFragment() {
         // Required empty public constructor
     }
 
+<<<<<<< HEAD
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -68,6 +88,12 @@ public class FavoriteFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+=======
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+>>>>>>> origin/main
     }
 
     @Override
@@ -75,6 +101,7 @@ public class FavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+<<<<<<< HEAD
         List<Song> songList = new ArrayList<Song>();
         songList.add(new Song(1, R.drawable.sontungmtp, "Song 1"));
         songList.add(new Song(2, R.drawable.sontungmtp, "Song 2"));
@@ -83,6 +110,9 @@ public class FavoriteFragment extends Fragment {
         SongAdapter = new SongAdapter(songList, getActivity()); // Sửa đoạn này
         recyclerView.setAdapter(SongAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+=======
+
+>>>>>>> origin/main
         return view;
     }
 

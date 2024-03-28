@@ -1,6 +1,9 @@
 package com.example.music_mobile_app.ui;
 
+<<<<<<< HEAD
 import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
+=======
+>>>>>>> origin/main
 
 import android.os.Bundle;
 
@@ -16,6 +19,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+<<<<<<< HEAD
+=======
+import com.example.music_mobile_app.MainActivity;
+>>>>>>> origin/main
 import com.example.music_mobile_app.R;
 
 import java.util.List;
@@ -34,6 +41,11 @@ import retrofit.client.Response;
 
 
 public class SubSearchFragment extends Fragment {
+<<<<<<< HEAD
+=======
+    public SubSearchFragment() {
+    }
+>>>>>>> origin/main
 
     private EditText editText;
     private ImageView imageView;
@@ -116,7 +128,11 @@ public class SubSearchFragment extends Fragment {
 
     public void getTrack(String q) {
         spotifyApi = new SpotifyApi();
+<<<<<<< HEAD
         spotifyApi.setAccessToken(ACCESS_TOKEN);
+=======
+        spotifyApi.setAccessToken(MainActivity.authToken);
+>>>>>>> origin/main
         SpotifyService spotify = spotifyApi.getService();
         spotify.searchTracks(q, new Callback<TracksPager>() {
             @Override
@@ -130,7 +146,11 @@ public class SubSearchFragment extends Fragment {
                 if (subSearchRecyclerViewFoundSongFragment.isAdded()) {
                     subSearchRecyclerViewFoundSongFragment.setTrackList(trackList);
                 } else {
+<<<<<<< HEAD
                     getChildFragmentManager().beginTransaction()
+=======
+                    getParentFragmentManager().beginTransaction()
+>>>>>>> origin/main
                             .replace(R.id.search_subSearchMainFragmentContainer, subSearchRecyclerViewFoundSongFragment)
                             .commit();
                 }
