@@ -91,7 +91,7 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/ic_play" />
+                android:background="@drawable/ic_playpng" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

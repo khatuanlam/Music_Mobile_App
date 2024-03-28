@@ -1,8 +1,13 @@
-apply plugin: 'com.android.application'
 
+plugins {
+    id('com.android.application')
+    id("com.google.devtools.ksp") version "1.9.21-1.0.16" apply false
+}
 android {
 
-    compileSdk 31
+
+    compileSdk 33
+
     buildToolsVersion '30.0.2'
     namespace 'com.example.music_mobile_app'
     defaultConfig {
@@ -46,17 +51,26 @@ android {
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
+    flatDir {
+        dirs 'libs'
+    }
 }
 dependencies {
+
     implementation fileTree(include: ['*.aar','*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:2.1.0'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation files('C:\\Users\\haile\\Downloads\\spotify-app-remote-release-0.8.0.aar')
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
     testImplementation 'junit:junit:4.12'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation 'androidx.browser:browser:1.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
     implementation 'com.github.iammert:ScalingLayout:1.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
@@ -72,6 +86,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.spotify.android:auth:2.1.0'
     implementation 'com.squareup.picasso:picasso:2.8'
-
-
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
+    implementation 'androidx.palette:palette:1.0.0'
 }

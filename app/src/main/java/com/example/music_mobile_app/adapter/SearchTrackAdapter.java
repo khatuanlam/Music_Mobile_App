@@ -1,5 +1,6 @@
-package com.example.music_mobile_app.manager.SearchManager.adapter;
+package com.example.music_mobile_app.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 
 import java.util.List;
@@ -22,9 +24,10 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
     private Fragment fragment;
     public List<Track> mDataList;
 
+
     public SearchTrackAdapter(Fragment fragment, List<Track> dataList) {
         this.fragment = fragment;
-        mDataList = dataList;
+        this.mDataList = dataList;
     }
 
     public void setmDataList(List<Track> mDataList) {
@@ -42,8 +45,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull FoundSongViewHolder holder, int position) {
-        Track track = mDataList.get(position);
-        holder.bind(track);
+        holder.bind(mDataList.get(position));
     }
 
     @Override
@@ -51,11 +53,14 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
         return mDataList.size();
     }
 
-    public class FoundSongViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewSingerName;
-        public TextView textViewSongName;
-        public ImageView imageView;
-        public CardView cardView;
+
+    protected class FoundSongViewHolder extends RecyclerView.ViewHolder {
+
+        private Track mTrack;
+        private TextView textViewSingerName;
+        private TextView textViewSongName;
+        private ImageView imageView;
+        private CardView cardView;
 
         public FoundSongViewHolder(View itemView) {
             super(itemView);
@@ -63,10 +68,16 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
             textViewSongName = itemView.findViewById(R.id.list_item_search_found_song_songName);
             imageView = itemView.findViewById(R.id.list_item_search_found_song_image);
             cardView = itemView.findViewById(R.id.list_item_search_found_song_cardview);
+
+            itemView.setOnClickListener((View v) -> {
+                Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
+                intent.putExtra("Track", mTrack);
+                fragment.getActivity().startActivity(intent);
+            });
         }
 
         public void bind(Track track) {
-
+            this.mTrack = track;
             textViewSongName.setText(track.album.name);
             if (track.artists.size() > 0) {
                 textViewSingerName.setText(track.artists.get(0).name);

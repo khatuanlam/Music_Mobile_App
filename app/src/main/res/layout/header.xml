@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:alpha="0.6"
-    android:background="#000000"
+    android:background="@color/colorTransparent"
     android:elevation="4dp">
 
     <!-- Back button -->
@@ -13,40 +12,11 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_arrow"
-        android:alpha="1"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_arrow_small_white" />
 
-    <!-- Download button -->
-    <ImageView
-        android:id="@+id/downloadButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:layout_marginEnd="203dp"
-        android:layout_toStartOf="@+id/searchButton"
-        android:src="@drawable/ic_download_white" />
-
-    <!-- Search button -->
-
-    <!-- Overflow menu button -->
-    <ImageView
-        android:id="@+id/searchButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="8dp"
-        android:layout_marginEnd="203dp"
-        android:layout_toStartOf="@+id/overflowMenu"
-        android:src="@drawable/ic_search_white" />
-
-    <ImageView
-        android:id="@+id/overflowMenu"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_overflow" />
 
 </RelativeLayout>

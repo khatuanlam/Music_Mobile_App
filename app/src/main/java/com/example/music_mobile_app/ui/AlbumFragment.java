@@ -1,18 +1,22 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.manager.Service.RetrofitClient;
@@ -20,7 +24,7 @@ import com.example.music_mobile_app.manager.Service.SpotifyApiService;
 import com.example.music_mobile_app.model.Album;
 import com.example.music_mobile_app.model.Page;
 import com.example.music_mobile_app.model.Track;
-import com.example.music_mobile_app.model.Tracks;
+import com.example.music_mobile_app.util.HandleBackground;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,7 +38,9 @@ import retrofit2.Response;
 
 public class AlbumFragment extends Fragment {
 
-
+    private ImageView albumImage;
+    private FrameLayout frameLayout;
+    private Drawable backgroundDrawable;
 
     private SpotifyApiService spotifyApiService;
     private FragmentManager manager;
@@ -44,7 +50,7 @@ public class AlbumFragment extends Fragment {
     public List<Track> trackList = new ArrayList<Track>();
     private RetrofitClient retrofitClient;
 
-    private ImageView albumImage;
+
     private TextView albumName;
     private TextView albumArtistname;
 
@@ -71,6 +77,7 @@ public class AlbumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         albumImage = view.findViewById(R.id.albumImage);
@@ -78,6 +85,7 @@ public class AlbumFragment extends Fragment {
         albumName = view.findViewById(R.id.albumName);
         release_date = view.findViewById(R.id.albumRelease_date);
 
+        backgroundDrawable = frameLayout.getBackground();
 
 
         retrofitClient = new RetrofitClient();
@@ -107,10 +115,7 @@ public class AlbumFragment extends Fragment {
                     release_date.setText(response.body().getRelease_date());
                     String imageUrl = response.body().getImageUrl().get(0).getUrl();
                     Picasso.get().load(imageUrl).into(albumImage);
-//                    List<Track> tracks = response.body().getTracks().getItems();
-//                    trackList.addAll(tracks);
-//                    trackAdapter.notifyDataSetChanged();
-//                    Log.i("Track " ,   " " + String.valueOf(tracks.size()) );
+
 
 
                 }
@@ -142,5 +147,25 @@ public class AlbumFragment extends Fragment {
 
             }
         });
+
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Create an instance of HandleBackground and call handleBackground method
+        HandleBackground backgroundHandler = new HandleBackground();
+        backgroundHandler.handleBackground(albumImage, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+            @Override
+            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                // Set the updated Drawable as the background of your view
+                frameLayout.setBackground(updatedDrawable);
+            }
+        });
+    }
+
+
+
+
+
 }

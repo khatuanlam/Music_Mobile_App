@@ -1,64 +1,45 @@
 package com.example.music_mobile_app.ui;
 
-import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
+
 import static com.example.music_mobile_app.ui.HomeFragment.TAG;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.music_mobile_app.R;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-
-import Adapter.TrackAdapter;
-
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.TrackSimple;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.RetrofitError;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
 import com.example.music_mobile_app.manager.Service.RetrofitClient;
 import com.example.music_mobile_app.manager.Service.SpotifyApiService;
 import com.example.music_mobile_app.model.Page;
 import com.example.music_mobile_app.model.SavedTrack;
-import com.example.music_mobile_app.model.Song;
 import com.example.music_mobile_app.model.Track;
-import com.example.music_mobile_app.model.Tracks;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoriteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import Adapter.TrackAdapter;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
 public class FavoriteFragment extends Fragment {
 
-//    private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
 
     private SpotifyApiService spotifyApiService;
     private FragmentManager manager;
     private RecyclerView recyclerView;
     private TrackAdapter trackAdapter;
     private SpotifyApi spotifyApi;
+
 
 
     public List<Track> trackList = new ArrayList<Track>();
@@ -68,7 +49,8 @@ public class FavoriteFragment extends Fragment {
     }
 
 
-    public static FavoriteFragment newInstance() {
+
+    public FavoriteFragment newInstance() {
         FavoriteFragment fragment = new FavoriteFragment();
         return fragment;
     }
@@ -77,6 +59,7 @@ public class FavoriteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
+
     }
 
     @Override
@@ -94,6 +77,7 @@ public class FavoriteFragment extends Fragment {
 
 //        getTrackData( "1J3SmWwlYAG68LGKr86MVH?si=f01feeb87adb4273");
         getMyTrack();
+
         return view;
     }
 

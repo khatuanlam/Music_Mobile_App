@@ -1,5 +1,6 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -33,16 +35,21 @@ import retrofit2.Response;
 
 public class ArtistFragment extends Fragment {
 
+
+    ImageView artistAvatar;
+    LinearLayout content_container;
+    private Drawable backgroundDrawable;
+
+
     private TextView artistName;
     private TextView listeners;
     private ImageView artistImage;
-    private Button followButton;
-    private Button overflowMenu;
     private Button playMusic;
 
     private SpotifyApiService spotifyApiService;
     private FragmentManager manager;
     private RecyclerView recyclerView;
+
     private TrackAdapter trackAdapter;
     private SpotifyApi spotifyApi;
 
@@ -56,10 +63,12 @@ public class ArtistFragment extends Fragment {
 
 
 
-    public static ArtistFragment newInstance() {
+    public  ArtistFragment newInstance() {
         ArtistFragment fragment = new ArtistFragment();
         return fragment;
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,7 @@ public class ArtistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         artistName = view.findViewById(R.id.textArtistName);
@@ -93,8 +103,8 @@ public class ArtistFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
-
     }
+
 
         public void getArtistInfo(String artistID){
             Call<Artist> artistCall = spotifyApiService.getArtist(artistID);
@@ -149,4 +159,5 @@ public class ArtistFragment extends Fragment {
 
 
         }
+
 }
