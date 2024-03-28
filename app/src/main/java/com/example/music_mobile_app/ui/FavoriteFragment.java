@@ -1,6 +1,7 @@
 package com.example.music_mobile_app.ui;
 
 import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
+import static com.example.music_mobile_app.ui.HomeFragment.TAG;
 
 import android.os.Bundle;
 
@@ -29,7 +30,6 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.TrackSimple;
-import kaaes.spotify.webapi.android.models.Tracks;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.RetrofitError;
 import retrofit2.Call;
@@ -39,8 +39,11 @@ import retrofit2.Response;
 import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
 import com.example.music_mobile_app.manager.Service.RetrofitClient;
 import com.example.music_mobile_app.manager.Service.SpotifyApiService;
+import com.example.music_mobile_app.model.Page;
+import com.example.music_mobile_app.model.SavedTrack;
 import com.example.music_mobile_app.model.Song;
 import com.example.music_mobile_app.model.Track;
+import com.example.music_mobile_app.model.Tracks;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +61,7 @@ public class FavoriteFragment extends Fragment {
     private SpotifyApi spotifyApi;
 
 
-    public List<Track> trackList = new ArrayList<>();
+    public List<Track> trackList = new ArrayList<Track>();
     private RetrofitClient retrofitClient;
     public FavoriteFragment() {
 
@@ -89,7 +92,8 @@ public class FavoriteFragment extends Fragment {
         recyclerView.setAdapter(trackAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        getTrackData( "1J3SmWwlYAG68LGKr86MVH?si=f01feeb87adb4273");
+//        getTrackData( "1J3SmWwlYAG68LGKr86MVH?si=f01feeb87adb4273");
+        getMyTrack();
         return view;
     }
 
@@ -121,6 +125,40 @@ public class FavoriteFragment extends Fragment {
 
     }
 
+    public void getMyTrack(){
+        Call<Page<SavedTrack>> call = spotifyApiService.getMyTrack(10,0);
+
+        call.enqueue(new Callback<Page<SavedTrack>>() {
+            @Override
+            public void onResponse(Call<Page<SavedTrack>> call, Response<Page<SavedTrack>> response) {
+                if (response.isSuccessful()) {
+                    Page<SavedTrack> trackPage = response.body();
+                    List<SavedTrack> savedTracks = trackPage.getItems();
+                    for (SavedTrack savedTrack : savedTracks) {
+                        Track track1 = savedTrack.getTrack();
+                        if (track1 != null) {
+                            trackList.add(track1);
+                        } else {
+                            Log.e(TAG, "Track object is null");
+                        }
+
+
+
+//                    trackList.add((Track) trackPage.items.get(0).getTrack().getTracks());
+                    }
+
+                    Track newtrack = trackPage.getItems().get(0).getTrack();
+                    Log.d(TAG, "onResponse() returned: " + newtrack.getName());
+                    trackAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<Page<SavedTrack>> call, Throwable t) {
+                Log.i("get api", "Unsuccessfull");
+            }
+        });
+
+    }
 
 }
 

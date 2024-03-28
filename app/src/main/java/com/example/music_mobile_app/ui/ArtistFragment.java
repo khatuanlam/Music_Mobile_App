@@ -84,7 +84,7 @@ public class ArtistFragment extends Fragment {
         retrofitClient = new RetrofitClient();
         spotifyApiService = retrofitClient.getClient();
 
-        getArtistInfo("0ZbgKh0FgPYeFP38nVaEGp?si=JaIwBfW-SEO6kGvwP4bPzQ");
+        getArtistInfo("5dfZ5uSmzR7VQK0udbAVpf");
         getArtistTopTrack("5dfZ5uSmzR7VQK0udbAVpf");
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerArtistMusicView);

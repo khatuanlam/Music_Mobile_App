@@ -6,6 +6,7 @@ import com.example.music_mobile_app.model.Artist;
 
 import com.example.music_mobile_app.model.Page;
 import com.example.music_mobile_app.model.Playlist;
+import com.example.music_mobile_app.model.SavedTrack;
 import com.example.music_mobile_app.model.Track;
 import com.example.music_mobile_app.model.Tracks;
 
@@ -36,6 +37,8 @@ public interface SpotifyApiService {
 
     @GET("artists/{id}/albums")
     Call<Album> getArtistAlbums(@Path("id") String artistId);
+    @GET("me/tracks")
+    Call<Page<SavedTrack>> getMyTrack(@Query("limit") int limit, @Query("offset") int offset);
 
     //TRACK
     @GET("tracks/{id}")
