@@ -1,35 +1,15 @@
 package com.example.music_mobile_app.ui;
 
-<<<<<<< HEAD
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-=======
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
->>>>>>> origin/main
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-<<<<<<< HEAD
-
-import com.example.music_mobile_app.AccountActivity;
-import com.example.music_mobile_app.R;
-
-public class HomeFragment extends Fragment {
-    public static final String TAG = "Spotify HomFragment";
-
-    private Button account;
-=======
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,32 +53,19 @@ public class HomeFragment extends Fragment {
     private static TopTracksAdapter topTracksAdapter;
 
     private static RecentlyTracksAdapter recentlyTracksAdapter;
->>>>>>> origin/main
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-=======
 
         FragmentManager manager = getParentFragmentManager();
         methodsManager = new MethodsManager();
->>>>>>> origin/main
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-<<<<<<< HEAD
-        account = view.findViewById(R.id.avt);
-        Intent intent = new Intent(getActivity(), AccountActivity.class);
-        account.setOnClickListener(view1 -> {
-            startActivity(intent);
-        });
-        return view;
-    }
-=======
 
         recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
@@ -199,5 +166,4 @@ public class HomeFragment extends Fragment {
         topTracksRecyclerView.setAdapter(topTracksAdapter);
     }
 
->>>>>>> origin/main
 }

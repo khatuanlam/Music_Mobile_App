@@ -1,10 +1,5 @@
 package com.example.music_mobile_app;
 
-<<<<<<< HEAD
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-=======
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,19 +7,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
->>>>>>> origin/main
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
-public class EditAccountActivity extends AppCompatActivity {
-=======
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -56,7 +42,6 @@ public class EditAccountActivity extends FragmentActivity {
     String authToken;
 
     private mSpotifyService spotifyService = MainActivity.mSpotifyService;
->>>>>>> origin/main
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,25 +50,6 @@ public class EditAccountActivity extends FragmentActivity {
         setContentView(R.layout.acitvity_edit_account);
 
 
-<<<<<<< HEAD
-        // Căn giữa tiêu đề
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
-        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER);
-        getSupportActionBar().setCustomView(customView, params);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
-        getSupportActionBar().setTitle("Chỉnh sửa hồ sơ");
-
-
-
-
-    }
-=======
 //        // Căn giữa tiêu đề
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
@@ -141,7 +107,6 @@ public class EditAccountActivity extends FragmentActivity {
 
     }
 
->>>>>>> origin/main
     // Xử lý sự kiện khi nút quay lại được nhấn
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -153,8 +118,6 @@ public class EditAccountActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-<<<<<<< HEAD
-=======
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -212,5 +175,4 @@ public class EditAccountActivity extends FragmentActivity {
     }
 
 
->>>>>>> origin/main
 }

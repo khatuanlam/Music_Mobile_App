@@ -6,13 +6,6 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-<<<<<<< HEAD
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-=======
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +31,6 @@
         android:layout_weight="1">
 
 
->>>>>>> origin/main
         <FrameLayout
             android:id="@+id/fragment"
             android:layout_width="match_parent"
@@ -104,12 +96,7 @@
                     android:id="@+id/nav_favorite"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-<<<<<<< HEAD
-                    android:background="@drawable/ic_like_black_24dp"
-                    />
-=======
                     android:background="@drawable/ic_like_black_24dp" />
->>>>>>> origin/main
 
                 <TextView
                     android:id="@+id/nav_favorite_text"
@@ -134,11 +121,7 @@
                     android:id="@+id/nav_search"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-<<<<<<< HEAD
-                    android:background="@drawable/ic_search_black_24dp" />
-=======
                     android:background="@drawable/ic_search_white_24dp" />
->>>>>>> origin/main
 
                 <TextView
                     android:id="@+id/nav_search_text"

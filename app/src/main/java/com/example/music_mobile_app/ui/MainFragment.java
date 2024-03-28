@@ -1,40 +1,24 @@
 package com.example.music_mobile_app.ui;
 
 import android.content.Context;
-<<<<<<< HEAD
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
-=======
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
->>>>>>> origin/main
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-<<<<<<< HEAD
-import android.widget.LinearLayout;
-import android.widget.TextView;
-=======
 import android.widget.TextView;
 import android.widget.Toast;
->>>>>>> origin/main
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-<<<<<<< HEAD
-import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.model.IconNavbar;
-
-=======
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.AccountActivity;
@@ -43,7 +27,6 @@ import com.example.music_mobile_app.model.IconNavbar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
->>>>>>> origin/main
 public class MainFragment extends Fragment {
 
     private static final String TAG = "Spotify MainFragment";
@@ -58,20 +41,12 @@ public class MainFragment extends Fragment {
     private Button searchLayout;
     private TextView downloadText;
     private Button downloadLayout;
-<<<<<<< HEAD
-=======
     private CircleImageView account;
->>>>>>> origin/main
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-
-        manager = getFragmentManager();
-=======
->>>>>>> origin/main
         manager = getChildFragmentManager();
     }
 
@@ -80,10 +55,6 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
         homeLayout = view.findViewById(R.id.nav_home);
         favoriteLayout = view.findViewById(R.id.nav_favorite);
         searchLayout = view.findViewById(R.id.nav_search);
@@ -99,8 +70,6 @@ public class MainFragment extends Fragment {
         searchLayout.setOnClickListener(mListener);
         downloadLayout.setOnClickListener(mListener);
 
-<<<<<<< HEAD
-=======
         // Home
         manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
 
@@ -114,63 +83,15 @@ public class MainFragment extends Fragment {
             startActivity(intent);
         });
 
->>>>>>> origin/main
         return view;
     }
 
     View.OnClickListener mListener = new View.OnClickListener() {
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
-<<<<<<< HEAD
-//                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
-                    current_view = new IconNavbar(homeLayout, view, homeText, home);
-                    setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
-                    break;
-                case R.id.nav_favorite:
-                    Log.d(TAG, "FAVORITE");
-//                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new FavoriteFragment()).commit();
-                    current_view = new IconNavbar(favoriteLayout, view, favoriteText, favorite);
-                    setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
-                    break;
-                case R.id.nav_search:
-                    Log.d(TAG, "SEARCH");
-//                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new SearchFragment()).commit();
-                    current_view = new IconNavbar(searchLayout, view, searchText, search);
-                    setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
-                    break;
-                case R.id.nav_download:
-                    Log.d(TAG, "DOWNLOAD");
-//                    if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
-                    current_view = new IconNavbar(downloadLayout, view, downloadText, download);
-                    setFocusMode(current_view);
-                    if (prev_view != null) {
-                        setDefocusMode(prev_view);
-                    }
-                    prev_view = current_view;
-=======
                     if (view.isActivated()) break;
                     manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
@@ -196,7 +117,6 @@ public class MainFragment extends Fragment {
                     manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
                     current_view = new IconNavbar(downloadLayout, view, downloadText, download);
                     setFocusMode(current_view);
->>>>>>> origin/main
                     break;
             }
         }
@@ -211,14 +131,11 @@ public class MainFragment extends Fragment {
     }
 
     private void setFocusMode(IconNavbar iconNavbar) {
-<<<<<<< HEAD
-=======
         // Replace prev and current view
         if (prev_view != null) {
             setDefocusMode(prev_view);
         }
         prev_view = current_view;
->>>>>>> origin/main
         iconNavbar.getDrawable().setTint(focusMode);
         iconNavbar.getView().setBackground(iconNavbar.getDrawable());
         iconNavbar.getTextView().setTextColor(focusMode);
@@ -241,11 +158,7 @@ public class MainFragment extends Fragment {
 
         home = getResources().getDrawable(R.drawable.ic_home_black_24dp, null);
         favorite = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
-<<<<<<< HEAD
-        search = getResources().getDrawable(R.drawable.ic_search_black_24dp, null);
-=======
         search = getResources().getDrawable(R.drawable.ic_search_white_24dp, null);
->>>>>>> origin/main
         download = getResources().getDrawable(R.drawable.ic_download_black_24dp, null);
 
         focusMode = getResources().getColor(R.color.colorWhite, null);

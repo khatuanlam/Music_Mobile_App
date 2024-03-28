@@ -2,47 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-<<<<<<< HEAD
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingVertical="16dp">
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView"-->
-<!--        android:layout_width="60dp"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        android:adjustViewBounds="true"-->
-<!--        android:src="@drawable/avt"/>-->
-
-=======
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingVertical="16dp">
 
->>>>>>> origin/main
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="60dp"
         android:layout_height="60dp"
-<<<<<<< HEAD
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"/>
-
-
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            android:fontFamily="@font/gotham_medium"
-            android:layout_marginLeft="25dp"
-            android:layout_gravity="center"/>
-
-
-=======
         android:adjustViewBounds="true"
         android:scaleType="centerCrop" />
 
@@ -57,7 +24,6 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="17dp" />
->>>>>>> origin/main
 
 
 </LinearLayout>

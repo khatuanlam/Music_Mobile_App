@@ -1,6 +1,5 @@
 package com.example.music_mobile_app;
 
-<<<<<<< HEAD
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-=======
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,43 +55,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.hdodenhof.circleimageview.CircleImageView;
->>>>>>> origin/main
 
 public class AccountActivity extends AppCompatActivity {
 
     CircleImageView imageAvt;
     ListView listView;
-<<<<<<< HEAD
     ArrayList<PlaylistItem> playlistItems;
-    AccountAdapter adapter;
+    AccountAdapter Accountadapter;
     Button buttonEditAccount;
     private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
-=======
     ArrayList<String> arrItem;
     ArrayAdapter adapter;
-
-    Button buttonEditAccount;
->>>>>>> origin/main
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
 
         setContentView(R.layout.activity_account);
 
-=======
-        setContentView(R.layout.activity_account);
-
-//        Toolbar toolbar = findViewById(R.id.app_bar);
-////        setSupportActionBar(toolbar);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onBackPressed();
-//            }
-//        });
->>>>>>> origin/main
         // Căn giữa tiêu đề
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -103,15 +82,6 @@ public class AccountActivity extends AppCompatActivity {
         //View Logo
         imageAvt = (CircleImageView) findViewById(R.id.imageAvt);
 
-<<<<<<< HEAD
-        listView = findViewById(R.id.listViewPlaylist);
-        playlistItems = new ArrayList<>();
-        adapter = new AccountAdapter(this, playlistItems);
-        listView.setAdapter(adapter);
-
-        // Set up buttonEditAccount onClickListener
-        buttonEditAccount = findViewById(R.id.buttonEditAccount);
-=======
         //Inner List Item
         listView = (ListView) findViewById(R.id.listViewPlaylist);
         arrItem = new ArrayList<>(Arrays.asList("Danh sách phát 1", "Danh sách phát 2", "Danh sách phát 3"));
@@ -128,7 +98,6 @@ public class AccountActivity extends AppCompatActivity {
         });
         buttonEditAccount = (Button) findViewById(R.id.buttonEditAccount);
         //Onclick RegisterFree
->>>>>>> origin/main
         buttonEditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +106,6 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-<<<<<<< HEAD
         // Load Spotify playlists
         loadSpotifyPlaylists();
     }
@@ -159,7 +127,7 @@ public class AccountActivity extends AppCompatActivity {
                     PlaylistItem item = new PlaylistItem(id, images, name);
                     playlistItems.add(item);
                 }
-                adapter.notifyDataSetChanged();
+                Accountadapter.notifyDataSetChanged();
             }
 
             @Override
@@ -172,10 +140,6 @@ public class AccountActivity extends AppCompatActivity {
 
 
 
-=======
-    }
-
->>>>>>> origin/main
     // Xử lý sự kiện khi nút quay lại được nhấn
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -187,9 +151,6 @@ public class AccountActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-<<<<<<< HEAD
-}
-=======
 
     private void goToAlbumFragment() {
         // Tạo đối tượng FragmentManager
@@ -215,4 +176,3 @@ public class AccountActivity extends AppCompatActivity {
     }
 
 }
->>>>>>> origin/main

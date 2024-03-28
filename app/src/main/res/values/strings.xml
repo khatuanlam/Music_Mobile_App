@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Music_Mobile_App</string>
     <string name="welcome">Welcome</string>
-<<<<<<< HEAD
-=======
 
     <string name="create_account">CREATE ACCOUNT</string>
     <string name="already_user">Already a user?</string>
@@ -14,5 +12,4 @@
     <string name="code">Code: %1$s</string>
     <string name="token">Access Token: %1$s</string>
     <string name="welcome_text">Sign up for free music on your phone, tablet, and computer.</string>
->>>>>>> origin/main
 </resources>

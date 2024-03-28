@@ -1,19 +1,5 @@
 package com.example.music_mobile_app;
 
-<<<<<<< HEAD
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
-public class SplashActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-    }
-}
-=======
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -85,4 +71,3 @@ public class SplashActivity extends FragmentActivity {
     }
 
 }
->>>>>>> origin/main

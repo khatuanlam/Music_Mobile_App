@@ -1,42 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
-    android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
-    android:paddingTop="5dp"
-    android:paddingStart="5dp"
-    android:paddingEnd="15dp"
-    android:paddingBottom="5dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/track_image_field"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/images_album"/>
-
-    <TextView
-        android:id="@+id/track_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="1dp"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorWhite"
-        android:textAlignment="center"
-        android:text="Nơi mình dừng chân"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="1dp"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorNavIcon"
-        android:textAlignment="center"
-        android:text="Nghệ sĩ"/>
-=======
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark"
@@ -72,6 +35,5 @@
         android:textColor="@color/colorNavIcon"
         android:textSize="12sp"
         android:textStyle="bold" />
->>>>>>> origin/main
 
 </LinearLayout>

@@ -11,11 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.music_mobile_app.R;
-<<<<<<< HEAD
-import com.example.music_mobile_app.manager.SearchManager.adapter.SearchTrackAdapter;
-=======
 import com.example.music_mobile_app.adapter.SearchTrackAdapter;
->>>>>>> origin/main
 
 import java.util.List;
 
@@ -30,12 +26,9 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         this.trackList = trackList;
     }
 
-<<<<<<< HEAD
-=======
     public SubSearchRecyclerViewFoundSongFragment() {
     }
 
->>>>>>> origin/main
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +46,6 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         mAdapter = new SearchTrackAdapter(this, trackList);
         recyclerView.setAdapter(mAdapter);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
         return view;
     }
 
@@ -65,9 +54,6 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         mAdapter.setmDataList(trackList);
 
     }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> origin/main
 }

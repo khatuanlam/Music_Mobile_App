@@ -3,10 +3,6 @@ package com.example.music_mobile_app.ui;
 
 import androidx.fragment.app.Fragment;
 
-<<<<<<< HEAD
-import static com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable.ACCESS_TOKEN;
-=======
->>>>>>> origin/main
 
 import android.os.Bundle;
 import android.util.Log;
@@ -19,14 +15,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-<<<<<<< HEAD
-import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.manager.SearchManager.adapter.SearchAlbumAdapter;
-=======
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.SearchAlbumAdapter;
->>>>>>> origin/main
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +40,8 @@ public class SearchFragment extends Fragment {
     private SearchAlbumAdapter mAdapter;
     private FragmentManager manager;
 
-<<<<<<< HEAD
-=======
     private SpotifyService spotify = MainActivity.spotifyService;
 
->>>>>>> origin/main
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,12 +77,6 @@ public class SearchFragment extends Fragment {
     }
 
     public void getAlbum(String q) {
-<<<<<<< HEAD
-        spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ACCESS_TOKEN);
-        SpotifyService spotify = spotifyApi.getService();
-=======
->>>>>>> origin/main
         spotify.searchAlbums(q, new Callback<AlbumsPager>() {
             @Override
             public void success(AlbumsPager albumsPager, Response response) {

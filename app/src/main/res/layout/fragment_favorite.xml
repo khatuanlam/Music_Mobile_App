@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.FavoriteFragment">
-=======
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
@@ -14,58 +8,17 @@
     android:background="@drawable/background"
     tools:context=".ui.AlbumFragment">
 
->>>>>>> origin/main
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-<<<<<<< HEAD
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-        <include layout="@layout/header"/>
-=======
         android:orientation="vertical">
 
         <include layout="@layout/header" />
->>>>>>> origin/main
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-<<<<<<< HEAD
-            android:background="@color/black"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/titleLikedSong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="115dp"
-                android:text="Bài hát yêu thích"
-                android:textColor="@color/white"
-                android:textSize="25dp"/>
-
-            <TextView
-                android:id="@+id/songNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="160dp"
-                android:text="100 bài hát"
-                android:textColor="@color/white"
-                android:textSize="18dp" />
-
-            <Button
-                android:id="@+id/randomPlay"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="120dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/custom_random_btn"
-                android:text="Phát ngẫu nhiên"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                />
-=======
             android:orientation="vertical">
 
             <TextView
@@ -90,75 +43,10 @@
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
->>>>>>> origin/main
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-<<<<<<< HEAD
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@color/black"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/filterButton"
-                    android:layout_width="62dp"
-                    android:layout_height="16dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="31dp"
-                    android:layout_marginEnd="337dp"
-                    android:layout_marginBottom="24dp"
-                    android:layout_weight="0"
-                    android:background="@color/black"
-                    android:drawableLeft="@drawable/ic_filter_white"
-                    android:drawablePadding="-20dp"
-                    android:text="Lọc"
-                    android:textColor="@color/white"
-                    android:textSize="13dp"
-                    tools:ignore="TextSizeCheck" />
-
-                <Button
-                    android:id="@+id/newestButton"
-                    android:layout_width="100dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="299dp"
-                    android:layout_marginTop="27dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="25dp"
-                    android:layout_weight="0"
-                    android:background="@color/black"
-                    android:drawableRight="@drawable/ic_arrow_small_white"
-                    android:drawablePadding="-5dp"
-                    android:text="Mới nhất"
-                    android:textColor="@color/white"
-                    android:textSize="15dp" />
-            </RelativeLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerMusicViewLiked"
-                    android:layout_width="410dp"
-                    android:layout_height="491dp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-=======
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="end">
@@ -177,7 +65,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp" />
->>>>>>> origin/main
 
     </LinearLayout>
 </FrameLayout>

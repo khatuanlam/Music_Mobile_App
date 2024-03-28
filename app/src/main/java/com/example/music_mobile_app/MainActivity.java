@@ -1,22 +1,6 @@
 package com.example.music_mobile_app;
 
 import androidx.appcompat.app.AppCompatActivity;
-<<<<<<< HEAD
-import androidx.fragment.app.FragmentManager;
-
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
-
-
-import com.example.music_mobile_app.ui.ArtistFragment;
-import com.example.music_mobile_app.ui.HomeFragment;
-import com.example.music_mobile_app.ui.MainFragment;
-
-import java.util.Objects;
-
-public class MainActivity extends AppCompatActivity {
-=======
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -46,21 +30,10 @@ public class MainActivity extends FragmentActivity {
     public static String authToken;
 
     private static final String TAG = MainActivity.class.getSimpleName();
->>>>>>> origin/main
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-        // Hide action bar
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Objects.requireNonNull(getSupportActionBar()).hide();
-
-        setContentView(R.layout.activity_main);
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
-=======
         setContentView(R.layout.activity_main);
 
         FragmentManager manager = getSupportFragmentManager();
@@ -131,6 +104,5 @@ public class MainActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
->>>>>>> origin/main
     }
 }

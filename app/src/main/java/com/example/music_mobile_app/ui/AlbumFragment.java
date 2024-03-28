@@ -1,10 +1,5 @@
 package com.example.music_mobile_app.ui;
 
-<<<<<<< HEAD
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-=======
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -14,21 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
->>>>>>> origin/main
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
-
-import com.example.music_mobile_app.R;
-=======
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.util.HandleBackground;
->>>>>>> origin/main
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,13 +26,10 @@ import com.example.music_mobile_app.util.HandleBackground;
  */
 public class AlbumFragment extends Fragment {
 
-<<<<<<< HEAD
-=======
     private ImageView albumImage;
     private FrameLayout frameLayout;
     private Drawable backgroundDrawable;
 
->>>>>>> origin/main
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -82,20 +68,12 @@ public class AlbumFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-<<<<<<< HEAD
-        return inflater.inflate(R.layout.fragment_album, container, false);
-    }
-=======
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         // Find the ImageView within the fragment's layout
@@ -137,5 +115,4 @@ public class AlbumFragment extends Fragment {
 
 
 
->>>>>>> origin/main
 }

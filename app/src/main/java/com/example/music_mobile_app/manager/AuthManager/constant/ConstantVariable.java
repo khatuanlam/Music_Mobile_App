@@ -1,7 +1,7 @@
 package com.example.music_mobile_app.manager.AuthManager.constant;
 
 public class ConstantVariable {
-    public static String ACCESS_TOKEN = "BQCVO2JbNGz1xaXQ_5A1ot8tXYGrQqnYD8kWolzrwOA6RVbc6t5M0Uucf5joP5p9Gv3mov62FXTSkKMtIjUNermE44aMKWo-n2H8cMGf6YDDcK8gLouYv8yfcqgMp8Vw7zP7f_5YeO3Nv8hopbFqxnzohqQ93IWLiIldMnoNC5yhD3RNOON-2F6ySHn2SpF8Vom2c2NJG2HfO_pnwLcqbbf41YxZwHkba2OfxilUrQGUwXNEuSxKiE0_uC_7O4nvq3pwo7F7HzbK2_oquxXi";
+    public static String ACCESS_TOKEN = "BQCuK8v8Il75QlQAH7d2XaFzpxnHJE1RvzCb88rvc69b927F3bD_ogWE-RSK_vZNWolvHf19JMx0XF0bYVyJ_AQOpLl_89EX-BmSLs10q6nXh1sJZT0hp14YkXst-OcTSlU61e_szJpr9xGK9IIAWnj623UscufEyW5I-_TkO5tJbWpWs3zpgdOwqD1gFH0B0HvGfv8RRN4-p3QlCuj7xgjY69P0W-nekfDm6ZLCETxfIrZi9kyPCSPQLTGJs8nTFKMlcJsZdFvYMA6nqC0U";
 
     //Cập nhật USER_ID cá nhân
     public static String USER_ID = "8fp3lkzd33nnx2r8zfthp9w5b";
