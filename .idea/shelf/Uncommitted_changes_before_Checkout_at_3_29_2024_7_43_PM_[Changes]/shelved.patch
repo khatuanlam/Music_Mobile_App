@@ -1,0 +1,103 @@
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\nplugins {\r\n    id('com.android.application')\r\n    id(\"com.google.devtools.ksp\") version \"1.9.21-1.0.16\" apply false\r\n}\r\nandroid {\r\n\r\n    compileSdk 33\r\n    buildToolsVersion '30.0.2'\r\n\r\n    defaultConfig {\r\n        applicationId \"com.example.music_mobile_app\"\r\n        minSdkVersion 27\r\n        targetSdkVersion 33\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n        testInstrumentationRunner \"android.support.test.runner.AndroidJUnitRunner\"\r\n        vectorDrawables.useSupportLibrary = true\r\n    }\r\n    compileOptions {\r\n        encoding \"UTF-8\"\r\n\r\n        allprojects {\r\n            tasks.withType(JavaCompile) {\r\n                options.compilerArgs << \"-Xlint:deprecation\"\r\n            }\r\n        }\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'\r\n        }\r\n        debug {}\r\n    }\r\n\r\n    buildFeatures {\r\n        viewBinding = true\r\n    }\r\n\r\n}\r\n\r\nrepositories {\r\n    mavenCentral()\r\n    maven { url \"https://jitpack.io\" }\r\n    flatDir {\r\n        dirs 'libs'\r\n    }\r\n}\r\ndependencies {\r\n    implementation fileTree(include: ['*.jar'], dir: 'libs')\r\n    implementation 'androidx.appcompat:appcompat:1.6.1'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    testImplementation 'junit:junit:4.12'\r\n    implementation 'com.github.bumptech.glide:glide:4.14.2'\r\n    implementation 'androidx.browser:browser:1.0.0'\r\n    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'\r\n    androidTestImplementation 'com.android.support.test:runner:1.0.1'\r\n    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'\r\n\r\n\r\n    implementation 'com.github.iammert:ScalingLayout:1.1'\r\n    implementation 'com.squareup.picasso:picasso:2.71828'\r\n\r\n    implementation \"androidx.recyclerview:recyclerview:1.2.1\"\r\n    implementation \"androidx.recyclerview:recyclerview-selection:1.1.0\"\r\n    implementation 'androidx.palette:palette:1.0.0'\r\n    implementation 'com.google.android.material:material:1.5.0'\r\n\r\n\r\n//    implementation 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'\r\n    implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'\r\n    implementation 'androidx.browser:browser:1.0.0'\r\n    implementation 'com.spotify.android:auth:1.2.5'\r\n    implementation(name: 'spotify-app-remote-release-0.8.0', ext: 'aar');\r\n//    implementation \"org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31\"\r\n//    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2\"\r\n//    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2\"\r\n\r\n    implementation 'de.hdodenhof:circleimageview:3.1.0'\r\n    implementation 'androidx.palette:palette:1.0.0'\r\n    implementation 'com.github.dhaval2404:imagepicker:2.1'\r\n\r\n    implementation 'com.squareup.retrofit2:retrofit:2.9.0'\r\n    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision dc54f208c588279d3f027f8d28cfb982f93c2404)
++++ b/app/build.gradle	(date 1711715873910)
+@@ -6,7 +6,6 @@
+ android {
+ 
+     compileSdk 33
+-    buildToolsVersion '30.0.2'
+ 
+     defaultConfig {
+         applicationId "com.example.music_mobile_app"
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// Top-level build file where you can add configuration options common to all sub-projects/modules.\r\n\r\nbuildscript {\r\n\r\n    repositories {\r\n        google()\r\n        jcenter()\r\n        // Other repositories...\r\n        flatDir {\r\n            dirs 'libs'\r\n        }\r\n    }\r\n    dependencies {\r\n        classpath 'com.android.tools.build:gradle:7.0.0'\r\n        // NOTE: Do not place your application dependencies here; they belong\r\n        // in the individual module build.gradle files\r\n    }\r\n}\r\n\r\nallprojects {\r\n    repositories {\r\n        google()\r\n        jcenter()\r\n        flatDir {\r\n            dirs 'libs'\r\n        }\r\n        maven { url \"https://jitpack.io\" }\r\n    }\r\n}\r\n\r\ntask clean(type: Delete) {\r\n    delete rootProject.buildDir\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle b/build.gradle
+--- a/build.gradle	(revision dc54f208c588279d3f027f8d28cfb982f93c2404)
++++ b/build.gradle	(date 1711715873769)
+@@ -11,7 +11,7 @@
+         }
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:7.0.0'
++        classpath 'com.android.tools.build:gradle:7.4.2'
+         // NOTE: Do not place your application dependencies here; they belong
+         // in the individual module build.gradle files
+     }
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_17\" default=\"true\" project-jdk-name=\"17\" project-jdk-type=\"JavaSDK\" />\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision dc54f208c588279d3f027f8d28cfb982f93c2404)
++++ b/.idea/misc.xml	(date 1711715911016)
+@@ -1,6 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK" />
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK" />
+   <component name="ProjectType">
+     <option name="id" value="Android" />
+   </component>
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Wed Mar 06 14:01:44 ICT 2024\r\ndistributionBase=GRADLE_USER_HOME\r\ndistributionPath=wrapper/dists\r\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-7.3.3-bin.zip\r\nzipStoreBase=GRADLE_USER_HOME\r\nzipStorePath=wrapper/dists\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+--- a/gradle/wrapper/gradle-wrapper.properties	(revision dc54f208c588279d3f027f8d28cfb982f93c2404)
++++ b/gradle/wrapper/gradle-wrapper.properties	(date 1711715873921)
+@@ -1,6 +1,6 @@
+ #Wed Mar 06 14:01:44 ICT 2024
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-7.3.3-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"17\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision dc54f208c588279d3f027f8d28cfb982f93c2404)
++++ b/.idea/gradle.xml	(date 1711715688546)
+@@ -4,16 +4,15 @@
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
+-        <option name="testRunner" value="GRADLE" />
+-        <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="gradleJvm" value="17" />
++        <option name="gradleJvm" value="jbr-17" />
+         <option name="modules">
+           <set>
+             <option value="$PROJECT_DIR$" />
+             <option value="$PROJECT_DIR$/app" />
+           </set>
+         </option>
++        <option name="resolveExternalAnnotations" value="false" />
+       </GradleProjectSettings>
+     </option>
+   </component>

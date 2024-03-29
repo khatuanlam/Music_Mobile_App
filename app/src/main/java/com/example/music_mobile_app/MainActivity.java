@@ -38,13 +38,13 @@ public class MainActivity extends FragmentActivity {
 
         FragmentManager manager = getSupportFragmentManager();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
-        authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
+//        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
+//        authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
-        setServiceAPI();
+//        setServiceAPI();
 
-        getUserProfile();
+//        getUserProfile();
     }
 
 

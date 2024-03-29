@@ -115,8 +115,10 @@ public class MainFragment extends Fragment {
                 case R.id.nav_download:
                     Log.d(TAG, "DOWNLOAD");
                     if (view.isActivated()) break;
-                    manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
+//                    manager.beginTransaction().replace(R.id.fragment, new DownloadFragment()).commit();
+                    manager.beginTransaction().replace(R.id.fragment, new com.example.music_mobile_app.ui.mydatabase.MainFragment()).commit();
                     current_view = new IconNavbar(downloadLayout, view, downloadText, download);
+
                     setFocusMode(current_view);
                     break;
             }

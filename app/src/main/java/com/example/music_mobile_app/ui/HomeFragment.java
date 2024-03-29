@@ -71,17 +71,17 @@ public class HomeFragment extends Fragment {
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
         topTracksRecyclerView = view.findViewById(R.id.top_tracks);
 
-        LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-        recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
-        recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
-        topTracksRecyclerView.setLayoutManager(topTracks_layout);
-
-        setRecommendations();
-        setTopTracks();
-        setRecentlyTracks();
+//        LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+//
+//        recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
+//        recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
+//        topTracksRecyclerView.setLayoutManager(topTracks_layout);
+//
+//        setRecommendations();
+//        setTopTracks();
+//        setRecentlyTracks();
 
         return view;
     }
