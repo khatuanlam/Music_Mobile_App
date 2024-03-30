@@ -8,15 +8,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.music_mobile_app.adapter.PlaylistAdapter;
 //import com.example.music_mobile_app.adapter.SongPlaylistAdapter;
-import com.example.music_mobile_app.manager.AuthManager.constant.ConstantVariable;
 import com.example.music_mobile_app.model.PlaylistItem;
-import com.example.music_mobile_app.model.SongPlaylist;
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Image;
@@ -25,21 +25,22 @@ import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-public class PlaylistActivity extends AppCompatActivity {
+public class PlaylistActivity extends AppCompatActivity implements PlaylistAdapter.OnPlaylistItemClickListener {
     private ListView listView;
     private PlaylistAdapter adapter;
     private ArrayList<PlaylistItem> playlistItems = new ArrayList<>();
-//    private SongPlaylistAdapter songAdapter;
-//    private ArrayList<SongPlaylist> songPlaylist = new ArrayList<>();
-    private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
     private int selectedItem = -1; // Biến lưu trữ vị trí item được chọn, -1 là giá trị mặc định không có item nào được chọn
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
         listView = findViewById(R.id.listAddPlaylist);
         adapter = new PlaylistAdapter(this,playlistItems);
+        adapter.setOnPlaylistItemClickListener(this);
         listView.setAdapter(adapter);
         loadSpotifyPlaylists();
         Button buttonAddPlaylist = findViewById(R.id.buttonAddPlaylist);
@@ -56,16 +57,48 @@ public class PlaylistActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public void onPlaylistItemClick(PlaylistItem playlistItem) {
+        Log.e("Item", "Click");
+        // Xử lý sự kiện khi một item được nhấn trong Activity
+        String playlistId = playlistItem.getId();
+
         Button buttonOK = findViewById(R.id.buttonOK);
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Chuyển dữ liệu sang AddSongPlaylistActivity
+                String trackName = getIntent().getStringExtra("trackName");
+                String trackID = getIntent().getStringExtra("trackID");
+
                 Intent intent = new Intent(PlaylistActivity.this, AddSongPlaylistActivity.class);
+                intent.putExtra("playlistId", playlistId);
+                intent.putExtra("playlistName", playlistItem.getName());
+                intent.putExtra("trackID", trackID);
+                intent.putExtra("trackName", trackName);
+
+                // Kiểm tra xem Intent có chứa dữ liệu hình ảnh của bài hát hay không
+                if (getIntent().hasExtra("trackImage")) {
+                    String trackImageUrl = getIntent().getStringExtra("trackImage");
+                    Log.d("PlaylistActivity", "Received track image URL: " + trackImageUrl);
+                    intent.putExtra("trackImage", trackImageUrl);
+                } else {
+                    Log.d("PlaylistActivity", "No track image URL received");
+                }
+
+                Log.e("Button", "Click");
+
+
+                if (!playlistItem.getImages().isEmpty()) {
+                    intent.putExtra("imageUrl", playlistItem.getImages().get(0).url);
+                }
                 startActivity(intent);
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -92,7 +125,7 @@ public class PlaylistActivity extends AppCompatActivity {
     // Load danh sách playlist từ Spotify
     private void loadSpotifyPlaylists() {
         SpotifyApi spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ACCESS_TOKEN);
+        spotifyApi.setAccessToken(MainActivity.authToken);
         SpotifyService spotifyService = spotifyApi.getService();
         // Gọi API để lấy danh sách playlist
         spotifyService.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {

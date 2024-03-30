@@ -67,7 +67,7 @@ public class NewPlaylistActivity extends AppCompatActivity {
 
     private void createPlaylistOnSpotify(String playlistName) {
         SpotifyApi spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ConstantVariable.ACCESS_TOKEN);
+        spotifyApi.setAccessToken(MainActivity.authToken);
         SpotifyService spotifyService = spotifyApi.getService();
 
         // Tạo yêu cầu tạo playlist mới

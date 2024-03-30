@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -30,13 +31,9 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.gson.Gson;
 import com.spotify.android.appremote.api.ConnectionParams;
-//import com.spotify.android.appremote.api.Connector;
-//import com.spotify.android.appremote.api.SpotifyAppRemote;
-//import com.spotify.android.appremote.api.AppRemote;
 
-
-//import com.spotify.protocol.types.PlayerState;
-
+import java.io.Serializable;
+import java.util.ArrayList;
 
 public class PlayTrackActivity extends FragmentActivity {
 
@@ -68,53 +65,36 @@ public class PlayTrackActivity extends FragmentActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString("AUTH_TOKEN", "");
 
-
-//        if (mPlayer == null) {
-//            Config playerConfig = new Config(this, authToken, LoginActivity.CLIENT_ID);
-//
-//            Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
-//
-//                @Override
-//                public void onInitialized(SpotifyPlayer spotifyPlayer) {
-//                    Log.d(TAG, "-- Player initialized --");
-//                    mPlayer = spotifyPlayer;
-//                    mPlayer.addConnectionStateCallback(PlayTrackActivity.this);
-//                    btn_play.setOnClickListener(v -> {
-//                        mPlayer.playUri(new Player.OperationCallback() {
-//                            @Override
-//                            public void onSuccess() {
-//                                logMessage("onSuccess: ", 10);
-//                            }
-//
-//                            @Override
-//                            public void onError(Error error) {
-//                                logMessage(error + "", 10);
-//                            }
-//                        }, detailTrack.uri, 0, 0);
-//                    });
-//
-//                    logMessage("pppp", 10);
-//
-//                    Log.d(TAG, "AccessToken: " + authToken);
-//                    // Set API
-//                }
-//
-//                @Override
-//                public void onError(Throwable throwable) {
-//                    Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
-//                }
-//            });
-//        } else {
-//            mPlayer.login(authToken);
-//        }
-
-
         btn_back.setOnClickListener(v ->
         {
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_down);
             play_back_layout.startAnimation(animation);
             onBackPressed();
             overridePendingTransition(0, 0);
+        });
+
+        btn_add_to_playlist.setOnClickListener(v -> {
+            // Kiểm tra và xử lý URL hình ảnh trước khi truyền qua intent
+            if (detailTrack != null && detailTrack.album != null && !detailTrack.album.images.isEmpty()) {
+                String imageUrl = detailTrack.album.images.get(0).url;
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    String trackId = detailTrack.id;
+                    // Log ID của bài hát để kiểm tra
+                    Log.d(TAG, "Track ID: " + trackId);
+                    Log.e(TAG, "OK!!");
+                    // Giờ bạn có URL hình ảnh hợp lệ, bạn có thể truyền nó qua intent
+                    Intent intent = new Intent(PlayTrackActivity.this, PlaylistActivity.class);
+                    intent.putExtra("trackID", detailTrack.id);
+                    intent.putExtra("trackName", tv_track_name.getText().toString());
+                    intent.putExtra("trackImage", imageUrl);
+                    startActivity(intent);
+                } else {
+                    Log.e(TAG, "Image URL is null or empty");
+                }
+            } else {
+                Log.e(TAG, "Detail track or album is null or empty");
+            }
+
         });
 
     }
@@ -148,9 +128,9 @@ public class PlayTrackActivity extends FragmentActivity {
         mSeekBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         mSeekBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-        // Get connectionParams
-        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", MODE_PRIVATE);
-        Gson gson = new Gson();
+//        // Get connectionParams
+//        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", MODE_PRIVATE);
+//        Gson gson = new Gson();
     }
 
     private void setData(Track detailTrack) {

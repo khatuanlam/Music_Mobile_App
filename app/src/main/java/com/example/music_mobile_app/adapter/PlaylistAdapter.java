@@ -23,6 +23,18 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
         this.playlistItems = playlistItems;
         this.inflater = LayoutInflater.from(context);
     }
+
+    public interface OnPlaylistItemClickListener {
+        void onPlaylistItemClick(PlaylistItem playlistItem);
+    }
+
+    private OnPlaylistItemClickListener onPlaylistItemClickListener;
+
+    public void setOnPlaylistItemClickListener(OnPlaylistItemClickListener listener) {
+        this.onPlaylistItemClickListener = listener;
+    }
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         PlaylistAdapter.ViewHolder viewHolder;
@@ -70,11 +82,9 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
                 // Thông báo rằng dữ liệu đã thay đổi để cập nhật giao diện người dùng
                 notifyDataSetChanged();
 
-                String playlistId = playlistItem.getId();
-                // Chuyển sang AddSongPlaylistActivity và truyền playlistId
-                Intent intent = new Intent(getContext(), AddSongPlaylistActivity.class);
-                intent.putExtra("playlistId", playlistId);
-                getContext().startActivity(intent);
+                if (onPlaylistItemClickListener != null) {
+                    onPlaylistItemClickListener.onPlaylistItemClick(playlistItem);
+                }
             }
         });
         return convertView;

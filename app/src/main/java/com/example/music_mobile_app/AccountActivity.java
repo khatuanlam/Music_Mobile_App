@@ -61,15 +61,22 @@ public class AccountActivity extends AppCompatActivity {
     CircleImageView imageAvt;
     ListView listView;
     ArrayList<PlaylistItem> playlistItems;
-    AccountAdapter Accountadapter;
+    AccountAdapter adapter;
     Button buttonEditAccount;
-    private static final String ACCESS_TOKEN = ConstantVariable.ACCESS_TOKEN;
-    ArrayList<String> arrItem;
-    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_account);
+
+//        Toolbar toolbar = findViewById(R.id.app_bar);
+////        setSupportActionBar(toolbar);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onBackPressed();
+//            }
+//        });
 
         setContentView(R.layout.activity_account);
 
@@ -82,10 +89,12 @@ public class AccountActivity extends AppCompatActivity {
         //View Logo
         imageAvt = (CircleImageView) findViewById(R.id.imageAvt);
 
+        loadSpotifyPlaylists();
+
         //Inner List Item
         listView = (ListView) findViewById(R.id.listViewPlaylist);
-        arrItem = new ArrayList<>(Arrays.asList("Danh sách phát 1", "Danh sách phát 2", "Danh sách phát 3"));
-        adapter = new ArrayAdapter(this, R.layout.custom_list_playlist, R.id.textViewName, arrItem);
+        playlistItems = new ArrayList<>();
+        adapter = new AccountAdapter(this, playlistItems);
         listView.setAdapter(adapter);
 
         // Bộ lắng nghe sự kiện cho ListView
@@ -96,6 +105,7 @@ public class AccountActivity extends AppCompatActivity {
                 goToAlbumFragment();
             }
         });
+
         buttonEditAccount = (Button) findViewById(R.id.buttonEditAccount);
         //Onclick RegisterFree
         buttonEditAccount.setOnClickListener(new View.OnClickListener() {
@@ -106,37 +116,44 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        // Load Spotify playlists
-        loadSpotifyPlaylists();
     }
 
     // Load danh sách playlist từ Spotify
     private void loadSpotifyPlaylists() {
         SpotifyApi spotifyApi = new SpotifyApi();
-        spotifyApi.setAccessToken(ACCESS_TOKEN);
+        spotifyApi.setAccessToken(MainActivity.authToken);
         SpotifyService spotifyService = spotifyApi.getService();
 
+        // Gọi API để lấy danh sách playlist
         spotifyService.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {
             @Override
             public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-                List<PlaylistSimple> playlists = playlistSimplePager.items;
-                for (PlaylistSimple playlist : playlists) {
+                // Xử lý kết quả thành công
+                // Lấy danh sách playlist từ kết quả và hiển thị lên ListView
+                ArrayList<PlaylistItem> spotifyPlaylists = new ArrayList<>();
+                for (PlaylistSimple playlist : playlistSimplePager.items) {
+                    // Tạo đối tượng PlaylistItem từ dữ liệu playlist
                     List<Image> images = playlist.images;
                     String id = playlist.id;
                     String name = playlist.name;
                     PlaylistItem item = new PlaylistItem(id, images, name);
-                    playlistItems.add(item);
+                    spotifyPlaylists.add(item);
                 }
-                Accountadapter.notifyDataSetChanged();
+
+                // Hiển thị danh sách playlist lên RecyclerView
+                playlistItems.addAll(spotifyPlaylists);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e("AccountActivity", "Error loading playlists from Spotify: " + error.getMessage());
+                // Xử lý khi gặp lỗi
+                Log.e("AddToPlaylistActivity", "Error loading playlists from Spotify: " + error.getMessage());
                 Toast.makeText(AccountActivity.this, "Failed to load playlists from Spotify", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
 
 
@@ -151,7 +168,6 @@ public class AccountActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
     private void goToAlbumFragment() {
         // Tạo đối tượng FragmentManager
         FragmentManager fragmentManager = getSupportFragmentManager();

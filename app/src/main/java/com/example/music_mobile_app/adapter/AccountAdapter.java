@@ -76,9 +76,12 @@ public class AccountAdapter extends ArrayAdapter<PlaylistItem> {
                 notifyDataSetChanged();
 
                 String playlistId = playlistItem.getId();
-                // Chuyển sang AddSongPlaylistActivity và truyền playlistId
                 Intent intent = new Intent(getContext(), AddSongPlaylistActivity.class);
                 intent.putExtra("playlistId", playlistId);
+                intent.putExtra("playlistName", playlistItem.getName());
+                if (!playlistItem.getImages().isEmpty()) {
+                    intent.putExtra("imageUrl", playlistItem.getImages().get(0).url);
+                }
                 getContext().startActivity(intent);
             }
         });

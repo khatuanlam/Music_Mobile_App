@@ -7,7 +7,7 @@
     android:background="@drawable/background_account">
     <include layout="@layout/header"/>
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="250dp">
         <ImageView
             android:id="@+id/song_playlist_avt"

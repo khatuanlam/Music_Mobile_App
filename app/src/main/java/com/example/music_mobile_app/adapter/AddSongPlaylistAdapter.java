@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.PlaylistItem;
-import com.example.music_mobile_app.model.SongPlaylist;
 
 import java.util.List;
 
