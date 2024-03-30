@@ -1,33 +1,33 @@
 package com.example.music_mobile_app.model.mydatabase;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Song {
+
+public class User {
 
     public Long id;
 
-    public String name;
+
+    public String username;
 
 
-    public String image;
+    public String password;
+
+    public String email;
 
 
-    public String urlLyric;
+    public Boolean vip;
 
 
-    public String urlSong;
+    private String authorities;
 
-    public Integer popularity;
 
-    public String releaseDate;
+    private Boolean isActive;
 
-    public Boolean isActive;
 
 }

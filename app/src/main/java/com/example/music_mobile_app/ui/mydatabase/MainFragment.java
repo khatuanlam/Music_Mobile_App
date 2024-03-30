@@ -12,44 +12,44 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.SearchAlbumAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.TopSongAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.TopAlbumPopularAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.TopSongPopularAdapter;
+import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.repository.mydatabase.AlbumRepository;
 import com.example.music_mobile_app.repository.mydatabase.SongRepository;
+import com.example.music_mobile_app.repository.mydatabase.impl.AlbumRepositoryImpl;
 import com.example.music_mobile_app.repository.mydatabase.impl.SongRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.AlbumSimple;
-import kaaes.spotify.webapi.android.models.AlbumsPager;
-import kaaes.spotify.webapi.android.models.Pager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainFragment extends Fragment {
 
     private EditText editText;
-    private RecyclerView recyclerView;
-    private TopSongAdapter mAdapter;
+
+    private TopSongPopularAdapter mSongAdapter;
+    private TopAlbumPopularAdapter mAlbumAdapter;
     private FragmentManager manager;
     private SongRepository songRepository;
-    private LiveData<List<Song>> songListLiveData;
+    private AlbumRepository albumRepository;
+    private LiveData<List<Song>> popular_songListLiveData;
+    private LiveData<List<Album>> popular_albumListLiveData;
+
+
+    private RecyclerView topPopularSongsRecyclerView;
+    private RecyclerView topPopularAlbumsRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
         songRepository = new SongRepositoryImpl();
+        albumRepository = new AlbumRepositoryImpl();
     }
 
     @Override
@@ -59,21 +59,42 @@ public class MainFragment extends Fragment {
         editText = view.findViewById(R.id.mydb_search_searchTextBox);
 
 
-        recyclerView = view.findViewById(R.id.mydb_search_recyclerViewSongs);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
-        recyclerView.setLayoutManager(layoutManager);
+        topPopularSongsRecyclerView = view.findViewById(R.id.mydb_main_top_popular_songs_recyclerView);
+        topPopularAlbumsRecyclerView = view.findViewById(R.id.mydb_main_top_popular_albums_recyclerView);
+
+        LinearLayoutManager topsong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        topPopularSongsRecyclerView.setLayoutManager(topsong_layoutManager);
+
+        LinearLayoutManager topalbum_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        topPopularAlbumsRecyclerView.setLayoutManager(topalbum_layoutManager);
 
 
-        mAdapter = new TopSongAdapter(getActivity(), this, new ArrayList<Song>());
-        recyclerView.setAdapter(mAdapter);
+        mSongAdapter = new TopSongPopularAdapter(getActivity(), this, new ArrayList<Song>());
+        topPopularSongsRecyclerView.setAdapter(mSongAdapter);
 
-        songListLiveData = songRepository.getAllSongs();
-        songListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
+        mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<Album>());
+        topPopularAlbumsRecyclerView.setAdapter(mAlbumAdapter);
+
+        popular_songListLiveData = songRepository.getTopPopularitySongs();
+        popular_albumListLiveData = albumRepository.getTopPopularityAlbums();
+
+        popular_songListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
             @Override
             public void onChanged(List<Song> songs) {
                 if (songs != null) {
-                    mAdapter.setmDataList(songs);
-                    Log.i("Cap nhat list songs","cap nhat");
+                    mSongAdapter.setmDataList(songs);
+                    Log.i("Cap nhat list songs POPULAR","cap nhat");
+                    songs.forEach(s -> System.out.println(s.toString()));
+                }
+            }
+        });
+        popular_albumListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Album>>() {
+            @Override
+            public void onChanged(List<Album> albums) {
+                if (albums != null) {
+                    mAlbumAdapter.setmDataList(albums);
+                    Log.i("Cap nhat list Albums POPULAR" ,"cap nhat");
+                    albums.forEach(s -> System.out.println(s.toString()));
                 }
             }
         });

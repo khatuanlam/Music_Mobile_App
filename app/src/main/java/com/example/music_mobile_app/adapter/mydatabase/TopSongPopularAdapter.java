@@ -1,7 +1,6 @@
 package com.example.music_mobile_app.adapter.mydatabase;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,38 +16,13 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.mydatabase.Song;
 
 import java.util.List;
-import java.util.Random;
 
-import kaaes.spotify.webapi.android.models.AlbumSimple;
-
-public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.TopSongViewHolder> {
+public class TopSongPopularAdapter extends RecyclerView.Adapter<TopSongPopularAdapter.TopSongViewHolder> {
     private Fragment fragment;
     private List<Song> mDataList;
-    private String[] randomBackgroundColors = {
-            "#FFB3BA",
-            "#FFDFBA",
-            "#FFFFBA",
-            "#BAFFC9",
-            "#BAE1FF",
-            "#D8BAFF",
-            "#FFD8FC",
-            "#B3E6FF",
-            "#BAFFC9",
-            "#FFDFBA",
-            "#FFB3BA",
-            "#FFFFBA",
-            "#BAE1FF",
-            "#BAFFC9",
-            "#D8BAFF",
-            "#FFD8FC",
-            "#B3E6FF",
-            "#BAFFC9",
-            "#FFDFBA",
-            "#FFB3BA"
-    };
     private Context context;
 
-    public TopSongAdapter(Context context, Fragment fragment, List<Song> dataList) {
+    public TopSongPopularAdapter(Context context, Fragment fragment, List<Song> dataList) {
         this.context = context;
         this.fragment = fragment;
         mDataList = dataList;
@@ -64,7 +37,7 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.TopSongV
     @Override
     public TopSongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mydb_list_item_search_song, parent, false);
+                .inflate(R.layout.mydb_list_item_top_popular, parent, false);
         return new TopSongViewHolder(view);
     }
 
@@ -82,26 +55,22 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.TopSongV
     public class TopSongViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView imageView;
-        public CardView cardView;
+
 
         public TopSongViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.list_item_search_genre_textview);
-            imageView = itemView.findViewById(R.id.list_item_search_genre_imageview);
-            cardView = itemView.findViewById(R.id.list_item_search_genre_cardview);
+            textView = itemView.findViewById(R.id.list_item_top_popular_textview);
+            imageView = itemView.findViewById(R.id.mydb_list_item_top_popular_imageview);
         }
 
-        public void bind(Song song) {
-            textView.setText(song.getName());
-            if (song.getImage() != null && !song.getImage().isEmpty()) {
+        public void bind(Song t) {
+            textView.setText(t.getName());
+            if (t.getImage() != null && !t.getImage().isEmpty()) {
                 Glide.with(fragment)
-                        .load(song.getImage())
+                        .load(t.getImage())
                         .into(imageView);
             }
 
-            Integer i = new Random().nextInt(randomBackgroundColors.length);
-            String color = randomBackgroundColors[i];
-            cardView.setCardBackgroundColor(Color.parseColor(color));
         }
     }
 

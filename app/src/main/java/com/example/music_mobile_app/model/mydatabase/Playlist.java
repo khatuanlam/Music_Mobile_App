@@ -9,25 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Song {
+public class Playlist {
 
     public Long id;
+
 
     public String name;
 
 
-    public String image;
+    public String createDate;
 
-
-    public String urlLyric;
-
-
-    public String urlSong;
-
-    public Integer popularity;
-
-    public String releaseDate;
 
     public Boolean isActive;
-
 }

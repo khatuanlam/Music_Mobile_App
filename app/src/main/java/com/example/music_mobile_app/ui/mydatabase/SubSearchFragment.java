@@ -64,9 +64,9 @@ public class SubSearchFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainFragment searchFragment = new MainFragment();
+                MainFragment mainFragment = new MainFragment();
                 manager.beginTransaction()
-                        .replace(R.id.fragment, searchFragment)
+                        .replace(R.id.fragment, mainFragment)
                         .commit();
 
             }
