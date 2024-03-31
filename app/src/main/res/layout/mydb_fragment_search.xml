@@ -70,7 +70,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp" />
 
-                            <!--                    <include layout="@layout/recently_played_music"></include>-->
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -103,8 +103,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp" />
 
-                            <!--                    <include layout="@layout/recently_played_music"></include>-->
-                            <!--                    <include layout="@layout/recently_played_music"></include>-->
 
                         </LinearLayout>
 
@@ -126,19 +124,18 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="1dp"
-                                android:text="Your Top Collection"
+                                android:text="Bài hát đã thích"
                                 android:textAlignment="center"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
                             <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/mydb_main_top_tracks"
+                                android:id="@+id/mydb_main_favorite_songs_recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp" />
 
-                            <!--                    <include layout="@layout/recently_played_music"></include>-->
 
                         </LinearLayout>
 

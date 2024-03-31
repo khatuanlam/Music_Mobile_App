@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mydb_menu_item_song_addFavorite"
+        android:title="Add to favorite"/>
+    <item
+        android:id="@+id/mydb_menu_item_song_removeFavorite"
+        android:title="Remove favorite"/>
+    <item
+        android:id="@+id/mydb_menu_item_song_download"
+        android:title="Download"/>
+</menu>

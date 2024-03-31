@@ -16,4 +16,9 @@ public interface SongRepository {
     LiveData<Song> getSongById(long id);
 
     LiveData<List<Song>> getTopPopularitySongs();
+
+    LiveData<List<Song>> getAllFavoriteSongsFromIdUser(long idUser);
+
+    LiveData<List<Song>> postFavoriteSongToUser(long idSong, long idUser);
+    LiveData<List<Song>> deleteFavoriteSongByIdUser(long idSong, long idUser);
 }

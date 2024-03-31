@@ -1,11 +1,15 @@
 package com.example.music_mobile_app.adapter.mydatabase;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -56,14 +60,51 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         public TextView textView;
         public ImageView imageView;
 
+        public ImageView moreVert;
+
+        public Song song;
+
 
         public SongViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.mydb_list_item_song_songNameTextView);
             imageView = itemView.findViewById(R.id.mydb_list_item_song_imageView);
-        }
+            moreVert = itemView.findViewById(R.id.mydb_list_item_song_more);
 
+            moreVert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(view);
+                }
+            });
+
+        }
+        private void showPopupMenu(View view) {
+            PopupMenu popupMenu = new PopupMenu(context, view);
+            popupMenu.inflate(R.menu.mydb_list_item_song); // Assuming you have defined a menu resource file named song_menu.xml
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.mydb_menu_item_song_addFavorite:
+                            Toast.makeText(context, song.getName() + "add favorite", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.mydb_menu_item_song_removeFavorite:
+                            Toast.makeText(context, song.getName() + "remove favorite", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.mydb_menu_item_song_download:
+                            Toast.makeText(context, song.getName() +"download favorite", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        }
         public void bind(Song song) {
+            this.song = song;
             textView.setText(song.getName());
             if (song.getImage() != null && !song.getImage().isEmpty()) {
                 Glide.with(fragment)

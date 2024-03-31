@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.TopAlbumPopularAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.TopFavoriteSongAdapter;
 import com.example.music_mobile_app.adapter.mydatabase.TopSongPopularAdapter;
 import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Song;
@@ -33,6 +34,8 @@ public class MainFragment extends Fragment {
     private EditText editText;
 
     private TopSongPopularAdapter mSongAdapter;
+
+    private TopFavoriteSongAdapter mFavoriteSongAdapter;
     private TopAlbumPopularAdapter mAlbumAdapter;
     private FragmentManager manager;
     private SongRepository songRepository;
@@ -40,8 +43,10 @@ public class MainFragment extends Fragment {
     private LiveData<List<Song>> popular_songListLiveData;
     private LiveData<List<Album>> popular_albumListLiveData;
 
+    private LiveData<List<Song>> favorite_songListLiveData;
 
     private RecyclerView topPopularSongsRecyclerView;
+    private RecyclerView favoriteSongsRecyclerView;
     private RecyclerView topPopularAlbumsRecyclerView;
 
     @Override
@@ -61,9 +66,14 @@ public class MainFragment extends Fragment {
 
         topPopularSongsRecyclerView = view.findViewById(R.id.mydb_main_top_popular_songs_recyclerView);
         topPopularAlbumsRecyclerView = view.findViewById(R.id.mydb_main_top_popular_albums_recyclerView);
+        favoriteSongsRecyclerView = view.findViewById(R.id.mydb_main_favorite_songs_recyclerView);
+
 
         LinearLayoutManager topsong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         topPopularSongsRecyclerView.setLayoutManager(topsong_layoutManager);
+
+        LinearLayoutManager favoritesong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        favoriteSongsRecyclerView.setLayoutManager(favoritesong_layoutManager);
 
         LinearLayoutManager topalbum_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         topPopularAlbumsRecyclerView.setLayoutManager(topalbum_layoutManager);
@@ -75,15 +85,20 @@ public class MainFragment extends Fragment {
         mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<Album>());
         topPopularAlbumsRecyclerView.setAdapter(mAlbumAdapter);
 
+        mFavoriteSongAdapter = new TopFavoriteSongAdapter(getActivity(), this, new ArrayList<>());
+        favoriteSongsRecyclerView.setAdapter(mFavoriteSongAdapter);
+
         popular_songListLiveData = songRepository.getTopPopularitySongs();
         popular_albumListLiveData = albumRepository.getTopPopularityAlbums();
+
+        favorite_songListLiveData = songRepository.getAllFavoriteSongsFromIdUser(1);
 
         popular_songListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
             @Override
             public void onChanged(List<Song> songs) {
                 if (songs != null) {
                     mSongAdapter.setmDataList(songs);
-                    Log.i("Cap nhat list songs POPULAR","cap nhat");
+                    Log.i("SONG POPULAR","cap nhat");
                     songs.forEach(s -> System.out.println(s.toString()));
                 }
             }
@@ -93,12 +108,21 @@ public class MainFragment extends Fragment {
             public void onChanged(List<Album> albums) {
                 if (albums != null) {
                     mAlbumAdapter.setmDataList(albums);
-                    Log.i("Cap nhat list Albums POPULAR" ,"cap nhat");
+                    Log.i("ALBUM POPULAR" ,"cap nhat");
                     albums.forEach(s -> System.out.println(s.toString()));
                 }
             }
         });
-
+        favorite_songListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
+            @Override
+            public void onChanged(List<Song> songs) {
+                if (songs != null) {
+                    mFavoriteSongAdapter.setmDataList(songs);
+                    Log.i("UPDATE FAVORITE","cap nhat");
+                    songs.forEach(s -> System.out.println(s.toString()));
+                }
+            }
+        });
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

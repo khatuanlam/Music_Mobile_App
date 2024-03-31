@@ -6,7 +6,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -22,6 +24,14 @@ public interface SongService {
 
     @GET("/Song/Playlist/{id}")
     Call<List<Song>> getAllSongsFromPlaylist(@Path("id") long id);
+
+    @GET("/Song/Favorite/{id}")
+    Call<List<Song>> getAllFavoriteSongsFromIdUser(@Path("id") long id);
+    @POST("/Song/AddFavorite/{idSong}/{idUser}")
+    Call<List<Song>> postFavoriteSongToUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
+
+    @DELETE("/Song/DeleteFavorite/{idSong}/{idUser}")
+    Call<List<Song>> deleteFavoriteSongByIdUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
     @GET("/Song/TopPopularity")
     Call<List<Song>> getTopPopularSongs(@Query("page") int page, @Query("size") int size);
 }

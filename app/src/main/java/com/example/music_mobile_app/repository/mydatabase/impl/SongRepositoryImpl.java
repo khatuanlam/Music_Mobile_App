@@ -28,6 +28,9 @@ public class SongRepositoryImpl implements SongRepository {
     private MutableLiveData<List<Song>> popular_songListLiveData = new MutableLiveData<>();
     private MutableLiveData<List<Song>> album_songListLiveData = new MutableLiveData<>();
     private MutableLiveData<List<Song>> playlist_songListLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<Song>> favorite_songListLiveData = new MutableLiveData<>();
+
     private MutableLiveData<Song> songById = new MutableLiveData<>();
 
     @Override
@@ -143,5 +146,38 @@ public class SongRepositoryImpl implements SongRepository {
             }
         });
         return popular_songListLiveData;
+    }
+
+    @Override
+    public LiveData<List<Song>> getAllFavoriteSongsFromIdUser(long idUser) {
+        SongService songService = retrofit.create(SongService.class);
+        Call<List<Song>> call = songService.getAllFavoriteSongsFromIdUser(idUser);
+        call.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                if (response.isSuccessful()) {
+                    favorite_songListLiveData.setValue(response.body());
+                } else {
+                    Log.i("getAllFavoriteSongsFromIdUser","LOI");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Song>> call, Throwable t) {
+                Log.i("getTopPopularitySongs","that bai");
+                Log.i("getTopPopularitySongs",t.getMessage());
+            }
+        });
+        return favorite_songListLiveData;
+    }
+
+    @Override
+    public LiveData<List<Song>> postFavoriteSongToUser(long idSong, long idUser) {
+        return null;
+    }
+
+    @Override
+    public LiveData<List<Song>> deleteFavoriteSongByIdUser(long idSong, long idUser) {
+        return null;
     }
 }
