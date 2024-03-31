@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,14 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.RecentlyTracksAdapter;
-import com.example.music_mobile_app.adapter.RecommendAdapter;
-import com.example.music_mobile_app.adapter.TopTracksAdapter;
+import com.example.music_mobile_app.adapter.ItemAdapter;
 import com.example.music_mobile_app.manager.ListManager;
-import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.network.mSpotifyService;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +28,11 @@ import java.util.Map;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Recommendations;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit.client.Response;
@@ -46,20 +44,16 @@ public class HomeFragment extends Fragment {
     private RecyclerView recentlyTracksRecyclerView;
     private RecyclerView recommendationsRecyclerView;
     private RecyclerView topTracksRecyclerView;
-    private MethodsManager methodsManager;
+    private RecyclerView albumsRecycleView;
 
-    final ListManager listManager = ListManager.getInstance();
-    private static RecommendAdapter recommendAdapter;
-    private static TopTracksAdapter topTracksAdapter;
+    public final ListManager listManager = MainActivity.listManager;
 
-    private static RecentlyTracksAdapter recentlyTracksAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FragmentManager manager = getParentFragmentManager();
-        methodsManager = new MethodsManager();
     }
 
     @Nullable
@@ -70,21 +64,32 @@ public class HomeFragment extends Fragment {
         recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
         topTracksRecyclerView = view.findViewById(R.id.top_tracks);
+        albumsRecycleView = view.findViewById(R.id.top_albums);
+
 
         LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager albums_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
 
         recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
         recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
         topTracksRecyclerView.setLayoutManager(topTracks_layout);
+        albumsRecycleView.setLayoutManager(albums_layout);
 
-        setRecommendations();
-        setTopTracks();
-        setRecentlyTracks();
+        updateUI();
 
         return view;
     }
+
+    private void updateUI() {
+        setRecommendations();
+        setTopTracks();
+        setRecentlyTracks();
+        setAlbums();
+    }
+
 
     private void setRecentlyTracks() {
 
@@ -95,8 +100,8 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<Pager<Track>> call, retrofit2.Response<Pager<Track>> response) {
                 if (response.isSuccessful()) {
                     List<Track> mList = response.body().items;
-                    RecentlyTracksAdapter recentlyTracksAdapter = new RecentlyTracksAdapter(mList, getParentFragment());
-                    recentlyTracksRecyclerView.setAdapter(recentlyTracksAdapter);
+                    ItemAdapter adapter = new ItemAdapter(mList, null, getParentFragment());
+                    recentlyTracksRecyclerView.setAdapter(adapter);
                 }
             }
 
@@ -132,17 +137,16 @@ public class HomeFragment extends Fragment {
                 }
             });
             Log.d(TAG, "setRecommendations: " + listTracks.size());
+        } else {
+            ItemAdapter adapter = new ItemAdapter(listTracks, new ArrayList<>(), getParentFragment());
+            adapter.notifyDataSetChanged();
+            recommendationsRecyclerView.setAdapter(adapter);
         }
-        recommendAdapter = new RecommendAdapter(listTracks, getParentFragment());
-        recommendAdapter.notifyDataSetChanged();
-
-        recommendationsRecyclerView.setAdapter(recommendAdapter);
     }
 
     private void setTopTracks() {
 
         List<Track> listTracks = listManager.getTopTracks();
-
         if (listTracks.isEmpty()) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 10);
@@ -160,11 +164,39 @@ public class HomeFragment extends Fragment {
                     setTopTracks();
                 }
             });
+        } else {
+            ItemAdapter adapter = new ItemAdapter(listTracks, new ArrayList<>(), getParentFragment());
+            adapter.notifyDataSetChanged();
+            topTracksRecyclerView.setAdapter(adapter);
         }
-        topTracksAdapter = new TopTracksAdapter(listTracks, getParentFragment());
-        topTracksAdapter.notifyDataSetChanged();
-
-        topTracksRecyclerView.setAdapter(topTracksAdapter);
     }
 
+
+    private void setAlbums() {
+
+        List<AlbumSimple> listAlbums = listManager.getFavoriteAlbums();
+        if (listAlbums.isEmpty()) {
+            Map<String, Object> options = new HashMap<>();
+            options.put(SpotifyService.LIMIT, 12);
+            spotifyService.getNewReleases(options, new SpotifyCallback<NewReleases>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, spotifyError.getErrorDetails().message);
+                }
+
+                @Override
+                public void success(NewReleases newReleases, Response response) {
+                    Log.d(TAG, "Get new album ");
+                    List<AlbumSimple> mList = newReleases.albums.items;
+                    listManager.setAlbums(mList);
+                    setAlbums();
+                }
+            });
+        } else {
+            ItemAdapter adapter = new ItemAdapter(new ArrayList<>(), listAlbums, getParentFragment());
+            adapter.notifyDataSetChanged();
+            albumsRecycleView.setAdapter(adapter);
+        }
+
+    }
 }

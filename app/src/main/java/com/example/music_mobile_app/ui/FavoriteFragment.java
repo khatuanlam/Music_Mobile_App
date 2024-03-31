@@ -21,7 +21,6 @@ import com.example.music_mobile_app.R;
 
 public class FavoriteFragment extends Fragment {
 
-
     public FavoriteFragment() {
         // Required empty public constructor
     }

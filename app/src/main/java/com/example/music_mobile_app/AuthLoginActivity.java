@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -21,7 +20,7 @@ public class AuthLoginActivity extends FragmentActivity {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String CLIENT_ID = "95fe47fe6b524ab2ba54354da461321a";
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String REDIRECT_URI = "http://localhost:8888/callback";
+    public static final String REDIRECT_URI = "http://localhost:8888/callback/v1";
 
     private static final String TAG = "Spotify " + AuthLoginActivity.class.getSimpleName();
 
@@ -44,7 +43,11 @@ public class AuthLoginActivity extends FragmentActivity {
         AuthorizationRequest.Builder builder =
                 new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
 
-        builder.setScopes(new String[]{"user-read-private", "streaming", "user-top-read", "user-read-recently-played"});
+        builder.setScopes(new String[]{"streaming",
+                "user-read-private", "user-top-read", "user-read-recently-played",
+                "playlist-modify-public", "playlist-read-private", " playlist-modify-private",
+                "user-library-read", "user-read-playback-state", "user-modify-playback-state", "user-read-currently-playing"});
+
         AuthorizationRequest request = builder.build();
 
         AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request);

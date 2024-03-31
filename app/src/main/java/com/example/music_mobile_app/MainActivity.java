@@ -1,18 +1,20 @@
 package com.example.music_mobile_app;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.example.music_mobile_app.model.User;
-import com.example.music_mobile_app.model.UserImage;
+import com.example.music_mobile_app.manager.ListManager;
+
+import kaaes.spotify.webapi.android.models.Image;
+
+import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.network.mSpotifyService;
 import com.example.music_mobile_app.ui.MainFragment;
 import com.google.android.gms.ads.MobileAds;
@@ -22,10 +24,10 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public class MainActivity extends FragmentActivity {
 
@@ -33,11 +35,15 @@ public class MainActivity extends FragmentActivity {
     public static SpotifyService spotifyService;
     public static String authToken;
 
+    public static final ListManager listManager = ListManager.getInstance();
+    public static final VariableManager varManager = VariableManager.getInstance();
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -45,58 +51,57 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-
-
-        setContentView(R.layout.activity_main);
-
         FragmentManager manager = getSupportFragmentManager();
-
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
+        setServiceAPI();
+        getUserProfile();
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
-        setServiceAPI();
-
-        getUserProfile();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        setContentView(R.layout.activity_main);
+        
+    }
 
     private void getUserProfile() {
-        mSpotifyService.getUserProfile(new Callback<User>() {
+        spotifyService.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    User userProfile = response.body();
-                    if (userProfile != null) {
-                        String displayName = userProfile.getDisplayName();
-                        String imageUrl = null;
-                        List<UserImage> images = userProfile.getImages();
-                        if (images != null && !images.isEmpty()) {
-                            // Choose the first image as default
-                            UserImage largestImage = images.get(0);
-
-                            // Iterate through images to find a larger one
-                            for (UserImage image : images) {
-                                if (image.getWidth() > largestImage.getWidth() && image.getHeight() > largestImage.getHeight()) {
-                                    largestImage = image;
-                                }
-                            }
-                            imageUrl = largestImage.getUrl();
-                        }
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("displayName", displayName);
-                        editor.putString("imageUrl", imageUrl);
-                        editor.apply();
-                    }
-                }
+            public void failure(SpotifyError spotifyError) {
+                Log.e(TAG, spotifyError.getErrorDetails().message);
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e(TAG, "Failed to get user profile", t);
+            public void success(UserPrivate userPrivate, retrofit.client.Response response) {
 
+                UserPrivate userProfile = userPrivate;
+                if (userProfile != null) {
+                    String displayName = userProfile.display_name;
+                    String imageUrl = null;
+                    List<Image> images = userProfile.images;
+                    if (images != null && !images.isEmpty()) {
+                        // Choose the first image as default
+                        Image largestImage = images.get(0);
+
+                        // Iterate through images to find a larger one
+                        for (Image image : images) {
+                            if (image.width > largestImage.height && image.height > largestImage.height) {
+                                largestImage = image;
+                            }
+                        }
+                        imageUrl = largestImage.url;
+                    }
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("displayName", displayName);
+                    editor.putString("imageUrl", imageUrl);
+                    editor.putString("userId", userProfile.id);
+                    editor.apply();
+                }
             }
         });
     }

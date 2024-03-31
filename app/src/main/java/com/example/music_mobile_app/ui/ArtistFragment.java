@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,25 @@ import android.widget.TextView;
 
 import com.example.music_mobile_app.R;
 
-public class ArtistFragment extends Fragment {
-    ImageView artistAvatar;
-    LinearLayout content_container;
-    private Drawable backgroundDrawable;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+import retrofit.client.Response;
 
+public class ArtistFragment extends Fragment {
+
+    private final String TAG = this.getClass().getSimpleName();
+    private ImageView artistAvatar;
+    private LinearLayout content_container;
+    private Drawable backgroundDrawable;
     private TextView artistName;
     private TextView listeners;
     private ImageView artistImage;
     private Button playMusic;
     private RecyclerView recyclerView;
+    private static SpotifyService spotifyService;
+
 
     public ArtistFragment() {
     }
@@ -39,7 +49,7 @@ public class ArtistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getParentFragmentManager();
 
     }
 
@@ -48,7 +58,30 @@ public class ArtistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
+        artistName = view.findViewById(R.id.textArtistName);
+        artistImage = view.findViewById(R.id.artistAvatar);
+        listeners = view.findViewById(R.id.followerNumber);
+        artistImage = view.findViewById(R.id.artistAvatar);
+//        overflowMenu = view.findViewById(R.id.overflowArtistButton);
+        playMusic = view.findViewById(R.id.playAristButton);
+        recyclerView = view.findViewById(R.id.recyclerArtistMusicView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return view;
+    }
+
+    private void getArtistInfo(String artistId) {
+        spotifyService.getArtist(artistId, new SpotifyCallback<Artist>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e(TAG, " ");
+            }
+
+            @Override
+            public void success(Artist artist, Response response) {
+
+            }
+        });
     }
 
 }

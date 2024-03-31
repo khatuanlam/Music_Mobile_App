@@ -4,20 +4,38 @@ package com.example.music_mobile_app.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListManager {
 
     private static ListManager listManager;
 
-    private List<Track> trackLists;
+    private List<PlaylistSimple> playlistList;
+
 
     private List<Track> recentlyTracks;
 
     private List<Track> recommendTracks;
 
     private List<Track> topTracks;
+    private List<AlbumSimple> albums;
+    private List<Track> albumTracks;
 
+
+    public List<AlbumSimple> getAlbums() {
+        return albums;
+    }
+
+    public List<Track> getAlbumTracks() {
+        return albumTracks;
+    }
+
+    public void setAlbumTracks(List<Track> albumTracks) {
+        this.albumTracks = albumTracks;
+    }
 
     public static ListManager getInstance() {
         if (listManager == null) {
@@ -27,10 +45,28 @@ public class ListManager {
     }
 
     public ListManager() {
-        trackLists = new ArrayList<>();
+        playlistList = new ArrayList<>();
         recentlyTracks = new ArrayList<>();
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
+        albums = new ArrayList<>();
+        albumTracks = new ArrayList<>();
+    }
+
+    public List<AlbumSimple> getFavoriteAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<AlbumSimple> albums) {
+        this.albums = albums;
+    }
+
+    public List<PlaylistSimple> getPlaylistList() {
+        return playlistList;
+    }
+
+    public void setPlaylistList(List<PlaylistSimple> playlistList) {
+        this.playlistList = playlistList;
     }
 
     public static void setListManager(ListManager listManager) {
@@ -45,13 +81,6 @@ public class ListManager {
         this.topTracks = topTracks;
     }
 
-    public List<Track> getTrackLists() {
-        return trackLists;
-    }
-
-    public void setTrackLists(List<Track> trackLists) {
-        this.trackLists = trackLists;
-    }
 
     public List<Track> getRecentlyTracks() {
         return recentlyTracks;
@@ -68,4 +97,9 @@ public class ListManager {
     public void setRecommendTracks(List<Track> recommendTracks) {
         this.recommendTracks = recommendTracks;
     }
+
+    public static ListManager getListManager() {
+        return listManager;
+    }
+
 }

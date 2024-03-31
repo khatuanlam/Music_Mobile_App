@@ -11,10 +11,10 @@
         android:id="@+id/imageViewLogo"
         android:layout_width="109dp"
         android:layout_height="94dp"
+        android:src="@drawable/spotify_white_icon_login"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/spotify_white_icon_login" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewSlogan"
