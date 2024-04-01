@@ -9,7 +9,6 @@
 
     <!-- Đường viền của button -->
     <stroke
-        android:color="#8F8F8F"
         android:width="1dp"
-        />
+        android:color="#8F8F8F" />
 </shape>

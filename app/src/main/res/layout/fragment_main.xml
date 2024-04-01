@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:background="@color/colorBottomNavBar"
+            android:background="@color/colorTransparent"
             android:orientation="horizontal"
             android:padding="10dp">
 
@@ -149,12 +149,12 @@
                     android:background="@drawable/ic_download_black_24dp" />
 
                 <TextView
-                    android:id="@+id/nav_download_text"
+                    android:id="@+id/nav_extension_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="-4dp"
-                    android:text="Download"
+                    android:text="Extension"
                     android:textAlignment="center"
                     android:textColor="@color/colorNavIcon"
                     android:textSize="12sp" />

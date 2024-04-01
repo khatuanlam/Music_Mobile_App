@@ -31,6 +31,14 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.gson.Gson;
 import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+//import com.spotify.android.appremote.api.Connector;
+//import com.spotify.android.appremote.api.SpotifyAppRemote;
+//import com.spotify.android.appremote.api.AppRemote;
+
+
+//import com.spotify.protocol.types.PlayerState;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,6 +59,8 @@ public class PlayTrackActivity extends FragmentActivity {
 
     private Track detailTrack;
 
+    SpotifyAppRemote mSpotifyAppRemote;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +74,74 @@ public class PlayTrackActivity extends FragmentActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString("AUTH_TOKEN", "");
+
+
+//        if (mPlayer == null) {
+//            Config playerConfig = new Config(this, authToken, LoginActivity.CLIENT_ID);
+//
+//            Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
+//
+//                @Override
+//                public void onInitialized(SpotifyPlayer spotifyPlayer) {
+//                    Log.d(TAG, "-- Player initialized --");
+//                    mPlayer = spotifyPlayer;
+//                    mPlayer.addConnectionStateCallback(PlayTrackActivity.this);
+//                    btn_play.setOnClickListener(v -> {
+//                        mPlayer.playUri(new Player.OperationCallback() {
+//                            @Override
+//                            public void onSuccess() {
+//                                logMessage("onSuccess: ", 10);
+//                            }
+//
+//                            @Override
+//                            public void onError(Error error) {
+//                                logMessage(error + "", 10);
+//                            }
+//                        }, detailTrack.uri, 0, 0);
+//                    });
+//
+//                    logMessage("pppp", 10);
+//
+//                    Log.d(TAG, "AccessToken: " + authToken);
+//                    // Set API
+//                }
+//
+//                @Override
+//                public void onError(Throwable throwable) {
+//                    Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
+//                }
+//            });
+//        } else {
+//            mPlayer.login(authToken);
+//        }
+
+        ConnectionParams connectionParams =
+                new ConnectionParams.Builder(AuthLoginActivity.CLIENT_ID)
+                        .setRedirectUri(AuthLoginActivity.REDIRECT_URI)
+                        .showAuthView(true)
+                        .build();
+
+        SpotifyAppRemote.connect(this, connectionParams,
+                new Connector.ConnectionListener() {
+
+                    @Override
+                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                        mSpotifyAppRemote = spotifyAppRemote;
+                        Log.d("MainActivity", "Connected! Yay!");
+
+                        // Now you can start interacting with App Remote
+                        // Play a playlist
+                        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL");
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.e("MainActivity", throwable.getMessage(), throwable);
+
+                        // Something went wrong when attempting to connect! Handle errors here
+                    }
+                });
+
 
         btn_back.setOnClickListener(v ->
         {

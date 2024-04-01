@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditAccountActivity extends FragmentActivity {
+public class EditAccountActivity extends AppCompatActivity {
 
     private static final String TAG = "EditAccountActivity";
     ShapeableImageView imageViewAvt;
@@ -51,6 +52,12 @@ public class EditAccountActivity extends FragmentActivity {
 
 
 //        // Căn giữa tiêu đề
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.background_register));
+
+
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
 //        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
