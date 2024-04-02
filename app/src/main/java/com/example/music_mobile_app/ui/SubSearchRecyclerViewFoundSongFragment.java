@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.CombinedRecyclerViewAdapter;
+import com.example.music_mobile_app.adapter.SearchAlbumAdapter;
 import com.example.music_mobile_app.adapter.SearchArtistAdapter;
 import com.example.music_mobile_app.adapter.SearchTrackAdapter;
 

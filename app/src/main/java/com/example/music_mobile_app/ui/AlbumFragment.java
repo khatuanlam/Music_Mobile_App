@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class AlbumFragment extends Fragment {
 
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private final String TAG = this.getClass().getSimpleName();
-    private ImageView albumImage;
+    private ImageView albumImage, backBtn;
     private FrameLayout frameLayout;
     private Drawable backgroundDrawable;
     private RecyclerView recyclerView;
@@ -80,10 +81,15 @@ public class AlbumFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
+        // Show header
+        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        header.setVisibility(View.GONE);
+
         albumImage = view.findViewById(R.id.albumImage);
         albumArtist = view.findViewById(R.id.albumArtist);
         albumYear = view.findViewById(R.id.albumYear);
         albumName = view.findViewById(R.id.albumName);
+        backBtn = view.findViewById(R.id.backButton);
 
         frameLayout = view.findViewById(R.id.fragment_container);
         backgroundDrawable = frameLayout.getBackground();

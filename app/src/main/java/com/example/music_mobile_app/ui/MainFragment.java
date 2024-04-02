@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +22,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.AccountActivity;
-import com.example.music_mobile_app.AuthLoginActivity;
-import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.IconNavbar;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -69,6 +68,7 @@ public class MainFragment extends Fragment {
         searchText = view.findViewById(R.id.nav_search_text);
         downloadText = view.findViewById(R.id.nav_extension_text);
 
+
         homeLayout.setOnClickListener(mListener);
         favoriteLayout.setOnClickListener(mListener);
         searchLayout.setOnClickListener(mListener);
@@ -78,14 +78,11 @@ public class MainFragment extends Fragment {
         account = view.findViewById(R.id.avt);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
-        Intent intent = new Intent(getActivity(), AccountActivity.class);
+
         account.setOnClickListener(v -> {
-            startActivity(intent);
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.addToBackStack(null).replace(R.id.fragment, new AccountFragment()).commit();
         });
-
-        // Home
-        manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
-
 
         return view;
     }
@@ -95,6 +92,8 @@ public class MainFragment extends Fragment {
         public void onClick(View view) {
             // Add animation here
             FragmentTransaction transaction = manager.beginTransaction().setCustomAnimations(0, 0);
+
+            // All main fragment
             switch (view.getId()) {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");

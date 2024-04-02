@@ -1,32 +1,35 @@
-package com.example.music_mobile_app;
+package com.example.music_mobile_app.ui;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.music_mobile_app.AuthLoginActivity;
+import com.example.music_mobile_app.EditAccountActivity;
+import com.example.music_mobile_app.MainActivity;
+import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
-import com.example.music_mobile_app.ui.AlbumFragment;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
 import java.util.ArrayList;
@@ -45,7 +48,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class AccountActivity extends AppCompatActivity {
+public class AccountFragment extends Fragment {
 
     public final String TAG = this.getClass().getSimpleName();
     private CircleImageView imageAvt;
@@ -57,50 +60,55 @@ public class AccountActivity extends AppCompatActivity {
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private ListManager listManager = MainActivity.listManager;
 
+    private FragmentManager manager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
-
-        // Căn giữa tiêu đề
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.purple_50)));
+        manager = getParentFragmentManager();
+    }
 
 
-        imageAvt = findViewById(R.id.imageAvt);
-        tvName = findViewById(R.id.textViewName);
-        recyclerView = findViewById(R.id.playlist_recyclerview);
-        btnEditAccount = findViewById(R.id.buttonEditAccount);
-        btnLogout = findViewById(R.id.buttonLogout);
-        btnCreatePlaylist = findViewById(R.id.btn_create_playlist);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+
+        //Hide header
+        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        header.setVisibility(View.GONE);
+
+        imageAvt = view.findViewById(R.id.account_imageAvt);
+        tvName = view.findViewById(R.id.textViewName);
+        recyclerView = view.findViewById(R.id.playlist_recyclerview);
+        btnEditAccount = view.findViewById(R.id.buttonEditAccount);
+        btnLogout = view.findViewById(R.id.buttonLogout);
+        btnCreatePlaylist = view.findViewById(R.id.btn_create_playlist);
+
+
+        prepareData();
+        setPlaylist();
+
 
         //Onclick RegisterFree
         btnEditAccount.setOnClickListener(v -> {
-            Intent intent = new Intent(AccountActivity.this, EditAccountActivity.class);
+            Intent intent = new Intent(getActivity(), EditAccountActivity.class);
             startActivity(intent);
         });
 
         // Log out
         btnLogout.setOnClickListener(v -> {
-            AuthorizationClient.clearCookies(getBaseContext());
+            listManager.clear();
+            AuthorizationClient.clearCookies(getContext());
             Log.d(TAG, "Logging out...");
-            Intent intent = new Intent(this, AuthLoginActivity.class);
+            Intent intent = new Intent(getActivity(), AuthLoginActivity.class);
             startActivity(intent);
-
         });
-
         // Create playlist
         btnCreatePlaylist.setOnClickListener(v -> {
             showAddDialog();
         });
-
-        prepareData();
-
-        setPlaylist();
-
+        return view;
     }
 
     // Xử lý sự kiện khi nút quay lại được nhấn
@@ -108,34 +116,34 @@ public class AccountActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                manager.popBackStack();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void goToDetailPlaylist() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.layout_account, new AlbumFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+//    private void goToDetailPlaylist() {
+//        FragmentManager fragmentManager = getParentFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.layout_account, new AlbumFragment());
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//    }
 
     private void prepareData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String image = sharedPreferences.getString("imageUrl", "None");
         String name = sharedPreferences.getString("displayName", "None");
         tvName.setText(name);
         Glide.with(this).load(image).into(imageAvt);
-        LinearLayoutManager playList_layout = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager playList_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(playList_layout);
     }
 
     private void showAddDialog() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = getLayoutInflater();
         View addView = inflater.inflate(R.layout.dialog_new_playlist, null);
 
@@ -155,7 +163,6 @@ public class AccountActivity extends AppCompatActivity {
             alertDialog.dismiss();
         });
 
-
         btnExit.setOnClickListener(v -> {
             alertDialog.dismiss();
         });
@@ -171,7 +178,7 @@ public class AccountActivity extends AppCompatActivity {
         options.put("public", true);
 
         // Get user information
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
         spotifyService.createPlaylist(USER_ID, options, new Callback<Playlist>() {
             @Override
@@ -191,30 +198,30 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void setPlaylist() {
-//        List<PlaylistSimple> playlistsList = listManager.getPlaylistList();
-//
-//        if (playlistsList.isEmpty()) {
-        Map<String, Object> options = new HashMap<>();
-        options.put(SpotifyService.LIMIT, 20);
-        spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "failure: " + spotifyError.getErrorDetails());
-            }
+        List<PlaylistSimple> playlistsList = listManager.getPlaylistList();
 
-            @Override
-            public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-                Log.d(TAG, "Get playlist success: ");
-                List<PlaylistSimple> mList = playlistSimplePager.items;
-                listManager.setPlaylistList(mList);
-                ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), mList, getBaseContext());
-                adapter.notifyDataSetChanged();
+        if (playlistsList.isEmpty()) {
+            Map<String, Object> options = new HashMap<>();
+            options.put(SpotifyService.LIMIT, 20);
+            spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+                }
 
-                recyclerView.setAdapter(adapter);
-            }
-        });
-//        }
+                @Override
+                public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
+                    Log.d(TAG, "Get playlist success: ");
+                    List<PlaylistSimple> mList = playlistSimplePager.items;
+                    listManager.setPlaylistList(mList);
+                    setPlaylist();
+                }
+            });
+        }
+        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), playlistsList, getContext());
+        adapter.notifyDataSetChanged();
+
+        recyclerView.setAdapter(adapter);
 
     }
-
 }

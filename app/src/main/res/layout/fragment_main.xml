@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorTransparent"
@@ -43,13 +44,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--        <TextView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="50dp"-->
-        <!--            android:background="@color/colorBottomNavBar"-->
-        <!--            android:gravity="center"-->
-        <!--            android:text="PLAYER FIELD"-->
-        <!--            android:textColor="#ffffff" />-->
+        <TextView
+            android:id="@+id/playerField"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="PLAYER FIELD"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/navbar"

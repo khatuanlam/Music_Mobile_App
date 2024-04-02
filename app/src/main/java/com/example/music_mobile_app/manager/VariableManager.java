@@ -3,12 +3,14 @@ package com.example.music_mobile_app.manager;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public class VariableManager {
     private static VariableManager variableManager;
     private Album album;
     private Playlist playlist;
     private Artist artist;
+    private UserPrivate user;
 
     public static VariableManager getVariableManager() {
         return variableManager;
@@ -46,8 +48,16 @@ public class VariableManager {
         album = new Album();
         playlist = new Playlist();
         artist = new Artist();
+        user = new UserPrivate();
     }
 
+    public UserPrivate getUser() {
+        return user;
+    }
+
+    public void setUser(UserPrivate user) {
+        this.user = user;
+    }
 
     public static VariableManager getInstance() {
         if (variableManager == null) {

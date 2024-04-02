@@ -12,8 +12,22 @@ public class ListenerManager {
 
         void onError(Throwable error);
     }
+
     public interface ArtistCompleteListener {
         void onComplete(Artist artist);
+
+        void onError(Throwable error);
+    }
+
+    public interface PlaylistCompleteListener {
+        void onComplete();
+
+        void onError(Throwable error);
+    }
+
+    public interface OnCompleteListener {
+        void onComplete();
+
         void onError(Throwable error);
     }
 }

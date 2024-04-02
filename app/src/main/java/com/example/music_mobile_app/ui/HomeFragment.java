@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         FragmentManager manager = getParentFragmentManager();
+
     }
 
     @Nullable
@@ -80,13 +82,17 @@ public class HomeFragment extends Fragment {
 
         updateUI();
 
+        // Show header
+        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        header.setVisibility(View.VISIBLE);
+
         return view;
     }
 
     private void updateUI() {
         setRecommendations();
         setTopTracks();
-        setRecentlyTracks();
+//        setRecentlyTracks();
         setAlbums();
     }
 
@@ -95,7 +101,6 @@ public class HomeFragment extends Fragment {
 
         List<Track> listTracks = listManager.getRecentlyTracks();
         mSpotifyService.getRecentlyTracks(new Callback<Pager<Track>>() {
-
             @Override
             public void onResponse(Call<Pager<Track>> call, retrofit2.Response<Pager<Track>> response) {
                 if (response.isSuccessful()) {
@@ -104,7 +109,6 @@ public class HomeFragment extends Fragment {
                     recentlyTracksRecyclerView.setAdapter(adapter);
                 }
             }
-
             @Override
             public void onFailure(Call<Pager<Track>> call, Throwable t) {
                 Log.e(TAG, "Cannot get recentlyTracks: " + t.getMessage());
@@ -113,9 +117,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setRecommendations() {
-
         List<Track> listTracks = listManager.getRecommendTracks();
-
         if (listTracks.isEmpty()) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 10);
@@ -133,7 +135,7 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void failure(SpotifyError spotifyError) {
-                    Log.e(TAG, "Cannot get recommend " + spotifyError.getErrorDetails());
+                    Log.e(TAG, "Cannot get recommend " + spotifyError.getMessage());
                 }
             });
             Log.d(TAG, "setRecommendations: " + listTracks.size());
@@ -145,23 +147,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void setTopTracks() {
-
         List<Track> listTracks = listManager.getTopTracks();
         if (listTracks.isEmpty()) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 10);
             spotifyService.getTopTracks(options, new SpotifyCallback<Pager<Track>>() {
                 @Override
-                public void failure(SpotifyError spotifyError) {
-                    Log.e(TAG, spotifyError.getErrorDetails().message);
-                }
-
-                @Override
                 public void success(Pager<Track> trackPager, Response response) {
                     Log.d(TAG, "Get top tracks");
                     List<Track> mList = trackPager.items;
                     listManager.setTopTracks(mList);
                     setTopTracks();
+                }
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, "Can't get top track" + spotifyError.getMessage());
                 }
             });
         } else {
@@ -170,8 +170,6 @@ public class HomeFragment extends Fragment {
             topTracksRecyclerView.setAdapter(adapter);
         }
     }
-
-
     private void setAlbums() {
 
         List<AlbumSimple> listAlbums = listManager.getFavoriteAlbums();
@@ -181,7 +179,7 @@ public class HomeFragment extends Fragment {
             spotifyService.getNewReleases(options, new SpotifyCallback<NewReleases>() {
                 @Override
                 public void failure(SpotifyError spotifyError) {
-                    Log.e(TAG, spotifyError.getErrorDetails().message);
+                    Log.e(TAG, "Can't get album " + spotifyError.getMessage());
                 }
 
                 @Override

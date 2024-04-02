@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.music_mobile_app.R;
@@ -56,8 +57,12 @@ public class ArtistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
+
+        //Hide header
+        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        header.setVisibility(View.GONE);
+
         artistName = view.findViewById(R.id.textArtistName);
         artistImage = view.findViewById(R.id.artistAvatar);
         listeners = view.findViewById(R.id.followerNumber);

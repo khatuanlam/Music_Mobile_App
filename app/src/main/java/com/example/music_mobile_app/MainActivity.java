@@ -34,10 +34,8 @@ public class MainActivity extends FragmentActivity {
     public static mSpotifyService mSpotifyService;
     public static SpotifyService spotifyService;
     public static String authToken;
-
     public static final ListManager listManager = ListManager.getInstance();
     public static final VariableManager varManager = VariableManager.getInstance();
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -54,8 +52,11 @@ public class MainActivity extends FragmentActivity {
         FragmentManager manager = getSupportFragmentManager();
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
+
         setServiceAPI();
+
         getUserProfile();
+
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
     }
@@ -64,48 +65,51 @@ public class MainActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         setContentView(R.layout.activity_main);
-        
+
     }
 
     private void getUserProfile() {
-        spotifyService.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, spotifyError.getErrorDetails().message);
-            }
-
-            @Override
-            public void success(UserPrivate userPrivate, retrofit.client.Response response) {
-
-                UserPrivate userProfile = userPrivate;
-                if (userProfile != null) {
-                    String displayName = userProfile.display_name;
-                    String imageUrl = null;
-                    List<Image> images = userProfile.images;
-                    if (images != null && !images.isEmpty()) {
-                        // Choose the first image as default
-                        Image largestImage = images.get(0);
-
-                        // Iterate through images to find a larger one
-                        for (Image image : images) {
-                            if (image.width > largestImage.height && image.height > largestImage.height) {
-                                largestImage = image;
-                            }
-                        }
-                        imageUrl = largestImage.url;
-                    }
-
-                    SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("displayName", displayName);
-                    editor.putString("imageUrl", imageUrl);
-                    editor.putString("userId", userProfile.id);
-                    editor.apply();
+        UserPrivate userPrivate = varManager.getUser();
+        if (userPrivate.id == null) {
+            spotifyService.getMe(new SpotifyCallback<UserPrivate>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, spotifyError.getMessage());
                 }
-            }
-        });
-    }
 
+                @Override
+                public void success(UserPrivate userPrivate, retrofit.client.Response response) {
+                    UserPrivate userProfile = userPrivate;
+                    varManager.setUser(userProfile);
+                    if (userProfile != null) {
+                        String displayName = userProfile.display_name;
+                        String imageUrl = null;
+                        List<Image> images = userProfile.images;
+                        if (images != null && !images.isEmpty()) {
+                            // Choose the first image as default
+                            Image largestImage = images.get(0);
+
+                            // Iterate through images to find a larger one
+                            for (Image image : images) {
+                                if (image.width > largestImage.height && image.height > largestImage.height) {
+                                    largestImage = image;
+                                }
+                            }
+                            imageUrl = largestImage.url;
+                        }
+                        getUserProfile();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("displayName", displayName);
+                        editor.putString("imageUrl", imageUrl);
+                        editor.putString("userId", userProfile.id);
+                        editor.apply();
+                    }
+                }
+            });
+        }
+    }
 
     private void setServiceAPI() {
         Log.d(TAG, "Setting Spotify API Service");

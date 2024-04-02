@@ -102,4 +102,11 @@ public class ListManager {
         return listManager;
     }
 
+    public void clear() {
+        setAlbumTracks(null);
+        setTopTracks(null);
+        setRecentlyTracks(null);
+        setAlbumTracks(null);
+    }
+
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -95,9 +96,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                 });
             } else {
                 itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(context, MainActivity.class);
-                    intent.putExtra("Playlist", mPlaylist);
-                    context.startActivity(intent);
+
                 });
             }
         }
