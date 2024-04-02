@@ -30,27 +30,31 @@ public class SearchAlbumAdapter extends RecyclerView.Adapter<SearchAlbumAdapter.
     private Fragment fragment;
     private List<AlbumSimple> mDataList;
     private String[] randomBackgroundColors = {
-            "#FFB3BA",
-            "#FFDFBA",
-            "#FFFFBA",
-            "#BAFFC9",
-            "#BAE1FF",
-            "#D8BAFF",
-            "#FFD8FC",
-            "#B3E6FF",
-            "#BAFFC9",
-            "#FFDFBA",
-            "#FFB3BA",
-            "#FFFFBA",
-            "#BAE1FF",
-            "#BAFFC9",
-            "#D8BAFF",
-            "#FFD8FC",
-            "#B3E6FF",
-            "#BAFFC9",
-            "#FFDFBA",
-            "#FFB3BA"
+            "#CC3333",
+            "#CC6633",
+            "#CCCC33",
+            "#33CC33",
+            "#3366CC",
+            "#6633CC",
+            "#CC6699",
+            "#336666",
+            "#33CC33",
+            "#CC6633",
+            "#CC3333",
+            "#CCCC33",
+            "#3366CC",
+            "#33CC33",
+            "#6633CC",
+            "#CC6699",
+            "#336666",
+            "#33CC33",
+            "#CC6633",
+            "#CC3333"
     };
+
+
+
+
 
 
     public SearchAlbumAdapter(Context context, Fragment fragment, List<AlbumSimple> dataList) {

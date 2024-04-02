@@ -27,6 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
@@ -43,6 +44,7 @@ public class SubSearchFragment extends Fragment {
     public SubSearchFragment() {
     }
 
+    private CircleImageView avt;
     private EditText editText;
     private ImageView imageView;
     private FragmentManager manager;
@@ -70,6 +72,18 @@ public class SubSearchFragment extends Fragment {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.search_subSearchMainFragmentContainer, subSearchInformationFragment)
                 .commit();
+
+        //ẩn avt trong main fragment
+        // Lấy tham chiếu đến MainFragment
+        MainFragment mainFragment = (MainFragment) getParentFragment();
+
+        // Kiểm tra mainFragment không null và có tham chiếu đến avt
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
+
+        //onclick back
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +91,7 @@ public class SubSearchFragment extends Fragment {
                 manager.beginTransaction()
                         .replace(R.id.fragment, searchFragment)
                         .commit();
+                avt.setVisibility(View.VISIBLE);
 
             }
         });
@@ -118,6 +133,12 @@ public class SubSearchFragment extends Fragment {
                 }, 1000);
             }
         });
+
+
+
+
+
+
         return view;
     }
 

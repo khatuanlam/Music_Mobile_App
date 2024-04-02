@@ -6,30 +6,23 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorTransparent"
-        android:elevation="4dp">
 
-        <!-- Back button -->
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avt"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp" />
-    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avt"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/sontungmtp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:elevation="1dp" />
 
         <FrameLayout
             android:id="@+id/fragment"
