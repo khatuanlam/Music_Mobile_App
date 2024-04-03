@@ -98,6 +98,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
                 //Set to album
                 itemView.setOnClickListener(v -> {
                     FragmentManager manager = fragment.getChildFragmentManager();
+                    // Send detail album
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("AlbumDetail", (Parcelable) mAlbum);
                     AlbumFragment albumFragment = new AlbumFragment();

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,13 +47,13 @@ public class AlbumFragment extends Fragment {
 
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private final String TAG = this.getClass().getSimpleName();
-    private ImageView albumImage, backBtn;
+    private ImageView albumImage, btnBack;
     private FrameLayout frameLayout;
     private Drawable backgroundDrawable;
     private RecyclerView recyclerView;
     private TextView albumArtist, albumName, albumYear;
     private static AlbumSimple albumDetail;
-
+    private FragmentManager manager;
 
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
@@ -61,7 +62,6 @@ public class AlbumFragment extends Fragment {
 
     public AlbumFragment() {
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class AlbumFragment extends Fragment {
         } else {
             Log.e(TAG, "Cannot get album detail");
         }
-
+        manager = getParentFragmentManager();
     }
 
     @Override
@@ -81,23 +81,16 @@ public class AlbumFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
-        // Show header
+        // Hide header
         RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
         header.setVisibility(View.GONE);
 
-        albumImage = view.findViewById(R.id.albumImage);
-        albumArtist = view.findViewById(R.id.albumArtist);
-        albumYear = view.findViewById(R.id.albumYear);
-        albumName = view.findViewById(R.id.albumName);
-        backBtn = view.findViewById(R.id.backButton);
+        prepareData(view);
 
-        frameLayout = view.findViewById(R.id.fragment_container);
-        backgroundDrawable = frameLayout.getBackground();
-        recyclerView = view.findViewById(R.id.album_recyclerView);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-
+        // Onclick back
+        btnBack.setOnClickListener(v -> {
+            manager.popBackStack();
+        });
         getAlbum(albumDetail.id, new ListenerManager.AlbumCompleteListener() {
             @Override
             public void onComplete(Album album) {
@@ -105,9 +98,9 @@ public class AlbumFragment extends Fragment {
                     albumName.setText(album.name);
                     albumYear.setText(album.release_date);
                     albumArtist.setText(album.artists.get(0).name);
-                    Glide.with(getActivity()).load(albumDetail.images.get(0).url).into(albumImage);
+                    Glide.with(getActivity()).load(album.images.get(0).url).into(albumImage);
+                    getAlbumTracks(albumDetail.id, album);
                 }
-                getAlbumTracks(album.id);
             }
 
             @Override
@@ -115,7 +108,6 @@ public class AlbumFragment extends Fragment {
                 Log.e(TAG, error.getMessage());
             }
         });
-
         return view;
     }
 
@@ -152,8 +144,7 @@ public class AlbumFragment extends Fragment {
         });
     }
 
-
-    private void getAlbumTracks(String id) {
+    private void getAlbumTracks(String id, Album album) {
         spotifyService.getAlbumTracks(id, new SpotifyCallback<Pager<Track>>() {
             @Override
             public void failure(SpotifyError spotifyError) {
@@ -165,15 +156,28 @@ public class AlbumFragment extends Fragment {
                 if (trackPager != null && trackPager.items != null) {
                     Log.d(TAG, "Get this album tracks success ");
                     List<Track> mList = trackPager.items;
-                    ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(mList, new ArrayList<>(), getContext());
+                    ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(mList, album, new ArrayList<>(), getContext(), getParentFragment());
                     recyclerView.setAdapter(adapter);
                 } else {
                     Log.e(TAG, "Album list is null");
                 }
-
             }
         });
     }
 
+    private void prepareData(View view) {
+        albumImage = view.findViewById(R.id.albumImage);
+        albumArtist = view.findViewById(R.id.albumArtist);
+        albumYear = view.findViewById(R.id.albumYear);
+        albumName = view.findViewById(R.id.albumName);
+        btnBack = view.findViewById(R.id.backButton);
+
+        frameLayout = view.findViewById(R.id.fragment_container);
+        backgroundDrawable = frameLayout.getBackground();
+        recyclerView = view.findViewById(R.id.album_recyclerView);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+    }
 
 }

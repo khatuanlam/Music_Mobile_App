@@ -19,7 +19,6 @@ public class AuthLoginActivity extends FragmentActivity {
 
     @SuppressWarnings("SpellCheckingInspection")
     public static final String CLIENT_ID = "95fe47fe6b524ab2ba54354da461321a";
-
     //
     @SuppressWarnings("SpellCheckingInspection")
     public static final String REDIRECT_URI = "http://localhost:8888/callback";

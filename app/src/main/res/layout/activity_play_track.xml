@@ -7,8 +7,14 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     tools:context=".PlayTrackActivity">
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
+        android:fillViewport="true">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTransparent">
@@ -17,12 +23,14 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10sp"
-            android:theme="@style/CardView.Dark">
+            android:layout_gravity="fill_vertical"
+            android:padding="10sp">
+<!--            android:theme="@style/CardView.Dark"-->
+
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:background="@color/colorTransparent">
 
                 <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -38,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Album"
+                    android:textSize="20dp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -48,7 +57,6 @@
                     android:layout_marginEnd="10sp"
                     android:src="@drawable/ic_option" />
             </com.google.android.material.appbar.MaterialToolbar>
-
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/track_img"
@@ -148,7 +156,8 @@
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
 
                 <androidx.constraintlayout.utils.widget.ImageFilterView
                     android:id="@+id/btn_shuffle"
@@ -162,6 +171,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginRight="15dp"
                     android:src="@drawable/ic_prev_white_36dp" />
 
                 <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -169,6 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginRight="15dp"
                     android:src="@drawable/ic_play_white_48dp" />
 
                 <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -195,5 +206,5 @@
         <!-- Other components go here -->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

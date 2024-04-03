@@ -14,10 +14,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,27 +59,25 @@ public class AccountFragment extends Fragment {
     private CircleImageView imageAvt;
     private RecyclerView recyclerView;
     private TextView tvName;
-    private Button btnEditAccount;
+    private Button btnEditAccount, btnBack;
     private Button btnLogout;
     private ImageView btnCreatePlaylist;
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private ListManager listManager = MainActivity.listManager;
-
     private FragmentManager manager;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
     }
 
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        //Hide header
+        // Hide header
         RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
         header.setVisibility(View.GONE);
 
@@ -83,19 +86,19 @@ public class AccountFragment extends Fragment {
         recyclerView = view.findViewById(R.id.playlist_recyclerview);
         btnEditAccount = view.findViewById(R.id.buttonEditAccount);
         btnLogout = view.findViewById(R.id.buttonLogout);
+        btnBack = view.findViewById(R.id.back);
         btnCreatePlaylist = view.findViewById(R.id.btn_create_playlist);
 
+        // Onclick back
+        btnBack.setOnClickListener(v -> {
+            manager.popBackStack();
+        });
 
-        prepareData();
-        setPlaylist();
-
-
-        //Onclick RegisterFree
+        // Onclick RegisterFree
         btnEditAccount.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditAccountActivity.class);
             startActivity(intent);
         });
-
         // Log out
         btnLogout.setOnClickListener(v -> {
             listManager.clear();
@@ -108,41 +111,26 @@ public class AccountFragment extends Fragment {
         btnCreatePlaylist.setOnClickListener(v -> {
             showAddDialog();
         });
+
+        prepareData();
+
+        setPlaylist();
+
         return view;
     }
 
-    // Xử lý sự kiện khi nút quay lại được nhấn
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                manager.popBackStack();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-//    private void goToDetailPlaylist() {
-//        FragmentManager fragmentManager = getParentFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.layout_account, new AlbumFragment());
-//        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
-//    }
-
     private void prepareData() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String image = sharedPreferences.getString("imageUrl", "None");
         String name = sharedPreferences.getString("displayName", "None");
         tvName.setText(name);
         Glide.with(this).load(image).into(imageAvt);
-        LinearLayoutManager playList_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager playList_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,
+                false);
         recyclerView.setLayoutManager(playList_layout);
     }
 
     private void showAddDialog() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = getLayoutInflater();
         View addView = inflater.inflate(R.layout.dialog_new_playlist, null);
@@ -169,9 +157,7 @@ public class AccountFragment extends Fragment {
         alertDialog.show();
     }
 
-
     private void createPlaylistOnSpotify(String playlistName) {
-
         // Tạo yêu cầu tạo playlist mới
         Map<String, Object> options = new HashMap<>();
         options.put("name", playlistName);
@@ -218,7 +204,7 @@ public class AccountFragment extends Fragment {
                 }
             });
         }
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), playlistsList, getContext());
+        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(), getParentFragment());
         adapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(adapter);

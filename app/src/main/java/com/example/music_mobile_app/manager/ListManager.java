@@ -14,8 +14,7 @@ public class ListManager {
     private static ListManager listManager;
 
     private List<PlaylistSimple> playlistList;
-
-
+    
     private List<Track> recentlyTracks;
 
     private List<Track> recommendTracks;

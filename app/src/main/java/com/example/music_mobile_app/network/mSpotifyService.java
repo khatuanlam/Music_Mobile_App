@@ -55,7 +55,7 @@ public class mSpotifyService {
     public void getRecentlyTracks(Callback<Pager<Track>> callback) {
         Map<String, Object> options = new HashMap<>();
         options.put(SpotifyService.LIMIT, 10);
-        Call<Pager<Track>> call = spotifyAPI.getRecentlyTracks("Bearer" + this.authToken, options);
+        Call<Pager<Track>> call = spotifyAPI.getRecentlyTracks( this.authToken, options);
         call.enqueue(callback);
     }
 }

@@ -2,6 +2,8 @@ package com.example.music_mobile_app.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,9 +23,12 @@ import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.ui.AlbumFragment;
+import com.example.music_mobile_app.ui.PlaylistFragment;
 
 import java.util.List;
 
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
@@ -29,20 +36,26 @@ import kaaes.spotify.webapi.android.models.Track;
 public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> {
 
     private final String TAG = this.getClass().getSimpleName();
-
     private List<Track> trackList;
     private List<PlaylistSimple> playlistList;
-
     private Context context;
+    private Fragment fragment;
+    private Album mAlbum;
     private int flag = 0;
     private static VariableManager varManager = MainActivity.varManager;
-
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
-    public ItemHorizontalAdapter(List<Track> trackList, List<PlaylistSimple> playlistList, Context context) {
+    public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context, Fragment fragment) {
         this.trackList = trackList;
         this.playlistList = playlistList;
         this.context = context;
+        this.fragment = fragment;
+        if (album == null) {
+            this.mAlbum = new Album();
+        } else {
+            this.mAlbum = album;
+        }
+
     }
 
     @NonNull
@@ -92,11 +105,20 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                 itemView.setOnClickListener(v -> {
                     Intent intent = new Intent(context, PlayTrackActivity.class);
                     intent.putExtra("Track", mTrack);
+                    intent.putExtra("Track's Album", mAlbum);
                     context.startActivity(intent);
                 });
             } else {
                 itemView.setOnClickListener(v -> {
-
+                    FragmentManager manager = fragment.getChildFragmentManager();
+                    // Send detail album
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("PlaylistDetail", (Parcelable) mPlaylist);
+                    PlaylistFragment playlistFragment = new PlaylistFragment();
+                    playlistFragment.setArguments(bundle);
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.addToBackStack(null);
+                    manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
                 });
             }
         }
@@ -115,9 +137,11 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             this.mTrack = track;
             item_name.setText(track.name);
             item_artist.setText(track.artists.get(0).name);
-//            if (track.album.images != null) {
-//                baseImage = track.album.images.get(0).url;
-//            }
+            if (track.album != null) {
+                baseImage = track.album.images.get(0).url;
+            } else {
+                baseImage = mAlbum.images.get(0).url;
+            }
             Glide.with(context).load(baseImage).override(Target.SIZE_ORIGINAL).into(item_image);
         }
     }

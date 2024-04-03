@@ -19,6 +19,8 @@ import com.example.music_mobile_app.adapter.SearchTrackAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
@@ -26,23 +28,26 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private RecyclerView recyclerViewArtist;
-
+    private RecyclerView recyclerViewAlbum;
     private RecyclerView recyclerViewFound;
     public List<Track> trackList;
     public List<Artist> artistList;
+    public List<AlbumSimple> albumList;
     private SearchTrackAdapter mAdapter;
-
     private SearchArtistAdapter mAdapterArtist;
+    private SearchAlbumAdapter mAdapterALbum;
 
     private CombinedRecyclerViewAdapter mCombinedRecyclerViewAdapter;
 
     public SubSearchRecyclerViewFoundSongFragment() {
         this.trackList = new ArrayList<>();
+        this.albumList = new ArrayList<>();
         this.artistList = new ArrayList<>();
     }
 
-    public SubSearchRecyclerViewFoundSongFragment(List<Track> trackList, List<Artist> artistList) {
+    public SubSearchRecyclerViewFoundSongFragment(List<Track> trackList, List<Artist> artistList, List<AlbumSimple> albumList) {
         this.trackList = trackList;
+        this.albumList = albumList;
         this.artistList = artistList;
     }
 
@@ -60,25 +65,30 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.search_recyclerViewFoundSongs);
         recyclerViewArtist = view.findViewById(R.id.search_recyclerViewFoundArtists);
-
+        recyclerViewAlbum = view.findViewById(R.id.search_recyclerViewFoundAlbums);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.LayoutManager layoutManagerArtist = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManagerAlbum = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerViewArtist.setLayoutManager(layoutManagerArtist);
+        recyclerViewAlbum.setLayoutManager(layoutManagerAlbum);
 
         recyclerView.setNestedScrollingEnabled(false);
         recyclerViewArtist.setNestedScrollingEnabled(false);
+        recyclerViewAlbum.setNestedScrollingEnabled(false);
 
         recyclerView.setHasFixedSize(false);
         recyclerViewArtist.setHasFixedSize(false);
+        recyclerViewAlbum.setHasFixedSize(false);
 
         mAdapter = new SearchTrackAdapter(this, trackList);
         mAdapterArtist = new SearchArtistAdapter(this, artistList);
+        mAdapterALbum = new SearchAlbumAdapter(this, albumList);
 
         recyclerView.setAdapter(mAdapter);
         recyclerViewArtist.setAdapter(mAdapterArtist);
-
+        recyclerViewAlbum.setAdapter(mAdapterALbum);
         return view;
     }
 

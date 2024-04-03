@@ -42,7 +42,6 @@ public class ArtistFragment extends Fragment {
     private RecyclerView recyclerView;
     private static SpotifyService spotifyService;
 
-
     public ArtistFragment() {
     }
 
@@ -75,7 +74,7 @@ public class ArtistFragment extends Fragment {
         return view;
     }
 
-    private void getArtistInfo(String artistId) {
+    private void getArtist(String artistId) {
         spotifyService.getArtist(artistId, new SpotifyCallback<Artist>() {
             @Override
             public void failure(SpotifyError spotifyError) {
@@ -88,5 +87,4 @@ public class ArtistFragment extends Fragment {
             }
         });
     }
-
 }

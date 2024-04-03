@@ -1,7 +1,6 @@
 package com.example.music_mobile_app.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -44,7 +43,6 @@ public class MainFragment extends Fragment {
     private Button downloadLayout;
     private CircleImageView account;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +51,8 @@ public class MainFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -68,20 +66,23 @@ public class MainFragment extends Fragment {
         searchText = view.findViewById(R.id.nav_search_text);
         downloadText = view.findViewById(R.id.nav_extension_text);
 
-
         homeLayout.setOnClickListener(mListener);
         favoriteLayout.setOnClickListener(mListener);
         searchLayout.setOnClickListener(mListener);
         downloadLayout.setOnClickListener(mListener);
 
-        // Setting avt img
+        // Setting avt img value
         account = view.findViewById(R.id.avt);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
+        Glide.with(this).load(sharedPreferences.getString("imageUrl",
+                "")).override(Target.SIZE_ORIGINAL).into(account);
 
         account.setOnClickListener(v -> {
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.addToBackStack(null).replace(R.id.fragment, new AccountFragment()).commit();
+            FragmentTransaction fragmentTransaction = manager.beginTransaction()
+                    .setCustomAnimations(0, 0);
+            fragmentTransaction.replace(R.id.fragment, new AccountFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         });
 
         return view;
@@ -111,14 +112,16 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.nav_search:
                     Log.d(TAG, "SEARCH");
-                    if (view.isActivated()) break;
+                    if (view.isActivated())
+                        break;
                     transaction.replace(R.id.fragment, new SearchFragment()).commit();
                     current_view = new IconNavbar(searchLayout, view, searchText, search);
                     setFocusMode(current_view);
                     break;
                 case R.id.nav_download:
                     Log.d(TAG, "DOWNLOAD");
-                    if (view.isActivated()) break;
+                    if (view.isActivated())
+                        break;
                     transaction.replace(R.id.fragment, new DownloadFragment()).commit();
                     current_view = new IconNavbar(downloadLayout, view, downloadText, download);
                     setFocusMode(current_view);

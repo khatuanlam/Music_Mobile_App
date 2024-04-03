@@ -11,14 +11,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
-        <include layout="@layout/header" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="70dp">
 
             <TextView
                 android:id="@+id/title"
@@ -29,7 +30,7 @@
                 android:fontFamily="@font/gotham_bold"
                 android:text="Bài hát đã tải"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32dp" />
 
             <TextView
                 android:id="@+id/quantity"
@@ -40,118 +41,74 @@
                 android:fontFamily="@font/gotham_medium"
                 android:text="10 bài hát"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="20dp" />
 
-
-            <!--            <com.google.android.material.button.MaterialButtonToggleGroup-->
-            <!--                android:id="@+id/toggleButton"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="75dp"-->
-            <!--                android:layout_marginTop="15dp">-->
-            <!--                <com.google.android.material.button.MaterialButton-->
-            <!--                    android:id="@+id/buttonSong"-->
-            <!--                    style="?attr/materialButtonOutlinedStyle"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:background="@drawable/left_button_bg"-->
-            <!--                    android:gravity="center"-->
-
-            <!--                    android:text="Bài hát" />-->
-
-            <!--                <com.google.android.material.button.MaterialButton-->
-            <!--                    android:id="@+id/buttonPlaylist"-->
-            <!--                    style="?attr/materialButtonOutlinedStyle"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:background="@drawable/custom_middle_btn"-->
-            <!--                    android:gravity="center"-->
-            <!--                    android:text="playlist" />-->
-
-            <!--                <com.google.android.material.button.MaterialButton-->
-            <!--                    android:id="@+id/buttonAlbum"-->
-            <!--                    style="?attr/materialButtonOutlinedStyle"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:background="@drawable/right_button_bg"-->
-
-            <!--                    android:gravity="center"-->
-            <!--                    android:text="album" />-->
-            <!--            </com.google.android.material.button.MaterialButtonToggleGroup>-->
-
-            <!--            <Button-->
-            <!--                android:id="@+id/randomPlay"-->
-            <!--                android:layout_width="156dp"-->
-            <!--                android:layout_height="40dp"-->
-            <!--                android:layout_marginStart="120dp"-->
-            <!--                android:layout_marginTop="10dp"-->
-            <!--                android:background="@drawable/custom_random_btn"-->
-            <!--                android:text="Phát ngẫu nhiên"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                android:textSize="15dp" />-->
         </LinearLayout>
+
+        <Button
+            android:id="@+id/download_testLoadAds"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="LOAD ADS"
+            android:textColor="@color/white"
+            android:background="@drawable/button_gray"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:layout_marginTop="15dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/black"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <Button
-                        android:id="@+id/filterButton"
-                        android:layout_width="62dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="31dp"
-                        android:layout_marginEnd="337dp"
-                        android:layout_marginBottom="24dp"
-                        android:layout_weight="0"
-                        android:background="@color/black"
-                        android:drawableLeft="@drawable/ic_filter_white"
-                        android:drawablePadding="-10dp"
-                        android:text="Lọc"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        tools:ignore="TextSizeCheck" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:orientation="horizontal">
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:drawableLeft="@drawable/ic_arrow_small_white"
-                        android:textSize="15sp" />
-
-                    <Spinner
-                        android:id="@+id/download_spinner_filter"
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="27dp"
-                        android:layout_marginEnd="12dp"
-                        android:layout_marginBottom="25dp"
-                        android:background="@color/black"
-                        android:drawablePadding="-5dp"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+                        <Button
+                            android:id="@+id/filterButton"
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_filter_white"
+                            android:background="@color/colorTransparent"
+                            android:text=""
+                            android:layout_weight="0"
+                            tools:ignore="TextSizeCheck" />
+                        <Spinner
+                            android:id="@+id/download_spinner_filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:layout_marginLeft="15dp"
+                            />
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/button12"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="end"
+                        android:background="@drawable/ic_play" />
 
                 </LinearLayout>
+
+
+
+
+
+
 
             </RelativeLayout>
 
@@ -164,21 +121,10 @@
                 <!--                    android:layout_width="410dp"-->
                 <!--                    android:layout_height="491dp" />-->
 
-                <Button
-                    android:id="@+id/download_testLoadAds"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LOAD ADS" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button12"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/ic_play" />
+
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

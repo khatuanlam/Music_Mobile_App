@@ -21,8 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
+
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -34,8 +36,6 @@ import com.spotify.protocol.types.PlayerState;
 
 public class PlayTrackActivity extends FragmentActivity {
 
-    private static final String CONNECTION_PARAMS_KEY = "connectionParamsKey";
-
     private static final String TAG = PlayTrackActivity.class.getSimpleName();
 
     private ImageView btn_back, btn_prev, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist;
@@ -43,10 +43,9 @@ public class PlayTrackActivity extends FragmentActivity {
     private ConstraintLayout play_back_layout;
     private ShapeableImageView track_img;
     private AppCompatSeekBar mSeekBar;
-
     private TrackProgressBar mTrackProgressBar;
-
     private Track detailTrack;
+    private Album detailAlbum;
 
     private static PlayerState playerState;
 
@@ -61,6 +60,7 @@ public class PlayTrackActivity extends FragmentActivity {
 
         // Get track detail
         detailTrack = getIntent().getParcelableExtra("Track");
+        detailAlbum = getIntent().getParcelableExtra("Track's Album");
         setData(detailTrack);
 
         btn_play.setOnClickListener(v -> {
@@ -69,13 +69,13 @@ public class PlayTrackActivity extends FragmentActivity {
         });
 
 
-        btn_back.setOnClickListener(v ->
-        {
+        // Onclick Back
+        btn_back.setOnClickListener(v -> {
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_down);
             play_back_layout.startAnimation(animation);
             onBackPressed();
             overridePendingTransition(0, 0);
-            tv_playerField.setVisibility(View.VISIBLE);
+//            tv_playerField.setVisibility(View.VISIBLE);
         });
     }
 
@@ -111,7 +111,6 @@ public class PlayTrackActivity extends FragmentActivity {
         mSeekBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         mSeekBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-
         // Setting player UI
         playbackManager = PlaybackManager.getInstance(this);
         mTrackProgressBar = new TrackProgressBar(mSeekBar);
@@ -119,10 +118,16 @@ public class PlayTrackActivity extends FragmentActivity {
     }
 
     private void setData(Track detailTrack) {
+
         tv_track_name.setText(detailTrack.name);
-        tv_track_album.setText(detailTrack.album.name);
+        tv_track_album.setText((detailTrack.album.name != null) ? detailTrack.album.name : detailAlbum.name);
         tv_track_arist.setText(detailTrack.artists.get(0).name);
-        Glide.with(this).load(detailTrack.album.images.get(0).url).override(Target.SIZE_ORIGINAL).into(track_img);
+
+        // Get Track's Album
+        Album album = getIntent().getParcelableExtra("Track's Album");
+        Glide.with(this)
+                .load((detailTrack.album.images.get(0).url == null) ? album.images.get(0).url : detailTrack.album.images.get(0).url)
+                .override(Target.SIZE_ORIGINAL).into(track_img);
     }
 
 
