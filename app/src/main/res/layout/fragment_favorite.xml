@@ -5,7 +5,7 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@color/colorPrimaryDark"
     tools:context=".ui.AlbumFragment">
 
 
@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/header" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +27,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/gotham_bold"
-                android:text="Bài hát đã thích"
+                android:text="Yêu thích"
                 android:textColor="@color/white"
                 android:textSize="32dp" />
 
@@ -39,7 +38,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/gotham_medium"
-                android:text="10 bài hát"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -60,11 +59,29 @@
                 android:background="@drawable/ic_playpng" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerMusicViewLiked"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp" />
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerMusicViewLiked"
+                    android:layout_width="match_parent"
+                    android:layout_height="549dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/black" />
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/recyclerAlbumViewLiked"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/white" />-->
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </FrameLayout>

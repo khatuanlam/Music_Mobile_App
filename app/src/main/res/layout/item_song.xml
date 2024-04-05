@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,65 +9,66 @@
     android:layout_marginBottom="25dp"
     android:background="@color/black">
 
-
-
-    <TextView
-        android:id="@+id/textViewPosition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="1"
-        android:textSize="20dp"
-        android:textColor="@color/white"
-        android:layout_marginRight="15dp" />
-
-
-    <ImageView
-        android:id="@+id/TrackImageSong"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/sontungmtp" />
-
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="horizontal"
+        android:layout_toStartOf="@+id/overflowSongmenu">
+
         <TextView
-            android:id="@+id/songTitle"
+            android:id="@+id/textViewPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:text="Em của ngày hôm qua"
-            android:layout_weight="1"
+            android:text="1"
+            android:textSize="20dp"
             android:textColor="@color/white"
-            android:fontFamily="@font/gotham_medium"
-            android:textSize="24dp"
-            />
+            android:layout_marginRight="15dp" />
 
-        <TextView
-            android:id="@+id/artistname"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/TrackImageSong"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/sontungmtp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
-            android:text="Sơn Tùng M-TP"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/white"
-            android:textSize="16dp"/>
-    </LinearLayout>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/songTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:text="Em của ngày hôm qua"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:fontFamily="@font/gotham_medium"
+                android:textSize="23dp" />
 
+            <TextView
+                android:id="@+id/artistname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:text="Sơn Tùng M-TP"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="16dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/overflowSongmenu"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="center|end|right"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_option"
         tools:ignore="TouchTargetSizeCheck" />
 
-</LinearLayout>
+</RelativeLayout>

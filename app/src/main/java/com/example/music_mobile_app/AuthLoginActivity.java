@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.music_mobile_app.MainActivity;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -19,7 +19,7 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
 public class AuthLoginActivity extends FragmentActivity {
 
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String CLIENT_ID = "95fe47fe6b524ab2ba54354da461321a";
+    public static final String CLIENT_ID = "f09cc2ccfa174f6d80c0b49050d83751";
     @SuppressWarnings("SpellCheckingInspection")
     public static final String REDIRECT_URI = "http://localhost:8888/callback";
 
@@ -44,7 +44,11 @@ public class AuthLoginActivity extends FragmentActivity {
         AuthorizationRequest.Builder builder =
                 new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
 
-        builder.setScopes(new String[]{"user-read-private", "streaming", "user-top-read", "user-read-recently-played"});
+        builder.setScopes(new String[]{"streaming",
+                "user-read-private", "user-top-read", "user-read-recently-played",
+                "playlist-modify-public", "playlist-read-private", " playlist-modify-private",
+                "user-library-read", "user-read-playback-state", "user-modify-playback-state", "user-read-currently-playing"});
+
         AuthorizationRequest request = builder.build();
 
         AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request);

@@ -2,8 +2,6 @@ package com.example.music_mobile_app.manager;
 
 import android.os.Parcelable;
 
-import com.example.music_mobile_app.MainActivity;
-
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 

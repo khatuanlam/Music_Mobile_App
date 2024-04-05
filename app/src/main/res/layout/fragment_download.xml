@@ -5,10 +5,8 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.AlbumFragment"
-    android:background="@drawable/background">
-
-
+    android:background="@drawable/background"
+    tools:context=".ui.AlbumFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,11 +26,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-
+                android:fontFamily="@font/gotham_bold"
                 android:text="Bài hát đã tải"
                 android:textColor="@color/white"
-                android:fontFamily="@font/gotham_bold"
-                android:textSize="32dp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/quantity"
@@ -40,19 +37,140 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/gotham_medium"
                 android:text="10 bài hát"
                 android:textColor="@color/white"
-                android:fontFamily="@font/gotham_medium"
+                android:textSize="18sp" />
 
-                android:textSize="20dp" />
 
+            <!--            <com.google.android.material.button.MaterialButtonToggleGroup-->
+            <!--                android:id="@+id/toggleButton"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="75dp"-->
+            <!--                android:layout_marginTop="15dp">-->
+            <!--                <com.google.android.material.button.MaterialButton-->
+            <!--                    android:id="@+id/buttonSong"-->
+            <!--                    style="?attr/materialButtonOutlinedStyle"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:background="@drawable/left_button_bg"-->
+            <!--                    android:gravity="center"-->
+
+            <!--                    android:text="Bài hát" />-->
+
+            <!--                <com.google.android.material.button.MaterialButton-->
+            <!--                    android:id="@+id/buttonPlaylist"-->
+            <!--                    style="?attr/materialButtonOutlinedStyle"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:background="@drawable/custom_middle_btn"-->
+            <!--                    android:gravity="center"-->
+            <!--                    android:text="playlist" />-->
+
+            <!--                <com.google.android.material.button.MaterialButton-->
+            <!--                    android:id="@+id/buttonAlbum"-->
+            <!--                    style="?attr/materialButtonOutlinedStyle"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:background="@drawable/right_button_bg"-->
+
+            <!--                    android:gravity="center"-->
+            <!--                    android:text="album" />-->
+            <!--            </com.google.android.material.button.MaterialButtonToggleGroup>-->
+
+            <!--            <Button-->
+            <!--                android:id="@+id/randomPlay"-->
+            <!--                android:layout_width="156dp"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                android:layout_marginStart="120dp"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:background="@drawable/custom_random_btn"-->
+            <!--                android:text="Phát ngẫu nhiên"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="15dp" />-->
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginTop="20dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@color/black"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/filterButton"
+                        android:layout_width="62dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="337dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_weight="0"
+                        android:background="@color/black"
+                        android:drawableLeft="@drawable/ic_filter_white"
+                        android:drawablePadding="-10dp"
+                        android:text="Lọc"
+                        android:textColor="@color/white"
+                        android:textSize="15dp"
+                        tools:ignore="TextSizeCheck" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawableLeft="@drawable/ic_arrow_small_white"
+                        android:textSize="15sp" />
+
+                    <Spinner
+                        android:id="@+id/download_spinner_filter"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="27dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="25dp"
+                        android:background="@color/black"
+                        android:drawablePadding="-5dp"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <!--                <androidx.recyclerview.widget.RecyclerView-->
+                <!--                    android:id="@+id/recyclerSongDownload"-->
+                <!--                    android:layout_width="410dp"-->
+                <!--                    android:layout_height="491dp" />-->
+
+                <Button
+                    android:id="@+id/download_testLoadAds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOAD ADS" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/button12"
@@ -60,15 +178,14 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/ic_playpng" />
+                android:background="@drawable/ic_play" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerMusicViewLiked"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"/>
-
+            android:layout_marginTop="20dp" />
 
     </LinearLayout>
 </FrameLayout>

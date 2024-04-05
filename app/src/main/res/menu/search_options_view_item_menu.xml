@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/search_options_view_item_menu_download"
+        android:title="Tải xuống bài hát" />
+    <item
+        android:id="@+id/search_options_view_item_menu_add_favorite"
+        android:title="Thêm vào danh sách yêu thích" />
+    <item
+        android:id="@+id/deleteTrack_from_favorite"
+        android:title="Xoá khỏi danh sách yêu thích"
+
+        />
+</menu>

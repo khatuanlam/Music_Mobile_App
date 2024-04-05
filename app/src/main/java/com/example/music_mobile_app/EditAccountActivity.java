@@ -3,11 +3,9 @@ package com.example.music_mobile_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,13 +15,12 @@ import android.widget.ImageButton;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
+import com.example.music_mobile_app.MainActivity;
+import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
 import com.example.music_mobile_app.network.mSpotifyService;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.Picasso;
 
@@ -31,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditAccountActivity extends FragmentActivity {
+public class EditAccountActivity extends AppCompatActivity {
 
     private static final String TAG = "EditAccountActivity";
     ShapeableImageView imageViewAvt;
@@ -51,6 +48,12 @@ public class EditAccountActivity extends FragmentActivity {
 
 
 //        // Căn giữa tiêu đề
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.background_register));
+
+
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
 //        ActionBar.LayoutParams params = new ActionBar.LayoutParams(

@@ -1,5 +1,5 @@
 package com.example.music_mobile_app.manager.AuthManager.constant;
 
 public class ConstantVariable {
-    public static String ACCESS_TOKEN = "BQAOQLEweTEy1RiNY-VBtCDKTP_sF5rw6BpVIdB5sLgxqyUco19B78j23sDwNl3znWbrPAQ7MU7gjRO_kKCKzNUM8OZREW69na-RFcc9q2CYzx4jgR0Jv4xeZHnJaHeBJX3Qj3th1LEIugUpGj9gS-IzS-Fb9285_ihuJmpzvSRIvELam81jxHCb0Y2rZATLKOYDfZ1P5b7einw";
+    public static String ACCESS_TOKEN = "BQA_NV0GNlv4R5gB11eeL1drh3hMiDOsQU3_I8RQS6v9WDGj5M5JLMkizFluGXPGu0Nl5pEyOqDk4oZktvXAtviQCoAY1prKIygiOPK7VmcWyKAQl3Y083YHd7LW73uPGEFaebhyI5pXrQ4IQ6JY3jQccRmzVR6IryzOSU8V2YQy4kwDAphbTm56VNrvz0fE5i7TwOteR0TUbxh_s926CAznRQ";
 }

@@ -6,6 +6,7 @@ import com.example.music_mobile_app.model.Artist;
 
 import com.example.music_mobile_app.model.Page;
 import com.example.music_mobile_app.model.Playlist;
+import com.example.music_mobile_app.model.SavedAlbum;
 import com.example.music_mobile_app.model.SavedTrack;
 import com.example.music_mobile_app.model.Track;
 import com.example.music_mobile_app.model.Tracks;
@@ -13,6 +14,7 @@ import com.example.music_mobile_app.model.Tracks;
 
 //import kaaes.spotify.webapi.android.models.Track;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 
@@ -26,8 +28,8 @@ public interface SpotifyApiService {
     Call<Album> getAlbum( @Path("id") String albumId);
     @GET("albums/{id}/tracks")
     Call <Page<Track>> getTrackFromAlbum(@Path("id")String albumID);
-
-
+    @GET("me/albums")
+    Call<Page<SavedAlbum>> getMyAlbum(@Query("limit") int limit, @Query("offset") int offset);
 
     // ARTISTS
     @GET("artists/{id}")
@@ -56,5 +58,22 @@ public interface SpotifyApiService {
             @Path("id") String playlistId,
             @Query("fields") String fields
     );
+
+
+    @DELETE("me/tracks")
+    Call<Void> deleteTrack(@Query("ids") String TrackId);
+    @DELETE("me/tracks")
+    Call<Void> deleteTracks(@Body Map<String, Object> body);
+    @DELETE("me/albums")
+    Call<Void> removeFromMyAlbums(@Query("ids") String ids, @Body List<String> albumIds);
+
+
+    @PUT("me/tracks")
+    Call<Void> addToMyTracks(@Query("ids") String ids, @Body List<String> trackIds);
+    @PUT("me/albums")
+    Call<Void> addToMyAlbums(@Query("ids") String ids, @Body List<String> albumIds);
+
+
+
 }
 
