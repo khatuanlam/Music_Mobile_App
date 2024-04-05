@@ -7,6 +7,7 @@ import java.util.List;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListManager {
@@ -14,6 +15,7 @@ public class ListManager {
     private static ListManager listManager;
 
     private List<PlaylistSimple> playlistList;
+    private List<PlaylistTrack> playlistTracks;
 
 
     private List<Track> recentlyTracks;
@@ -46,6 +48,7 @@ public class ListManager {
 
     public ListManager() {
         playlistList = new ArrayList<>();
+        playlistTracks = new ArrayList<>();
         recentlyTracks = new ArrayList<>();
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
@@ -64,9 +67,14 @@ public class ListManager {
     public List<PlaylistSimple> getPlaylistList() {
         return playlistList;
     }
+    public List<PlaylistTrack> getPlaylistTracks() {return playlistTracks;}
 
     public void setPlaylistList(List<PlaylistSimple> playlistList) {
         this.playlistList = playlistList;
+    }
+
+    public void setPlaylistTracks(List<PlaylistTrack> playlistTracks) {
+        this.playlistTracks = playlistTracks;
     }
 
     public static void setListManager(ListManager listManager) {

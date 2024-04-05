@@ -41,21 +41,21 @@
         <activity
             android:name=".EditAccountActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity
-            android:name=".AccountActivity"
-            android:theme="@style/Theme.AppCompat" />
+<!--        <activity-->
+<!--            android:name=".AccountActivity"-->
+<!--            android:theme="@style/Theme.AppCompat" />-->
 
-        <activity
-            android:name=".PlaylistActivity"
-            android:theme="@style/Theme.AppCompat" />
+<!--        <activity-->
+<!--            android:name=".PlaylistActivity"-->
+<!--            android:theme="@style/Theme.AppCompat" />-->
 
-        <activity
-            android:name=".NewPlaylistActivity"
-            android:theme="@style/Theme.AppCompat" />
+<!--        <activity-->
+<!--            android:name=".NewPlaylistActivity"-->
+<!--            android:theme="@style/Theme.AppCompat" />-->
 
-        <activity
-            android:name=".AddSongPlaylistActivity"
-            android:theme="@style/Theme.AppCompat" />
+<!--        <activity-->
+<!--            android:name=".AddSongPlaylistActivity"-->
+<!--            android:theme="@style/Theme.AppCompat" />-->
         
         <activity
             android:name=".AuthLoginActivity"

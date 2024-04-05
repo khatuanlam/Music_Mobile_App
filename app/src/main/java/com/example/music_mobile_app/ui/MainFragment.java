@@ -22,7 +22,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.AccountActivity;
+//import com.example.music_mobile_app.AccountActivity;
+import com.example.music_mobile_app.ui.AccountFragment;
 import com.example.music_mobile_app.AuthLoginActivity;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
@@ -73,14 +74,20 @@ public class MainFragment extends Fragment {
         searchLayout.setOnClickListener(mListener);
         downloadLayout.setOnClickListener(mListener);
 
-        // Setting avt img
+        // Setting avt img value
         account = view.findViewById(R.id.avt);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
-        Intent intent = new Intent(getActivity(), AccountActivity.class);
-        account.setOnClickListener(v -> {
-            startActivity(intent);
-        });
+        //Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
+
+        AccountFragment accountFragment = new AccountFragment();
+        if (getActivity() != null) {
+            account.setOnClickListener(v -> {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(0, 0);;
+                fragmentTransaction.replace(R.id.fragment_container, accountFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            });
+        }
 
         // Home
         manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();

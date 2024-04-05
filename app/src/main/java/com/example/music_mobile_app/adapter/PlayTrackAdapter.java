@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +34,7 @@ import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> {
+public class PlayTrackAdapter extends RecyclerView.Adapter<PlayTrackAdapter.ItemHorizontalHolder> {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -43,10 +45,22 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
     private int selectedItem = RecyclerView.NO_POSITION; // Khởi tạo biến để lưu vị trí item được chọn
     private int flag = 0;
     private static VariableManager varManager = MainActivity.varManager;
+    // Khai báo một biến để lưu trữ playlistId đã chọn
+    private String selectedPlaylistId = null;
 
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
-    public ItemHorizontalAdapter(List<Track> trackList, List<PlaylistSimple> playlistList, Context context) {
+    public interface OnPlaylistClickListener {
+        void onPlaylistClick(String playlistId);
+    }
+
+    private OnPlaylistClickListener playlistClickListener;
+
+    public void setOnPlaylistClickListener(OnPlaylistClickListener listener) {
+        this.playlistClickListener = listener;
+    }
+
+    public PlayTrackAdapter(List<Track> trackList, List<PlaylistSimple> playlistList, Context context) {
         this.trackList = trackList;
         this.playlistList = playlistList;
         this.context = context;
@@ -104,23 +118,15 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                 notifyDataSetChanged();
 
                 // Xử lý logic khi item được click ở đây
-                if (flag == 0) {
-                    Intent intent = new Intent(itemView.getContext(), PlayTrackActivity.class);
+                if (flag == 0) {//Nếu là track
+                    Intent intent = new Intent(context, PlayTrackActivity.class);
                     intent.putExtra("Track", mTrack);
-                    itemView.getContext().startActivity(intent);
-                } else {
-                    PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("playlistId", mPlaylist.id);
-                    bundle.putString("playlistName", mPlaylist.name);
-                    bundle.putString("playlistImage", mPlaylist.images.get(0).url);
-                    playlistDetailFragment.setArguments(bundle);
-
-//                    PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment();
-                    FragmentTransaction fragmentTransaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction().setCustomAnimations(0, 0);
-                    fragmentTransaction.replace(R.id.fragment_container, playlistDetailFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    context.startActivity(intent);
+                } else {//Nếu là playlist
+                    Log.d(TAG, "Playlist Clicked: " + mPlaylist.id);
+                    if (playlistClickListener != null) {
+                        playlistClickListener.onPlaylistClick(mPlaylist.id);
+                    }
                 }
             });
         }

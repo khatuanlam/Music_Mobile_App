@@ -40,13 +40,11 @@
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_download_more">
-
-
-    </androidx.appcompat.widget.AppCompatSpinner>
+<!--    <androidx.appcompat.widget.AppCompatSpinner-->
+<!--        android:id="@+id/spinner"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/ic_download_more">-->
+<!--    </androidx.appcompat.widget.AppCompatSpinner>-->
 
 </LinearLayout>
