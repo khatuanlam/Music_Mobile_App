@@ -5,10 +5,10 @@ buildscript {
     repositories {
         google()
         jcenter()
-        // Other repositories...
         flatDir {
             dirs 'libs'
         }
+        // Other repositories...
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
@@ -21,10 +21,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        flatDir {
-            dirs 'libs'
-        }
-        maven { url "https://jitpack.io" }
     }
 }
 

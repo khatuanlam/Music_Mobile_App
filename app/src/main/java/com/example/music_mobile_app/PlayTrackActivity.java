@@ -1,11 +1,16 @@
 package com.example.music_mobile_app;
 
+import static com.example.music_mobile_app.MainActivity.listManager;
+import static com.example.music_mobile_app.MainActivity.mSpotifyService;
+import static com.example.music_mobile_app.MainActivity.spotifyService;
+
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -13,25 +18,41 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.example.music_mobile_app.ui.AccountFragment;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.gson.Gson;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 //import com.spotify.android.appremote.api.Connector;
 //import com.spotify.android.appremote.api.SpotifyAppRemote;
 //import com.spotify.android.appremote.api.AppRemote;
@@ -41,7 +62,8 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 
 public class PlayTrackActivity extends FragmentActivity {
-
+    private boolean isFollowing = false;
+    private static final String FOLLOW_PREF_KEY = "follow_pref_key";
     private static final String CONNECTION_PARAMS_KEY = "connectionParamsKey";
 
     private static final String TAG = PlayTrackActivity.class.getSimpleName();
@@ -55,8 +77,11 @@ public class PlayTrackActivity extends FragmentActivity {
     TrackProgressBar mTrackProgressBar;
 
     private Track detailTrack;
+    String authToken;
+    Button btnFollow;
 
     SpotifyAppRemote mSpotifyAppRemote;
+    public static String artistId;
 
 
     @Override
@@ -68,49 +93,13 @@ public class PlayTrackActivity extends FragmentActivity {
         prepareData();
         detailTrack = getIntent().getParcelableExtra("Track");
         setData(detailTrack);
+        SharedPreferences sharedPreferences = getSharedPreferences("FollowState", MODE_PRIVATE);
+        // Đặt trạng thái ban đầu cho nút theo dõi từ SharedPreferences
+        isFollowing = sharedPreferences.getBoolean(FOLLOW_PREF_KEY, false);
+//        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("accessToken", "");
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
-        String authToken = sharedPreferences.getString("AUTH_TOKEN", "");
 
-
-//        if (mPlayer == null) {
-//            Config playerConfig = new Config(this, authToken, LoginActivity.CLIENT_ID);
-//
-//            Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
-//
-//                @Override
-//                public void onInitialized(SpotifyPlayer spotifyPlayer) {
-//                    Log.d(TAG, "-- Player initialized --");
-//                    mPlayer = spotifyPlayer;
-//                    mPlayer.addConnectionStateCallback(PlayTrackActivity.this);
-//                    btn_play.setOnClickListener(v -> {
-//                        mPlayer.playUri(new Player.OperationCallback() {
-//                            @Override
-//                            public void onSuccess() {
-//                                logMessage("onSuccess: ", 10);
-//                            }
-//
-//                            @Override
-//                            public void onError(Error error) {
-//                                logMessage(error + "", 10);
-//                            }
-//                        }, detailTrack.uri, 0, 0);
-//                    });
-//
-//                    logMessage("pppp", 10);
-//
-//                    Log.d(TAG, "AccessToken: " + authToken);
-//                    // Set API
-//                }
-//
-//                @Override
-//                public void onError(Throwable throwable) {
-//                    Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
-//                }
-//            });
-//        } else {
-//            mPlayer.login(authToken);
-//        }
 
         ConnectionParams connectionParams =
                 new ConnectionParams.Builder(AuthLoginActivity.CLIENT_ID)
@@ -148,7 +137,94 @@ public class PlayTrackActivity extends FragmentActivity {
             overridePendingTransition(0, 0);
         });
 
+        btnFollow = findViewById(R.id.buttonFollow);
+        btnFollow.setTag("follow"); // Đặt tag ban đầu cho nút button
+        // Thiết lập người nghe cho sự kiện bấm nút
+        if (btnFollow != null) {
+            btnFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Lấy tag hiện tại của nút
+                    String tag = (String) v.getTag();
+
+                    if (!isFollowing) {
+                        // Nếu chưa theo dõi, thực hiện hành động theo dõi
+                        followArtist(detailTrack.artists.get(0).id); // Chỉ lấy id của nghệ sĩ đầu tiên
+                        // Set state after following
+                        setFollowButtonState(btnFollow, true);
+                    } else {
+                        // Nếu đang theo dõi, thực hiện hành động bỏ theo dõi
+                        unfollowArtists(detailTrack.artists.get(0).id);
+                        // Set state after unfollowing
+                        setFollowButtonState(btnFollow, false);
+                    }
+                }
+            });
+        } else {
+            // Nếu btnFollow là null, hiển thị thông báo lỗi
+            Log.e(TAG, "Button btnFollow is null");
+        }
+
+        setFollowButtonState(btnFollow, isFollowing);
     }
+    private void initializeFollowButtonState() {
+        // Kiểm tra trạng thái ban đầu từ SharedPreferences và thiết lập nút theo dõi
+        SharedPreferences sharedPreferences = getSharedPreferences("FollowState", MODE_PRIVATE);
+        isFollowing = sharedPreferences.getBoolean(FOLLOW_PREF_KEY, false);
+        setFollowButtonState(btnFollow, isFollowing);
+    }
+
+    private void setFollowButtonState(Button button, boolean isFollowing) {
+        // Code của bạn ở setFollowButtonState...
+        // Sau khi đặt trạng thái của nút, lưu trạng thái mới vào SharedPreferences
+        SharedPreferences.Editor editor = getSharedPreferences("FollowState", MODE_PRIVATE).edit();
+        editor.putBoolean(FOLLOW_PREF_KEY, isFollowing);
+        // Thay đổi văn bản của nút tùy thuộc vào trạng thái theo dõi
+        if (isFollowing) {
+            button.setText("Bỏ theo dõi");
+        } else {
+            button.setText("Theo dõi");
+        }
+        editor.apply();
+    }
+
+    private void unfollowArtists(String artistId) {
+        Log.e(TAG, "artistId : " + artistId);
+        spotifyService.unfollowArtists(artistId, new Callback<Object>() {
+            @Override
+            public void success(Object object, retrofit.client.Response response) {
+                Log.d(TAG, "UnFollow artist success");
+                Toast.makeText(PlayTrackActivity.this, "Đã bỏ theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+                isFollowing = false;
+                setFollowButtonState(btnFollow, isFollowing); // Cập nhật trạng thái và văn bản của nút
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Error following artist on Spotify: " + error.getMessage());
+                Toast.makeText(PlayTrackActivity.this, "Đã xảy ra lỗi khi bỏ theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void followArtist(String artistId) {
+        spotifyService.followArtists(artistId, new Callback<Object>() {
+            @Override
+            public void success(Object object, retrofit.client.Response response) {
+                Log.d(TAG, "Follow artist success");
+                Toast.makeText(PlayTrackActivity.this, "Đã bắt đầu theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+                isFollowing = true;
+                setFollowButtonState(btnFollow, isFollowing); // Cập nhật trạng thái và văn bản của nút
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Error following artist on Spotify: " + error.getMessage());
+                Toast.makeText(PlayTrackActivity.this, "Đã xảy ra lỗi khi theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @Override
     protected void onStop() {
@@ -185,10 +261,42 @@ public class PlayTrackActivity extends FragmentActivity {
     }
 
     private void setData(Track detailTrack) {
+
         tv_track_name.setText(detailTrack.name);
         tv_track_album.setText(detailTrack.album.name);
         tv_track_arist.setText(detailTrack.artists.get(0).name);
         Glide.with(this).load(detailTrack.album.images.get(0).url).override(Target.SIZE_ORIGINAL).into(track_img);
+
+        List<ArtistSimple> artists = detailTrack.artists; // Danh sách các nghệ sĩ
+        StringBuilder artistNames = new StringBuilder();
+        for (ArtistSimple artist : artists) {
+            artistNames.append(artist.name).append(", "); // Lấy tên của mỗi nghệ sĩ và thêm vào chuỗi
+        }
+        // Loại bỏ dấu phẩy cuối cùng và gán vào TextView
+        TextView artistNameTextView = findViewById(R.id.artist_item_name);
+        artistNameTextView.setText(artistNames.toString().substring(0, artistNames.length() - 2));
+
+        if (!artists.isEmpty()) {
+            ArtistSimple firstArtist = artists.get(0);
+            // Chuyển đổi ArtistSimple sang Artist
+            String artistId = firstArtist.id;
+            spotifyService.getArtist(artistId, new Callback<Artist>() {
+
+                @Override
+                public void success(Artist artist, retrofit.client.Response response) {
+                    if (!artist.images.isEmpty()) {
+                        Image artistImage = artist.images.get(0);
+                        ImageView artistImageView = findViewById(R.id.artist_item_image);
+                        Glide.with(PlayTrackActivity.this).load(artistImage.url).into(artistImageView);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    // Xử lý lỗi khi không thể lấy thông tin về nghệ sĩ
+                }
+            });
+        }
     }
 
 

@@ -3,9 +3,8 @@ plugins {
     id("com.google.devtools.ksp") version "1.9.21-1.0.16" apply false
 }
 android {
-
-    compileSdk 33
-    buildToolsVersion '30.0.2'
+    compileSdkVersion 33
+    buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "com.example.music_mobile_app"
         minSdkVersion 27
@@ -17,27 +16,15 @@ android {
     }
     compileOptions {
         encoding "UTF-8"
-
-        allprojects {
-            tasks.withType(JavaCompile) {
-                options.compilerArgs << "-Xlint:deprecation"
-            }
-        }
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {}
+        debug {
+        }
     }
-
-    buildFeatures {
-        viewBinding = true
-    }
-    namespace 'com.example.music_mobile_app'
-
 }
 
 repositories {
@@ -65,7 +52,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.4.0'
 
 
 //    implementation 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'

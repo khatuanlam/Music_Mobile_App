@@ -5,15 +5,18 @@ import com.example.music_mobile_app.model.User;
 
 import java.util.Map;
 
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface mSpotifyAPI {
@@ -42,8 +45,10 @@ public interface mSpotifyAPI {
     @POST("me/player/previous")
     Call<Void> skipToPrevious();
 
+
     @PUT("me/player/repeat")
     Call<Void> setRepeat();
+
 
     @GET("me/player/currently-playing")
     Call<Track> getCurrentTrack();
@@ -51,4 +56,11 @@ public interface mSpotifyAPI {
     @GET("me/player/recently-played")
     Call<Pager<Track>> getRecentlyTracks(@Header("Authorization") String accessToken, @QueryMap Map<String, Object> var1);
 
+    @DELETE("/me/following?type=user")
+    Call<Pager<Artist>> unfollowArtists(@Header("Authorization") String token, @Query("ids") String artistId);
+
+    @PUT("v1/me/following?type=artist")
+    Call<Pager<Artist>> followArtist(@Query("ids") String artistId, @Header("Authorization") String authToken);
+    @GET("/me/following/contains?type=artist")
+    Call<Pager<Artist>> isFollowingArtists(@Header("Authorization") String token, @Query("ids") String artistId);
 }
