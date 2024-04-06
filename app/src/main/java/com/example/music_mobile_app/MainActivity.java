@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.music_mobile_app.manager.ListManager;
 
@@ -34,6 +35,7 @@ public class MainActivity extends FragmentActivity {
     public static mSpotifyService mSpotifyService;
     public static SpotifyService spotifyService;
     public static String authToken;
+    private TextView tv_playerField;
     public static final ListManager listManager = ListManager.getInstance();
     public static final VariableManager varManager = VariableManager.getInstance();
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -53,6 +55,7 @@ public class MainActivity extends FragmentActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
 
+
         setServiceAPI();
 
         getUserProfile();
@@ -64,7 +67,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setContentView(R.layout.activity_main);
 
     }
 

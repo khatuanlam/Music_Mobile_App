@@ -3,6 +3,7 @@ package com.example.music_mobile_app.adapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +18,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.manager.ListenerManager;
+import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.ui.AlbumFragment;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Track;
+import retrofit.client.Response;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> {
 
@@ -33,7 +43,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
     private List<Track> trackList;
     private List<AlbumSimple> albumList;
     private Fragment fragment;
-
+    private SpotifyService spotifyService = MainActivity.spotifyService;
     private int flag = 0;
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
@@ -98,14 +108,27 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
                 //Set to album
                 itemView.setOnClickListener(v -> {
                     FragmentManager manager = fragment.getChildFragmentManager();
-                    // Send detail album
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("AlbumDetail", (Parcelable) mAlbum);
-                    AlbumFragment albumFragment = new AlbumFragment();
-                    albumFragment.setArguments(bundle);
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.addToBackStack(null);
-                    manager.beginTransaction().replace(R.id.fragment, albumFragment).commit();
+                    MethodsManager.getInstance().getAlbum(mAlbum.id, new ListenerManager.AlbumCompleteListener() {
+                        @Override
+                        public void onComplete(Album album, List<Track> trackList) {
+                            // Send detail album
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("AlbumDetail", (Parcelable) mAlbum);
+                            bundle.putParcelable("Album", (Parcelable) album);
+                            bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
+                            AlbumFragment albumFragment = new AlbumFragment();
+                            albumFragment.setArguments(bundle);
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            transaction.addToBackStack(null);
+                            manager.beginTransaction().replace(R.id.fragment, albumFragment).commit();
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+
+                        }
+                    });
+
                 });
             }
         }
@@ -132,4 +155,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
             item_artist.setText(albumSimple.album_type.toUpperCase());
         }
     }
+
+
 }

@@ -11,6 +11,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +31,14 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.ListenerManager;
+import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.util.HandleBackground;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
@@ -53,8 +59,8 @@ public class AlbumFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView albumArtist, albumName, albumYear;
     private static AlbumSimple albumDetail;
+    private static Album mAlbum;
     private FragmentManager manager;
-
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
     //    private static ListManager listManager = MainActivity.listManager;
@@ -66,13 +72,7 @@ public class AlbumFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get detail album
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            albumDetail = (AlbumSimple) bundle.getParcelable("AlbumDetail");
-        } else {
-            Log.e(TAG, "Cannot get album detail");
-        }
+
         manager = getParentFragmentManager();
     }
 
@@ -91,78 +91,47 @@ public class AlbumFragment extends Fragment {
         btnBack.setOnClickListener(v -> {
             manager.popBackStack();
         });
-        getAlbum(albumDetail.id, new ListenerManager.AlbumCompleteListener() {
-            @Override
-            public void onComplete(Album album) {
-                if (album.id != albumDetail.id) {
-                    albumName.setText(album.name);
-                    albumYear.setText(album.release_date);
-                    albumArtist.setText(album.artists.get(0).name);
-                    Glide.with(getActivity()).load(album.images.get(0).url).into(albumImage);
-                    getAlbumTracks(albumDetail.id, album);
+
+        // Get detail album
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            albumDetail = (AlbumSimple) bundle.getParcelable("AlbumDetail");
+            mAlbum = (Album) bundle.getParcelable("Album");
+            ArrayList<Parcelable> parcelableList = bundle.getParcelableArrayList("ListTrack");
+            List<Track> trackList = new ArrayList<>();
+            // Chuyển đổi từ parcelableList sang List<Track>
+            for (Parcelable parcelable : parcelableList) {
+                if (parcelable instanceof Track) {
+                    trackList.add((Track) parcelable);
                 }
             }
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, mAlbum, new ArrayList<>(), getContext(), getParentFragment());
+            recyclerView.setAdapter(adapter);
+        } else {
+            Log.e(TAG, "Cannot get album detail");
+        }
 
-            @Override
-            public void onError(Throwable error) {
-                Log.e(TAG, error.getMessage());
-            }
-        });
+        albumName.setText(mAlbum.name);
+        albumYear.setText(mAlbum.release_date);
+        albumArtist.setText(mAlbum.artists.get(0).name);
+        Glide.with(this)
+                .load((albumDetail.images.get(0).url != null) ? albumDetail.images.get(0).url : baseImage)
+                .override(Target.SIZE_ORIGINAL).into(albumImage);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Create an instance of HandleBackground and call handleBackground method
-        HandleBackground backgroundHandler = new HandleBackground();
-        backgroundHandler.handleBackground(albumImage, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
-            @Override
-            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
-                // Set the updated Drawable as the background of your view
-                frameLayout.setBackground(updatedDrawable);
-            }
-        });
-
-    }
-
-    private void getAlbum(String albumId, final ListenerManager.AlbumCompleteListener listener) {
-        spotifyService.getAlbum(albumId, new SpotifyCallback<Album>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "Cannot get this album");
-                listener.onError(spotifyError);
-            }
-
-            @Override
-            public void success(Album album, Response response) {
-                // Get albumTracks
-                Log.d(TAG, "Get this album success");
-                varManager.setAlbum(album);
-                listener.onComplete(album);
-            }
-        });
-    }
-
-    private void getAlbumTracks(String id, Album album) {
-        spotifyService.getAlbumTracks(id, new SpotifyCallback<Pager<Track>>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "Cannot get this album tracks");
-            }
-
-            @Override
-            public void success(Pager<Track> trackPager, Response response) {
-                if (trackPager != null && trackPager.items != null) {
-                    Log.d(TAG, "Get this album tracks success ");
-                    List<Track> mList = trackPager.items;
-                    ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(mList, album, new ArrayList<>(), getContext(), getParentFragment());
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    Log.e(TAG, "Album list is null");
-                }
-            }
-        });
+//        // Create an instance of HandleBackground and call handleBackground method
+//        HandleBackground backgroundHandler = new HandleBackground();
+//        backgroundHandler.handleBackground(albumImage, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+//            @Override
+//            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+//                // Set the updated Drawable as the background of your view
+//                frameLayout.setBackground(updatedDrawable);
+//            }
+//        });
     }
 
     private void prepareData(View view) {
@@ -172,7 +141,7 @@ public class AlbumFragment extends Fragment {
         albumName = view.findViewById(R.id.albumName);
         btnBack = view.findViewById(R.id.backButton);
 
-        frameLayout = view.findViewById(R.id.fragment_container);
+        frameLayout = view.findViewById(R.id.album_fragment_container);
         backgroundDrawable = frameLayout.getBackground();
         recyclerView = view.findViewById(R.id.album_recyclerView);
 

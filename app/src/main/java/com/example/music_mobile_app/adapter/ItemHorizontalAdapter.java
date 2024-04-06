@@ -21,10 +21,13 @@ import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.manager.ListenerManager;
+import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.ui.AlbumFragment;
 import com.example.music_mobile_app.ui.PlaylistFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -32,6 +35,7 @@ import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
 
 public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> {
 
@@ -103,22 +107,35 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
 
             if (flag == 0) {
                 itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(context, PlayTrackActivity.class);
+                    Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
                     intent.putExtra("Track", mTrack);
                     intent.putExtra("Track's Album", mAlbum);
-                    context.startActivity(intent);
+                    fragment.getActivity().startActivity(intent);
                 });
             } else {
                 itemView.setOnClickListener(v -> {
                     FragmentManager manager = fragment.getChildFragmentManager();
-                    // Send detail album
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("PlaylistDetail", (Parcelable) mPlaylist);
-                    PlaylistFragment playlistFragment = new PlaylistFragment();
-                    playlistFragment.setArguments(bundle);
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.addToBackStack(null);
-                    manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
+
+                    MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, fragment.getContext(), new ListenerManager.ListTrackOnCompleteListener() {
+                        @Override
+                        public void onComplete(List<Track> trackList) {
+                            // Send detail playlist
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("PlaylistDetail", (Parcelable) mPlaylist);
+                            bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
+                            PlaylistFragment playlistFragment = new PlaylistFragment();
+                            playlistFragment.setArguments(bundle);
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            transaction.addToBackStack(null);
+                            manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+
+                        }
+                    });
+
                 });
             }
         }

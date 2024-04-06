@@ -81,13 +81,7 @@ public class AccountFragment extends Fragment {
         RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
         header.setVisibility(View.GONE);
 
-        imageAvt = view.findViewById(R.id.account_imageAvt);
-        tvName = view.findViewById(R.id.textViewName);
-        recyclerView = view.findViewById(R.id.playlist_recyclerview);
-        btnEditAccount = view.findViewById(R.id.buttonEditAccount);
-        btnLogout = view.findViewById(R.id.buttonLogout);
-        btnBack = view.findViewById(R.id.back);
-        btnCreatePlaylist = view.findViewById(R.id.btn_create_playlist);
+        prepareData(view);
 
         // Onclick back
         btnBack.setOnClickListener(v -> {
@@ -101,6 +95,7 @@ public class AccountFragment extends Fragment {
         });
         // Log out
         btnLogout.setOnClickListener(v -> {
+            // Clear data save
             listManager.clear();
             AuthorizationClient.clearCookies(getContext());
             Log.d(TAG, "Logging out...");
@@ -112,14 +107,22 @@ public class AccountFragment extends Fragment {
             showAddDialog();
         });
 
-        prepareData();
-
-        setPlaylist();
+        setPlaylist(false);
 
         return view;
     }
 
-    private void prepareData() {
+    private void prepareData(View view) {
+
+        imageAvt = view.findViewById(R.id.account_imageAvt);
+        tvName = view.findViewById(R.id.textViewName);
+        recyclerView = view.findViewById(R.id.playlist_recyclerview);
+        btnEditAccount = view.findViewById(R.id.buttonEditAccount);
+        btnLogout = view.findViewById(R.id.buttonLogout);
+        btnBack = view.findViewById(R.id.back);
+        btnCreatePlaylist = view.findViewById(R.id.btn_create_playlist);
+
+        // Setting user profile
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String image = sharedPreferences.getString("imageUrl", "None");
         String name = sharedPreferences.getString("displayName", "None");
@@ -173,7 +176,7 @@ public class AccountFragment extends Fragment {
                 String playlistID = playlist.id;
                 Log.d(TAG, "Create playlist success");
                 // Reload playlist
-                setPlaylist();
+                setPlaylist(true);
             }
 
             @Override
@@ -183,10 +186,9 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    private void setPlaylist() {
+    private void setPlaylist(Boolean type) {
         List<PlaylistSimple> playlistsList = listManager.getPlaylistList();
-
-        if (playlistsList.isEmpty()) {
+        if (playlistsList.isEmpty() || type == true) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 20);
             spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
@@ -200,7 +202,7 @@ public class AccountFragment extends Fragment {
                     Log.d(TAG, "Get playlist success: ");
                     List<PlaylistSimple> mList = playlistSimplePager.items;
                     listManager.setPlaylistList(mList);
-                    setPlaylist();
+                    setPlaylist(false);
                 }
             });
         }
@@ -208,6 +210,5 @@ public class AccountFragment extends Fragment {
         adapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(adapter);
-
     }
 }

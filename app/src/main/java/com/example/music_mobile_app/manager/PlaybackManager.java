@@ -13,9 +13,13 @@ import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.ErrorCallback;
+import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 
 import java.util.List;
+import java.util.Map;
+
+import kaaes.spotify.webapi.android.SpotifyService;
 
 
 public class PlaybackManager {
@@ -26,63 +30,80 @@ public class PlaybackManager {
     private Context context;
     private final ErrorCallback mErrorCallback = this::logError;
 
-    public static PlaybackManager getInstance(Context context) {
+    public interface SpotifyAppRemoteConnectorListener {
+        void onSpotifyAppRemoteConnected();
+    }
+
+    public static PlaybackManager getInstance(Context context, Subscription.EventCallback<PlayerState> mPlayerStateCallback) {
         if (playbackManager == null) {
-            playbackManager = new PlaybackManager(context);
+            playbackManager = new PlaybackManager(context, mPlayerStateCallback);
         }
         return playbackManager;
     }
 
-    public PlaybackManager(Context context) {
+    public PlaybackManager(Context context, Subscription.EventCallback<PlayerState> mPlayerStateCallback) {
         this.context = context;
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
 
         // Connect to Spotify Player
-        ConnectionParams connectionParams =
-                new ConnectionParams.Builder(AuthLoginActivity.CLIENT_ID)
-                        .setRedirectUri(AuthLoginActivity.REDIRECT_URI)
-                        .showAuthView(true)
-                        .build();
+        ConnectionParams connectionParams = new ConnectionParams.Builder(AuthLoginActivity.CLIENT_ID).setRedirectUri(AuthLoginActivity.REDIRECT_URI).showAuthView(true).build();
 
-        SpotifyAppRemote.connect(context, connectionParams,
-                new Connector.ConnectionListener() {
-                    @Override
-                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                        mSpotifyAppRemote = spotifyAppRemote;
-                        Log.d(TAG, "Player Connected");
-                        // Now you can start interacting with App Remote
-                    }
+        SpotifyAppRemote.connect(context, connectionParams, new Connector.ConnectionListener() {
+            @Override
+            public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                mSpotifyAppRemote = spotifyAppRemote;
+                Log.d(TAG, "Player Connected");
+                // Now you can start interacting with App Remote
+                setPlayerState(mPlayerStateCallback);
 
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.e("MainActivity", throwable.getMessage(), throwable);
-                        // Something went wrong when attempting to connect! Handle errors here
-                    }
-                });
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.e("MainActivity", throwable.getMessage(), throwable);
+                // Something went wrong when attempting to connect! Handle errors here
+            }
+        });
+    }
+
+    public void setPlayerState(Subscription.EventCallback<PlayerState> mPlayerStateCallback) {
+        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(mPlayerStateCallback);
     }
 
     public void play(String uri) {
-        mSpotifyAppRemote.getPlayerApi().play(uri)
-                .setResultCallback(empty -> {
-                }).setErrorCallback(this::logError);
+        mSpotifyAppRemote.getPlayerApi().play(uri).setResultCallback(empty -> {
+        }).setErrorCallback(this::logError);
+    }
+
+    public void onSeekForward() {
+        mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(15000).setResultCallback(data -> logMessage("seek fwd", 10)).setErrorCallback(mErrorCallback);
     }
 
 
+    public void onSeekBack() {
+        mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(-15000).setResultCallback(data -> logMessage("seek back", 10)).setErrorCallback(mErrorCallback);
+    }
 
-    public void resumeOrPausePlayer() {
-        mSpotifyAppRemote.
-                getPlayerApi()
-                .getPlayerState().setResultCallback(playerState -> {
-                    if (playerState.isPaused) {
-                        mSpotifyAppRemote.getPlayerApi().resume()
-                                .setResultCallback(msg -> {
-                                });
-                    } else {
-                        mSpotifyAppRemote.getPlayerApi().pause()
-                                .setResultCallback(msg -> {
+    public void onSkipNextButtonClicked() {
+        mSpotifyAppRemote.getPlayerApi().skipNext().setResultCallback(data -> logMessage("skip next", 10)).setErrorCallback(mErrorCallback);
+    }
 
-                                });
-                    }
-                });
+    public void onPlayPauseButtonClicked() {
+        mSpotifyAppRemote.getPlayerApi().getPlayerState().setResultCallback(playerState -> {
+            if (playerState.isPaused) {
+                mSpotifyAppRemote.getPlayerApi().resume().setResultCallback(empty -> logMessage("play", 10)).setErrorCallback(mErrorCallback);
+            } else {
+                mSpotifyAppRemote.getPlayerApi().pause().setResultCallback(empty -> logMessage("pause", 10)).setErrorCallback(mErrorCallback);
+            }
+        });
+    }
+
+    public void onToggleShuffleButtonClicked() {
+        mSpotifyAppRemote.getPlayerApi().toggleShuffle().setResultCallback(empty -> logMessage("toggle shuffle", 10)).setErrorCallback(mErrorCallback);
+    }
+
+    public void Disconnect() {
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
     public void onRepeatMode() {
@@ -90,21 +111,16 @@ public class PlaybackManager {
     }
 
     public PlayerApi getPlayerApi() {
-        playerApi = mSpotifyAppRemote.getPlayerApi();
-        return playerApi;
+        return mSpotifyAppRemote.getPlayerApi();
     }
 
-    public void setPlayerApi(PlayerApi playerApi) {
-        this.playerApi = playerApi;
-    }
 
     private void logMessage(String msg, int duration) {
-        Toast.makeText(context, msg, duration).show();
         Log.d(TAG, msg);
     }
 
     private void logError(Throwable throwable) {
-        Toast.makeText(context, "logError", Toast.LENGTH_SHORT).show();
         Log.e(TAG, "", throwable);
     }
+
 }

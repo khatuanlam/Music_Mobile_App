@@ -12,4 +12,6 @@
     <string name="code">Code: %1$s</string>
     <string name="token">Access Token: %1$s</string>
     <string name="welcome_text">Sign up for free music on your phone, tablet, and computer.</string>
+    <string name="non_title">No title</string>
+
 </resources>
