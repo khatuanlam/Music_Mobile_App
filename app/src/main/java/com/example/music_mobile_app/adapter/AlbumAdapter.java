@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -17,56 +18,55 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.model.Album;
-import com.example.music_mobile_app.model.Track;
+import com.example.music_mobile_app.model.Album;
 import com.example.music_mobile_app.ui.FavoriteFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
-    private List<Track> trackList;
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
+    private List<Album> AlbumList;
     private Context context;
     private FavoriteFragment favoriteFragment;
     private boolean showDeleteMenuItem = false;
-    public TrackAdapter(List<Track> trackList, FragmentActivity activity) {
+    public AlbumAdapter(List<Album> AlbumList, FragmentActivity activity) {
 
     }
 
-    public TrackAdapter(List<Track> trackList,Context context) {
-        this.trackList = trackList;
+    public AlbumAdapter(List<Album> AlbumList,Context context) {
+        this.AlbumList = AlbumList;
         this.context = context;
         notifyDataSetChanged();
     }
 
 
-    private ListenerManager.TrackAdapterListener listener;
+    private ListenerManager.AlbumAdapterListener listener;
 
-    public void setListener(ListenerManager.TrackAdapterListener listener) {
+    public void setListener(ListenerManager.AlbumAdapterListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public TrackAdapter.TrackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false);
-        return new TrackViewHolder(view);
+    public AlbumAdapter.AlbumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.liked_item, parent, false);
+        return new AlbumViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull TrackViewHolder holder, int position) {
-        if (trackList != null) {
-            Track track = trackList.get(position);
-            holder.TextViewPosition.setText(String.valueOf(position + 1 ));
-            holder.trackName.setText(track.getName());
-            holder.artistName.setText(track.getArtists().get(0).getName());
+    public void onBindViewHolder(@NonNull AlbumViewHolder holder, int position) {
+        if (AlbumList != null) {
+            Album Album = AlbumList.get(position);
+            holder.AlbumName.setText(Album.getName());
+            holder.artistName.setText(Album.getArtists().get(0).getName());
 
-            Album album = track.getAlbum();
-            if (album != null && album.getImageUrl() != null && !album.getImageUrl().isEmpty()) {
-                String imageUrl = album.getImageUrl().get(0).getUrl();
-                Picasso.get().load(imageUrl).into(holder.trackImage);
+
+            if (Album != null && Album.getImageUrl() != null && !Album.getImageUrl().isEmpty()) {
+                String imageUrl = Album.getImageUrl().get(0).getUrl();
+                Picasso.get().load(imageUrl).into(holder.AlbumImage);
             } else {
-                holder.trackImage.setVisibility(View.GONE);
+                holder.AlbumImage.setVisibility(View.GONE);
             }
 
             // Set OnClickListener for overflow button
@@ -79,6 +79,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
                     }
                 }
             });
+//            holder.likeButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
         }
     }
 
@@ -92,7 +98,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
                 switch (item.getItemId()){
                     case R.id.delete_from_favorite:
                         if (listener != null) {
-                            listener.onDeleteTrackClicked(trackList.get(position).getId());
+                            listener.onDeleteAlbumClicked(AlbumList.get(position).getId());
                         }
                         return true;
                     default:
@@ -106,22 +112,22 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
 
     @Override
     public int getItemCount() {
-        return trackList != null ? trackList.size() : 0;
+        return AlbumList != null ? AlbumList.size() : 0;
     }
 
-    public class TrackViewHolder extends RecyclerView.ViewHolder {
+    public class AlbumViewHolder extends RecyclerView.ViewHolder {
         TextView TextViewPosition;
-        TextView trackName;
+        TextView AlbumName;
         TextView artistName;
-        ImageView trackImage;
-        ImageButton overflowButton;
-        public TrackViewHolder(@NonNull View itemView) {
+        ImageView AlbumImage;
+        Button likeButton, overflowButton;
+        public AlbumViewHolder(@NonNull View itemView) {
             super(itemView);
-            TextViewPosition = itemView.findViewById(R.id.textViewPosition);
-            trackName = itemView.findViewById(R.id.songTitle);
-            artistName = itemView.findViewById(R.id.artistname);
-            trackImage = itemView.findViewById(R.id.TrackImageSong);
-            overflowButton = itemView.findViewById(R.id.overflowSongmenu);
+//            TextViewPosition = itemView.findViewById(R.id.textViewPosition);
+            AlbumName = itemView.findViewById(R.id.ItemTitleLiked);
+            artistName = itemView.findViewById(R.id.ItemArtistLiked);
+            AlbumImage = itemView.findViewById(R.id.ItemImage);
+            overflowButton = itemView.findViewById(R.id.overflowAlbumMenu);
         }
     }
 }

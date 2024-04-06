@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class SavedAlbum {
     @SerializedName("added_at")
     private String added_at;
-    @SerializedName("track")
+    @SerializedName("album")
     private Album album;
 
     public String getAdded_at() {

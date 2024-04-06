@@ -1,73 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/item_song.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
+    android:padding="13dp"
     android:background="@color/black">
 
-
-
-<!--    <TextView-->
-<!--        android:id="@+id/textViewPosition"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="1."-->
-<!--        android:textSize="20dp"-->
-<!--        android:textColor="@color/white"/>-->
-
     <ImageView
-        android:id="@+id/TrackImage"
+        android:id="@+id/ItemImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/sontungmtp" />
+
     <LinearLayout
+        android:id="@+id/textContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/ItemImage"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/TrackTitleLiked"
-            android:layout_width="227dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:text="Em của ngày hôm qua"
-            android:textColor="@color/white"
-            android:textSize="23dp"
-            android:gravity="center"
-            />
 
         <TextView
-            android:id="@+id/artistnameLiked"
+            android:id="@+id/ItemTitleLiked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:text="Em của ngày hôm qua"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:fontFamily="@font/gotham_medium"
+            android:textSize="23dp" />
+
+        <TextView
+            android:id="@+id/ItemArtistLiked"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
             android:text="Sơn Tùng M-TP"
             android:layout_marginLeft="20dp"
             android:textColor="@color/white"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:fontFamily="@font/gotham_medium"/>
+
     </LinearLayout>
 
-
-
-
     <ImageButton
-        android:id="@+id/overflowButton"
+        android:id="@+id/likeButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/ic_like_black_24dp"
-        android:layout_gravity="center"
-        android:contentDescription="TODO" />
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/ic_overflow">
-    </Button>
-</LinearLayout>
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/ic_like_black_24dp"
+        android:contentDescription="TODO" />
+
+    <Button
+        android:id="@+id/overflowAlbumMenu"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toStartOf="@+id/likeButton"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:background="@drawable/ic_overflow" />
+
+</RelativeLayout>

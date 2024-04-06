@@ -7,7 +7,7 @@
         android:id="@+id/search_options_view_item_menu_add_favorite"
         android:title="Thêm vào danh sách yêu thích" />
     <item
-        android:id="@+id/deleteTrack_from_favorite"
+        android:id="@+id/delete_from_favorite"
         android:title="Xoá khỏi danh sách yêu thích"
 
         />

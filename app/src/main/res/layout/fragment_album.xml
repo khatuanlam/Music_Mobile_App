@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
+    android:padding="20dp"
     tools:context=".ui.AlbumFragment">
 
 
@@ -41,41 +42,31 @@
                 android:id="@+id/albumName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/gotham_bold"
+                android:fontFamily="@font/gotham_medium"
                 android:text="Chúng ta của hiện tại"
-
                 android:textSize="32dp"
                 android:textColor="@color/white"/>
 
-
             <TextView
-                android:id="@+id/albumArtistname"
+                android:id="@+id/albumArtist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/gotham_medium"
                 android:text="Sơn Tùng M-TP"
-
                 android:textSize="20dp"
                 android:textColor="@color/white"/>
 
-
             <TextView
-                android:id="@+id/albumRelease_date"
+                android:id="@+id/albumYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/gotham_medium"
                 android:text="Album - 2019"
                 android:textColor="@color/colorNavIcon"
-
-                android:textSize="13dp"
-                />
-
+                android:textSize="13dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -85,23 +76,21 @@
             android:gravity="end">
 
             <Button
-                android:id="@+id/button10"
-                android:layout_width="43dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
+                android:id="@+id/btn_add_to_fav"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/ic_like_black_24dp" />
 
             <Button
-                android:id="@+id/button12"
+                android:id="@+id/btn_play_album"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/ic_playpng" />
+                android:background="@drawable/ic_play" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerAlbumView"
+            android:id="@+id/album_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

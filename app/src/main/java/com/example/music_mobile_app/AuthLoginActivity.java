@@ -46,7 +46,7 @@ public class AuthLoginActivity extends FragmentActivity {
 
         builder.setScopes(new String[]{"streaming",
                 "user-read-private", "user-top-read", "user-read-recently-played",
-                "playlist-modify-public", "playlist-read-private", " playlist-modify-private",
+                "playlist-modify-public", "playlist-read-private", " playlist-modify-private", "user-library-modify",
                 "user-library-read", "user-read-playback-state", "user-modify-playback-state", "user-read-currently-playing"});
 
         AuthorizationRequest request = builder.build();

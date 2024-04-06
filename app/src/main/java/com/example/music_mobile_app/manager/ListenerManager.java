@@ -18,4 +18,8 @@ public class ListenerManager {
         void onDeleteTrackClicked(String trackId);
         int findTrackPositionById(String trackId);
     }
+    public static interface AlbumAdapterListener {
+        void onDeleteAlbumClicked(String albumId);
+        int findAlbumPositionById(String albumID);
+    }
 }

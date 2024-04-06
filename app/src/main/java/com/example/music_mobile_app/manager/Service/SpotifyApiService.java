@@ -66,10 +66,8 @@ public interface SpotifyApiService {
     Call<Void> deleteTracks(@Body Map<String, Object> body);
     @DELETE("me/albums")
     Call<Void> removeFromMyAlbums(@Query("ids") String ids, @Body List<String> albumIds);
-
-
-    @PUT("me/tracks")
-    Call<Void> addToMyTracks(@Query("ids") String ids, @Body List<String> trackIds);
+    @DELETE("me/albums")
+    Call<Void> removeFromMyAlbums(@Query("ids") String AlbumId);
     @PUT("me/albums")
     Call<Void> addToMyAlbums(@Query("ids") String ids, @Body List<String> albumIds);
 
