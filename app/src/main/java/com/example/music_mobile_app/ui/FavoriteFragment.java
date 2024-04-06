@@ -20,14 +20,11 @@ import android.widget.TextView;
 
 import com.example.music_mobile_app.R;
 
-
 public class FavoriteFragment extends Fragment {
-
 
     private RecyclerView favorite_recycleview;
 
     private TextView quantity;
-
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -36,18 +33,17 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        //Hide header
-//        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
-//        header.setVisibility(View.GONE);
+        // //Hide header
+        // RelativeLayout header =
+        // getParentFragment().getView().findViewById(R.id.header);
+        // header.setVisibility(View.GONE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
-
-
         return view;
     }
 
@@ -55,6 +51,5 @@ public class FavoriteFragment extends Fragment {
         quantity = view.findViewById(R.id.quantity);
         favorite_recycleview = view.findViewById(R.id.favorite_recycleview);
 
-        
     }
 }

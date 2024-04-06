@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,47 +23,47 @@ import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.manager.ListenerManager;
-import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.VariableManager;
+import com.example.music_mobile_app.ui.AccountFragment;
 import com.example.music_mobile_app.ui.AlbumFragment;
-import com.example.music_mobile_app.ui.PlaylistFragment;
+import com.example.music_mobile_app.ui.PlaylistDetailFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TrackSimple;
 
-public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> {
+public class PlayTrackAdapter extends RecyclerView.Adapter<PlayTrackAdapter.ItemHorizontalHolder> {
 
     private final String TAG = this.getClass().getSimpleName();
+
     private List<Track> trackList;
     private List<PlaylistSimple> playlistList;
+
     private Context context;
-    private Fragment fragment;
-    private Album mAlbum;
     private int selectedItem = RecyclerView.NO_POSITION; // Khởi tạo biến để lưu vị trí item được chọn
     private int flag = 0;
     private static VariableManager varManager = MainActivity.varManager;
+    // Khai báo một biến để lưu trữ playlistId đã chọn
+    private String selectedPlaylistId = null;
+
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
-    public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context,
-                                 Fragment fragment) {
+    public interface OnPlaylistClickListener {
+        void onPlaylistClick(String playlistId);
+    }
+
+    private OnPlaylistClickListener playlistClickListener;
+
+    public void setOnPlaylistClickListener(OnPlaylistClickListener listener) {
+        this.playlistClickListener = listener;
+    }
+
+    public PlayTrackAdapter(List<Track> trackList, List<PlaylistSimple> playlistList, Context context) {
         this.trackList = trackList;
         this.playlistList = playlistList;
         this.context = context;
-        this.fragment = fragment;
-        if (album == null) {
-            this.mAlbum = new Album();
-        } else {
-            this.mAlbum = album;
-        }
-
     }
 
     @NonNull
@@ -85,8 +85,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         }
 
         // Thiết lập màu nền cho item dựa trên selectedItem
-        holder.itemView.setBackgroundColor(
-                position == selectedItem ? ContextCompat.getColor(context, R.color.purple_50) : Color.TRANSPARENT);
+        holder.itemView.setBackgroundColor(position == selectedItem ? ContextCompat.getColor(context, R.color.purple_50) : Color.TRANSPARENT);
     }
 
     @Override
@@ -113,40 +112,23 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             item_name = itemView.findViewById(R.id.horizontal_item_name);
             item_artist = itemView.findViewById(R.id.horizontal_item_artist);
 
-            if (flag == 0) {
-                itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
+            itemView.setOnClickListener(v -> {
+                // Cập nhật selectedItem khi item được click
+                selectedItem = getAdapterPosition();
+                notifyDataSetChanged();
+
+                // Xử lý logic khi item được click ở đây
+                if (flag == 0) {//Nếu là track
+                    Intent intent = new Intent(context, PlayTrackActivity.class);
                     intent.putExtra("Track", mTrack);
-                    intent.putExtra("Track's Album", mAlbum);
-                    fragment.getActivity().startActivity(intent);
-                });
-            } else {
-                itemView.setOnClickListener(v -> {
-                    FragmentManager manager = fragment.getChildFragmentManager();
-
-                    MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, fragment.getContext(),
-                            new ListenerManager.ListTrackOnCompleteListener() {
-                                @Override
-                                public void onComplete(List<Track> trackList) {
-                                    // Send detail playlist
-                                    Bundle bundle = new Bundle();
-                                    bundle.putParcelable("PlaylistDetail", (Parcelable) mPlaylist);
-                                    bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
-                                    PlaylistFragment playlistFragment = new PlaylistFragment();
-                                    playlistFragment.setArguments(bundle);
-                                    FragmentTransaction transaction = manager.beginTransaction();
-                                    transaction.addToBackStack(null);
-                                    manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
-                                }
-
-                                @Override
-                                public void onError(Throwable error) {
-
-                                }
-                            });
-
-                });
-            }
+                    context.startActivity(intent);
+                } else {//Nếu là playlist
+                    Log.d(TAG, "Playlist Clicked: " + mPlaylist.id);
+                    if (playlistClickListener != null) {
+                        playlistClickListener.onPlaylistClick(mPlaylist.id);
+                    }
+                }
+            });
         }
 
         public void bindPlaylist(final PlaylistSimple playlist) {
@@ -163,11 +145,6 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             this.mTrack = track;
             item_name.setText(track.name);
             item_artist.setText(track.artists.get(0).name);
-            if (track.album != null) {
-                baseImage = track.album.images.get(0).url;
-            } else {
-                baseImage = mAlbum.images.get(0).url;
-            }
             Glide.with(context).load(baseImage).override(Target.SIZE_ORIGINAL).into(item_image);
         }
     }

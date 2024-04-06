@@ -1,12 +1,12 @@
 package com.example.music_mobile_app.manager;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListManager {
@@ -14,7 +14,9 @@ public class ListManager {
     private static ListManager listManager;
 
     private List<PlaylistSimple> playlistList;
-    
+
+    private List<PlaylistTrack> playlistTracks;
+
     private List<Track> recentlyTracks;
 
     private List<Track> recommendTracks;
@@ -22,7 +24,6 @@ public class ListManager {
     private List<Track> topTracks;
     private List<AlbumSimple> albums;
     private List<Track> albumTracks;
-
 
     public List<AlbumSimple> getAlbums() {
         return albums;
@@ -45,6 +46,7 @@ public class ListManager {
 
     public ListManager() {
         playlistList = new ArrayList<>();
+        playlistTracks = new ArrayList<>();
         recentlyTracks = new ArrayList<>();
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
@@ -64,8 +66,16 @@ public class ListManager {
         return playlistList;
     }
 
+    public List<PlaylistTrack> getPlaylistTracks() {
+        return playlistTracks;
+    }
+
     public void setPlaylistList(List<PlaylistSimple> playlistList) {
         this.playlistList = playlistList;
+    }
+
+    public void setPlaylistTracks(List<PlaylistTrack> playlistTracks) {
+        this.playlistTracks = playlistTracks;
     }
 
     public static void setListManager(ListManager listManager) {
@@ -79,7 +89,6 @@ public class ListManager {
     public void setTopTracks(List<Track> topTracks) {
         this.topTracks = topTracks;
     }
-
 
     public List<Track> getRecentlyTracks() {
         return recentlyTracks;

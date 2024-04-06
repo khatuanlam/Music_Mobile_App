@@ -41,9 +41,7 @@ public class PlaylistFragment extends Fragment {
 
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
-
     private PlaylistSimple playlistDetail;
-
 
     public PlaylistFragment() {
 
@@ -65,10 +63,11 @@ public class PlaylistFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
-        //Hide header
+        // Hide header
         RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
         header.setVisibility(View.GONE);
 
@@ -85,7 +84,6 @@ public class PlaylistFragment extends Fragment {
 
     }
 
-
     private void preparedData(View view) {
 
         playlistImage = view.findViewById(R.id.playlistImage);
@@ -98,7 +96,8 @@ public class PlaylistFragment extends Fragment {
 
         playlistName.setText(playlistDetail.name);
         playlistOwner.setText(playlistDetail.owner.display_name);
-        Glide.with(this).load((playlistDetail.images.isEmpty()) ? baseImage : playlistDetail.images.get(0).url).override(Target.SIZE_ORIGINAL).into(playlistImage);
+        Glide.with(this).load((playlistDetail.images.isEmpty()) ? baseImage : playlistDetail.images.get(0).url)
+                .override(Target.SIZE_ORIGINAL).into(playlistImage);
 
     }
 
@@ -114,7 +113,8 @@ public class PlaylistFragment extends Fragment {
                     trackList.add((Track) parcelable);
                 }
             }
-            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), getParentFragment());
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(),
+                    getParentFragment());
             recyclerView.setAdapter(adapter);
         } else {
             Log.e(TAG, "Cannot get album detail");

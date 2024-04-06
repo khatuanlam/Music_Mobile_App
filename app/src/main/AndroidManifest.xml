@@ -45,7 +45,6 @@
         <activity
             android:name=".EditAccountActivity"
             android:theme="@style/Theme.AppCompat" />
-
         <activity
             android:name=".AuthLoginActivity"
             android:exported="true"

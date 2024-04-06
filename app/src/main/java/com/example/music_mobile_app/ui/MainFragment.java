@@ -52,10 +52,9 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
         homeLayout = view.findViewById(R.id.nav_home);
         favoriteLayout = view.findViewById(R.id.nav_favorite);
         searchLayout = view.findViewById(R.id.nav_search);
@@ -98,14 +97,16 @@ public class MainFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
-                    if (view.isActivated()) break;
+                    if (view.isActivated())
+                        break;
                     transaction.replace(R.id.fragment, new HomeFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
                     setFocusMode(current_view);
                     break;
                 case R.id.nav_favorite:
                     Log.d(TAG, "FAVORITE");
-                    if (view.isActivated()) break;
+                    if (view.isActivated())
+                        break;
                     transaction.replace(R.id.fragment, new FavoriteFragment()).commit();
                     current_view = new IconNavbar(favoriteLayout, view, favoriteText, favorite);
                     setFocusMode(current_view);

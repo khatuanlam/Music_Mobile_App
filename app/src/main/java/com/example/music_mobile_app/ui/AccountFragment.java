@@ -206,7 +206,8 @@ public class AccountFragment extends Fragment {
                 }
             });
         }
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(), getParentFragment());
+        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(),
+                getParentFragment());
         adapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(adapter);

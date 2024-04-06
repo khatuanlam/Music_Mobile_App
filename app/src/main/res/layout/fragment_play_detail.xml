@@ -1,0 +1,71 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_account"
+    tools:context=".ui.PlaylistDetailFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/BtnBack"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_arrow_back_24dp"
+            android:background="@color/colorTransparent" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <ImageView
+                android:id="@+id/song_playlist_avt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:foreground="@drawable/overlay_dark"
+                android:foregroundGravity="fill"/>
+
+            <TextView
+                android:id="@+id/textSongName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/gotham_bold"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/songNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:text="0 bài hát"
+            android:textColor="@color/colorGrayLight"/>
+
+        <Button
+            android:id="@+id/playSongButton"
+            android:layout_width="60dp"
+            android:layout_height="51dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/ic_play" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/song_playlist_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:nestedScrollingEnabled="true"/>
+    </LinearLayout>
+
+</FrameLayout>

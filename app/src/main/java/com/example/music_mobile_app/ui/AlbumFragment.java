@@ -63,7 +63,7 @@ public class AlbumFragment extends Fragment {
     private FragmentManager manager;
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
-    //    private static ListManager listManager = MainActivity.listManager;
+    // private static ListManager listManager = MainActivity.listManager;
     private static VariableManager varManager = MainActivity.varManager;
 
     public AlbumFragment() {
@@ -78,7 +78,7 @@ public class AlbumFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         // Hide header
@@ -105,7 +105,8 @@ public class AlbumFragment extends Fragment {
                     trackList.add((Track) parcelable);
                 }
             }
-            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, mAlbum, new ArrayList<>(), getContext(), getParentFragment());
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, mAlbum, new ArrayList<>(),
+                    getContext(), getParentFragment());
             recyclerView.setAdapter(adapter);
         } else {
             Log.e(TAG, "Cannot get album detail");
@@ -123,15 +124,16 @@ public class AlbumFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        // Create an instance of HandleBackground and call handleBackground method
-//        HandleBackground backgroundHandler = new HandleBackground();
-//        backgroundHandler.handleBackground(albumImage, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
-//            @Override
-//            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
-//                // Set the updated Drawable as the background of your view
-//                frameLayout.setBackground(updatedDrawable);
-//            }
-//        });
+        // // Create an instance of HandleBackground and call handleBackground method
+        // HandleBackground backgroundHandler = new HandleBackground();
+        // backgroundHandler.handleBackground(albumImage, backgroundDrawable, new
+        // HandleBackground.OnPaletteGeneratedListener() {
+        // @Override
+        // public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+        // // Set the updated Drawable as the background of your view
+        // frameLayout.setBackground(updatedDrawable);
+        // }
+        // });
     }
 
     private void prepareData(View view) {
