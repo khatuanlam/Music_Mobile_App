@@ -1,7 +1,5 @@
 package com.example.music_mobile_app;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,13 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,30 +33,30 @@ import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TrackSimple;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.adapter.PlayTrackAdapter;
-import com.example.music_mobile_app.manager.ListenerManager;
+import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
+import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.PlaybackManager;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.gson.Gson;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Flow;
 
-public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdapter.OnPlaylistClickListener {
+public class PlayTrackActivity extends FragmentActivity {
 
     private static final String TAG = PlayTrackActivity.class.getSimpleName();
 
@@ -78,8 +72,8 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
     private Track detailTrack;
     private Album detailAlbum;
     private PlaybackManager playbackManager;
-    private SpotifyService spotifyService;
-    private String selectedPlaylistId, trackID;
+    private SpotifyService spotifyService = MainActivity.spotifyService;
+    private String selectedPlaylistId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,17 +102,11 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
             // Lấy ra TrackID
             String trackID = detailTrack.id;
             Log.d(TAG, "Track ID: " + trackID);
-            showPlaylistDialog();
+            showAddToPlaylist();
         });
     }
 
-    @Override
-    public void onPlaylistClick(String playlistId) {
-        Log.d(TAG, "Clicked playlistId: " + playlistId);
-        selectedPlaylistId = playlistId; // Lưu playlistId được chọn
-    }
-
-    private void showPlaylistDialog() {
+    private void showAddToPlaylist() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View addView = inflater.inflate(R.layout.dialog_playlist, null);
@@ -128,15 +116,13 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
         // Tạo adapter và gán cho RecyclerView
         recyclerView = addView.findViewById(R.id.playlist_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        PlayTrackAdapter adapter = new PlayTrackAdapter(new ArrayList<>(), new ArrayList<>(), this);
-        recyclerView.setAdapter(adapter);
-
+//
         buttonAddPlaylist = addView.findViewById(R.id.buttonAddPlaylist);
         buttonAddSong = addView.findViewById(R.id.buttonAddSong);
-        // buttonBack = addView.findViewById(R.id.BtnBackPlaylist);
 
         AlertDialog alertDialog = builder.create();
-        setPlaylist(); // Gọi hàm này sau khi gán adapter cho RecyclerView
+        setPlaylist(ListManager.getInstance().getPlaylistList());
+
 
         // Create playlist
         buttonAddPlaylist.setOnClickListener(v -> {
@@ -149,11 +135,8 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
         buttonAddSong.setOnClickListener(v -> {
             if (selectedPlaylistId != null) { // Kiểm tra xem đã chọn playlist chưa
                 Log.d(TAG, "Success!!!!");
-                Log.d(TAG, "PlaylistID:" + selectedPlaylistId);
-                Log.d(TAG, "Track ID: " + trackID);
-
-                createSongPlaylistOnSpotify(selectedPlaylistId, trackID);
-                Toast.makeText(PlayTrackActivity.this, "Add song playlist successful!!", Toast.LENGTH_SHORT).show();
+                addToPlaylist(selectedPlaylistId, detailTrack);
+                Toast.makeText(this, "Add song playlist successful!!", Toast.LENGTH_SHORT).show();
             } else {
                 Log.d(TAG, "fail");
                 // Thông báo cho người dùng rằng họ cần chọn một playlist trước khi thêm bài hát
@@ -163,33 +146,32 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
         });
     }
 
-    private void setupRecyclerView(List<PlaylistSimple> playlistList) {
-        PlayTrackAdapter adapter = new PlayTrackAdapter(new ArrayList<>(), playlistList, this);
-        adapter.setOnPlaylistClickListener(this);
+    private void setPlaylist(List<PlaylistSimple> playlistList) {
+        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistList, this, null);
+        adapter.setSend(true);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 
-    private void setPlaylist() {
-        Map<String, Object> options = new HashMap<>();
-        options.put(SpotifyService.LIMIT, 6);
-        spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "failure: " + spotifyError.getErrorDetails());
-            }
 
-            @Override
-            public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-                Log.d(TAG, "Get playlist success: ");
-                List<PlaylistSimple> mList = playlistSimplePager.items;
-                setupRecyclerView(mList);
-            }
-        });
+    // Xử lý dữ liệu được truyền từ Adapter
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataEvent(PlaylistSimple playlistSimple) {
+        selectedPlaylistId = playlistSimple.id;
+        String name = playlistSimple.name;
+        Toast.makeText(this, "Clicked item: " + name, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
         playbackManager.Disconnect();
     }
 
@@ -238,14 +220,13 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
         @Override
         public void onEvent(PlayerState playerState) {
 
-            if (playerState.track.name != detailTrack.name) {
+            if (playerState.track.name != detailTrack.name || playerState.track == null) {
                 playbackManager.play(detailTrack.uri);
             }
 
             btn_play.setOnClickListener(v -> {
                 playbackManager.onPlayPauseButtonClicked();
             });
-            playbackManager.play(detailTrack.uri);
 
             SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
             tv_endTime.setText(formatter.format(playerState.track.duration));
@@ -372,7 +353,6 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
                 String playlistID = playlist.id;
                 Log.d(TAG, "Create playlist success");
                 // Reload playlist
-                setPlaylist();
             }
 
             @Override
@@ -383,29 +363,29 @@ public class PlayTrackActivity extends FragmentActivity implements PlayTrackAdap
         });
     }
 
-    private void createSongPlaylistOnSpotify(String selectedPlaylistId, String trackID) {
-        // Tạo tham số cho yêu cầu POST
-        Map<String, Object> queryParams = new HashMap<>();
+    private void addToPlaylist(String selectedPlaylistId, Track mTrack) {
 
+        Map<String, Object> options = new HashMap<>();
         Map<String, Object> bodyParams = new HashMap<>();
         List<String> uris = new ArrayList<>();
-        uris.add("spotify:track:" + trackID); // Thêm URI của bài hát vào danh sách
+        uris.add(mTrack.uri); // Thêm URI của bài hát vào danh sách
         bodyParams.put("uris", uris);
+//        bodyParams.put("position", ListManager.getInstance().getPlaylistList().size() + 1);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
         // Gọi API để thêm bài hát vào playlist
-        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, queryParams, bodyParams,
-                new Callback<Pager<PlaylistTrack>>() {
+        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, options, bodyParams,
+                new SpotifyCallback<Pager<PlaylistTrack>>() {
                     @Override
-                    public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-                        Log.d(TAG, "Create song playlist success");
+                    public void failure(SpotifyError spotifyError) {
+                        Log.e(TAG, "Error creating song playlist on Spotify: " + spotifyError.getMessage());
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        // Xử lý khi gặp lỗi
-                        Log.e(TAG, "Error creating song playlist on Spotify: " + error.getMessage());
+                    public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                        Log.d(TAG, "Create song playlist success");
+
                     }
                 });
     }

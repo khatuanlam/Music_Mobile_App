@@ -123,7 +123,6 @@ public class MainActivity extends FragmentActivity {
         mSpotifyService = new mSpotifyService(authToken);
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();

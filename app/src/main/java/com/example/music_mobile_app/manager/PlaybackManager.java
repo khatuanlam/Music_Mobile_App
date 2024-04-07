@@ -79,7 +79,6 @@ public class PlaybackManager {
         mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(15000).setResultCallback(data -> logMessage("seek fwd", 10)).setErrorCallback(mErrorCallback);
     }
 
-
     public void onSeekBack() {
         mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(-15000).setResultCallback(data -> logMessage("seek back", 10)).setErrorCallback(mErrorCallback);
     }

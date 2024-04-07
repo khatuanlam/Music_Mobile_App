@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,8 +22,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.IconNavbar;
-
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -123,7 +120,7 @@ public class MainFragment extends Fragment {
                     Log.d(TAG, "DOWNLOAD");
                     if (view.isActivated())
                         break;
-                    transaction.replace(R.id.fragment, new DownloadFragment()).commit();
+                    transaction.replace(R.id.fragment, new ExtensionFragment()).commit();
                     current_view = new IconNavbar(downloadLayout, view, downloadText, download);
                     setFocusMode(current_view);
                     break;

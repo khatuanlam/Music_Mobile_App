@@ -27,8 +27,8 @@ public class ListenerManager {
         void onError(Throwable error);
     }
 
-    public interface PlaylistCompleteListener {
-        void onComplete();
+    public interface OnClickCompleteListener {
+        void onItemClicked(String itemId);
 
         void onError(Throwable error);
     }

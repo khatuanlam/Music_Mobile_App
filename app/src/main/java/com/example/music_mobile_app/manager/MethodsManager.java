@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.music_mobile_app.MainActivity;
 
 import java.util.ArrayList;
@@ -17,8 +19,12 @@ import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
+import retrofit.Callback;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MethodsManager {
@@ -32,30 +38,56 @@ public class MethodsManager {
         return methodsManager;
     }
 
-    //    private void addTrack(String userId, String playlistId, String trackId) {
-//        // Tạo tham số cho yêu cầu POST
-//        Map<String, Object> queryParams = new HashMap<>();
-//
-//        Map<String, Object> bodyParams = new HashMap<>();
-//        List<String> uris = new ArrayList<>();
-//        uris.add("spotify:track:" + trackId); // Thêm URI của bài hát vào danh sách
-//        bodyParams.put("uris", uris);
-//
-//        // Gọi API để thêm bài hát vào playlist
-//        spotifyService.addTracksToPlaylist(USER_ID, playlistId, queryParams, bodyParams, new Callback<Pager<PlaylistTrack>>() {
-//            @Override
-//            public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-//                // Xử lý kết quả thành công
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                // Xử lý khi gặp lỗi
-//                Log.e("AddSongPlaylistActivity", "Error adding track to playlist: " + error.getMessage());
-//                Toast.makeText(AddSongPlaylistActivity.this, "Failed to add track to playlist", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-////    }
+    public void createPlaylistOnSpotify(Fragment fragment, String playlistName) {
+
+        // Tạo yêu cầu tạo playlist mới
+        Map<String, Object> options = new HashMap<>();
+        options.put("name", playlistName);
+        options.put("public", true);
+
+        // Get user information
+        SharedPreferences sharedPreferences = fragment.getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
+        spotifyService.createPlaylist(USER_ID, options, new Callback<Playlist>() {
+            @Override
+            public void success(Playlist playlist, Response response) {
+                // Lấy ID của playlist mới được tạo
+                String playlistID = playlist.id;
+                Log.d(fragment.getTag(), "Create playlist success");
+                // Reload playlist
+                getUserPlaylists(false);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(fragment.getTag(), "Error creating playlist on Spotify: " + error.getMessage());
+
+            }
+        });
+    }
+
+    public void getUserPlaylists(Boolean type) {
+        List<PlaylistSimple> playlistsList = ListManager.getInstance().getPlaylistList();
+        if (playlistsList.isEmpty() || type == true) {
+            Map<String, Object> options = new HashMap<>();
+            options.put(SpotifyService.LIMIT, 20);
+            spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+//                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+                }
+
+                @Override
+                public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
+//                    Log.d(TAG, "Get playlist success: ");
+                    List<PlaylistSimple> mList = playlistSimplePager.items;
+                    ListManager.getInstance().setPlaylistList(mList);
+                    getUserPlaylists(false);
+                }
+            });
+        }
+    }
+
     public void getAlbum(String albumId, ListenerManager.AlbumCompleteListener listener) {
         spotifyService.getAlbum(albumId, new SpotifyCallback<Album>() {
             @Override
@@ -124,7 +156,5 @@ public class MethodsManager {
         });
     }
 
-    public MethodsManager() {
 
-    }
 }

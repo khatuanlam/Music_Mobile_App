@@ -63,7 +63,6 @@ public class AccountFragment extends Fragment {
     private Button btnLogout;
     private ImageView btnCreatePlaylist;
     private SpotifyService spotifyService = MainActivity.spotifyService;
-    private ListManager listManager = MainActivity.listManager;
     private FragmentManager manager;
 
     @Override
@@ -96,8 +95,8 @@ public class AccountFragment extends Fragment {
         // Log out
         btnLogout.setOnClickListener(v -> {
             // Clear data save
-            listManager.clear();
-            AuthorizationClient.clearCookies(getContext());
+            ListManager.getInstance().clear();
+            AuthorizationClient.clearCookies(getActivity());
             Log.d(TAG, "Logging out...");
             Intent intent = new Intent(getActivity(), AuthLoginActivity.class);
             startActivity(intent);
@@ -187,7 +186,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void setPlaylist(Boolean type) {
-        List<PlaylistSimple> playlistsList = listManager.getPlaylistList();
+        List<PlaylistSimple> playlistsList = ListManager.getInstance().getPlaylistList();
         if (playlistsList.isEmpty() || type == true) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 20);
@@ -201,7 +200,7 @@ public class AccountFragment extends Fragment {
                 public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
                     Log.d(TAG, "Get playlist success: ");
                     List<PlaylistSimple> mList = playlistSimplePager.items;
-                    listManager.setPlaylistList(mList);
+                    ListManager.getInstance().setPlaylistList(mList);
                     setPlaylist(false);
                 }
             });

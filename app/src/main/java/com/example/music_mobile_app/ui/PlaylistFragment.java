@@ -1,5 +1,7 @@
 package com.example.music_mobile_app.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +31,13 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.SnapshotId;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackToRemove;
+import kaaes.spotify.webapi.android.models.TracksToRemove;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class PlaylistFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
@@ -64,7 +73,7 @@ public class PlaylistFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
         // Hide header
@@ -115,9 +124,41 @@ public class PlaylistFragment extends Fragment {
             }
             ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(),
                     getParentFragment());
+            adapter.setSend(true);
+            adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
         } else {
             Log.e(TAG, "Cannot get album detail");
         }
     }
+
+    private void removeTrackFromPlaylist(String playlistId, Track mTrack) {
+        // Tạo một instance của TracksToRemove và thêm các TrackToRemove vào danh sách
+        TracksToRemove tracksToRemove = new TracksToRemove();
+        tracksToRemove.tracks = new ArrayList<>();
+
+        // Tạo một TrackToRemove và thêm trackId vào URI
+        TrackToRemove trackToRemove = new TrackToRemove();
+        trackToRemove.uri = mTrack.uri;
+        tracksToRemove.tracks.add(trackToRemove);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
+
+        // Gọi service để xóa bài hát khỏi playlist
+        spotifyService.removeTracksFromPlaylist(USER_ID, playlistId, tracksToRemove, new Callback<SnapshotId>() {
+            @Override
+            public void success(SnapshotId snapshotId, Response response) {
+                Log.d(TAG, "Remove track from playlist success");
+                Toast.makeText(getContext(), "Đã xóa track thành công", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Remove track from playlist failed: " + error.getMessage());
+                Toast.makeText(getContext(), "Xóa track thất bại: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

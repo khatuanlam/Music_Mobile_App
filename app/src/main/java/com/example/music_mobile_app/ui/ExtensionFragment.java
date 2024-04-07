@@ -1,16 +1,8 @@
 package com.example.music_mobile_app.ui;
 
-import static com.spotify.sdk.android.auth.AuthorizationResponse.Type.ERROR;
-import static com.spotify.sdk.android.auth.AuthorizationResponse.Type.TOKEN;
-import static com.spotify.sdk.android.auth.LoginActivity.REQUEST_CODE;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -22,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.music_mobile_app.R;
 
@@ -32,22 +23,15 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Track;
-import com.spotify.sdk.android.auth.AuthorizationClient;
-import com.spotify.sdk.android.auth.AuthorizationRequest;
-import com.spotify.sdk.android.auth.AuthorizationResponse;
 
-public class DownloadFragment extends Fragment {
+public class ExtensionFragment extends Fragment {
     private InterstitialAd mInterstitialAd;
     private static final String TAG = "INTERSTITIAL AD";
 
     private Spinner spinner;
     private Button button;
 
-    public DownloadFragment() {
+    public ExtensionFragment() {
     }
 
     @Override

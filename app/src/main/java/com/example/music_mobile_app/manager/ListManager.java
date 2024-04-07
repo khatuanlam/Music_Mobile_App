@@ -46,7 +46,6 @@ public class ListManager {
 
     public ListManager() {
         playlistList = new ArrayList<>();
-        playlistTracks = new ArrayList<>();
         recentlyTracks = new ArrayList<>();
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
@@ -66,16 +65,9 @@ public class ListManager {
         return playlistList;
     }
 
-    public List<PlaylistTrack> getPlaylistTracks() {
-        return playlistTracks;
-    }
 
     public void setPlaylistList(List<PlaylistSimple> playlistList) {
         this.playlistList = playlistList;
-    }
-
-    public void setPlaylistTracks(List<PlaylistTrack> playlistTracks) {
-        this.playlistTracks = playlistTracks;
     }
 
     public static void setListManager(ListManager listManager) {
