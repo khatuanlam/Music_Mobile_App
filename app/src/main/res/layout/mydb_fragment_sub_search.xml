@@ -37,11 +37,12 @@
                 android:hint="Bạn muốn tìm gì" />
 
         </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/mydb_search_subSearchMainFragmentContainer"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mydb_search_subSearchRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_margin="5dp" />
+
 
     </LinearLayout>
 

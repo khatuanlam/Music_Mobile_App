@@ -28,10 +28,14 @@ public interface SongService {
     @GET("/Song/Favorite/{id}")
     Call<List<Song>> getAllFavoriteSongsFromIdUser(@Path("id") long id);
     @POST("/Song/AddFavorite/{idSong}/{idUser}")
-    Call<List<Song>> postFavoriteSongToUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
+    Call<Song> postFavoriteSongToUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
 
     @DELETE("/Song/DeleteFavorite/{idSong}/{idUser}")
-    Call<List<Song>> deleteFavoriteSongByIdUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
+    Call<Song> deleteFavoriteSongByIdUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
     @GET("/Song/TopPopularity")
     Call<List<Song>> getTopPopularSongs(@Query("page") int page, @Query("size") int size);
+
+    @GET("/Song/Filter")
+    Call<List<Song>> getfilteredSongs(@Query("songName") String songName);
+
 }
