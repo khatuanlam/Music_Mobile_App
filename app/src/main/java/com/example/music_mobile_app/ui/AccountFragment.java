@@ -1,12 +1,12 @@
 package com.example.music_mobile_app.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,15 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,7 +51,7 @@ public class AccountFragment extends Fragment {
     public final String TAG = this.getClass().getSimpleName();
     private CircleImageView imageAvt;
     private RecyclerView recyclerView;
-    private TextView tvName;
+    private TextView tvName, textViewFollow;
     private Button btnEditAccount, btnBack;
     private Button btnLogout;
     private ImageView btnCreatePlaylist;
@@ -211,4 +204,35 @@ public class AccountFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
     }
+
+
+    //    private void getFollowedArtists() {
+//        Map<String, Object> options = new HashMap<>();
+//        options.put(SpotifyService.LIMIT, 50); // Set the limit as needed
+//
+//        spotifyService.getFollowedArtists(options, new SpotifyCallback<ArtistsCursorPager>() {
+//            @Override
+//            public void success(ArtistsCursorPager artistsCursorPager, Response response) {
+//                // Xử lý danh sách nghệ sĩ đã được follow ở đây
+//                List<Artist> followedArtists = artistsCursorPager.artists.items;
+//                // Bạn có thể làm bất cứ điều gì bạn muốn với danh sách này
+//            }
+//
+//            @Override
+//            public void failure(SpotifyError spotifyError) {
+//                Log.e(TAG, "failure: " + spotifyError.getErrorDetails());
+//            }
+//        });
+//    }
+//
+//    // Phương thức để hiển thị hoặc ẩn danh sách playlist
+//    private void togglePlaylistContainerVisibility() {
+//        LinearLayout playlistContainer = getView().findViewById(R.id.playlist_container);
+//        if (playlistContainer.getVisibility() == View.VISIBLE) {
+//            playlistContainer.setVisibility(View.GONE); // Nếu đang hiển thị, ẩn đi
+//        } else {
+//            playlistContainer.setVisibility(View.VISIBLE); // Nếu đang ẩn, hiển thị lên
+//        }
+//    }
 }
+

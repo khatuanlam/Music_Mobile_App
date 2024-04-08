@@ -28,6 +28,9 @@ import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
@@ -42,6 +45,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.PlaybackManager;
+import com.example.music_mobile_app.network.mSpotifyService;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
@@ -60,11 +64,10 @@ public class PlayTrackActivity extends FragmentActivity {
 
     private static final String TAG = PlayTrackActivity.class.getSimpleName();
 
-    private ImageView btn_back, btn_prev, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options,
-            btn_add_to_playlist;
+    private ImageView btn_back, btn_prev, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist;
     private TextView tv_track_name, tv_track_arist, tv_track_album, tv_currentTime, tv_endTime, tv_playerField;
     private RecyclerView recyclerView;
-    private Button buttonAddPlaylist, buttonAddSong;
+    private Button buttonAddPlaylist, buttonAddSong, btnFollow;
     private ConstraintLayout play_back_layout;
     private ShapeableImageView track_img;
     private AppCompatSeekBar mSeekBar;
@@ -73,7 +76,10 @@ public class PlayTrackActivity extends FragmentActivity {
     private Album detailAlbum;
     private PlaybackManager playbackManager;
     private SpotifyService spotifyService = MainActivity.spotifyService;
+    private mSpotifyService mSpotifyService = MainActivity.mSpotifyService;
     private String selectedPlaylistId;
+    private static boolean isFollowing = false;
+    private static final String FOLLOW_PREF_KEY = "follow_pref_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,11 @@ public class PlayTrackActivity extends FragmentActivity {
         detailAlbum = getIntent().getParcelableExtra("Track's Album");
         setData(detailTrack);
 
+//        SharedPreferences sharedPreferences = getSharedPreferences("FollowState", MODE_PRIVATE);
+//        // Đặt trạng thái ban đầu cho nút theo dõi từ SharedPreferences
+//        isFollowing = sharedPreferences.getBoolean(FOLLOW_PREF_KEY, false);
+
+
         // Setting player UI
         playbackManager = PlaybackManager.getInstance(this, mPlayerStateCallback);
 
@@ -99,13 +110,57 @@ public class PlayTrackActivity extends FragmentActivity {
         });
 
         btn_add_to_playlist.setOnClickListener(v -> {
-            // Lấy ra TrackID
-            String trackID = detailTrack.id;
-            Log.d(TAG, "Track ID: " + trackID);
+            Log.d(TAG, "Track ID: " + detailTrack.id);
             showAddToPlaylist();
         });
+
+        // Initial primal follow status
+        initializeFollowButtonState(detailTrack.artists.get(0));
+
+        if (btnFollow != null) {
+            btnFollow.setOnClickListener(v -> {
+                if (isFollowing == false) {
+                    // Nếu chưa theo dõi, thực hiện hành động theo dõi
+                    followArtist(detailTrack.artists.get(0).id); // Chỉ lấy id của nghệ sĩ đầu tiên
+                    setFollowButtonState(btnFollow, true);
+                } else {
+                    // Nếu đang theo dõi, thực hiện hành động bỏ theo dõi
+                    unfollowArtists(detailTrack.artists.get(0).id); // Chỉ lấy id của nghệ sĩ đầu tiên
+                    // Cập nhật trạng thái và văn bản của nút
+                    setFollowButtonState(btnFollow, false);
+                }
+            });
+            // Reload follow artist
+            ListManager.getInstance().setFollowArtists(null);
+        } else {
+            // Nếu btnFollow là null, hiển thị thông báo lỗi
+            Log.e(TAG, "Button btnFollow is null");
+        }
+
     }
 
+    // Xử lý dữ liệu được truyền từ Adapter
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataEvent(PlaylistSimple playlistSimple) {
+        selectedPlaylistId = playlistSimple.id;
+        String name = playlistSimple.name;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+        playbackManager.Disconnect();
+    }
+
+
+    // Playlist
     private void showAddToPlaylist() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -127,7 +182,7 @@ public class PlayTrackActivity extends FragmentActivity {
         // Create playlist
         buttonAddPlaylist.setOnClickListener(v -> {
             Log.e("add playlist", "click");
-            showAddDialog();
+            showAddToPlaylistDialog();
         });
 
         alertDialog.show();
@@ -153,27 +208,155 @@ public class PlayTrackActivity extends FragmentActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    private void showAddToPlaylistDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View addView = inflater.inflate(R.layout.dialog_new_playlist, null);
 
-    // Xử lý dữ liệu được truyền từ Adapter
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDataEvent(PlaylistSimple playlistSimple) {
-        selectedPlaylistId = playlistSimple.id;
-        String name = playlistSimple.name;
-        Toast.makeText(this, "Clicked item: " + name, Toast.LENGTH_SHORT).show();
+        builder.setView(addView);
+
+        EditText editText = addView.findViewById(R.id.name_playlist);
+        Button btnCreate = addView.findViewById(R.id.btnCreate);
+        Button btnExit = addView.findViewById(R.id.btnExit);
+
+        AlertDialog alertDialog = builder.create();
+
+        // Set click listener
+        btnCreate.setOnClickListener(v -> {
+            // Lấy văn bản từ EditText
+            String playlistName = editText.getText().toString();
+            createPlaylistOnSpotify(playlistName);
+            alertDialog.dismiss();
+        });
+
+        btnExit.setOnClickListener(v -> {
+            alertDialog.dismiss();
+        });
+        alertDialog.show();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    private void createPlaylistOnSpotify(String playlistName) {
+        // Tạo yêu cầu tạo playlist mới
+        Map<String, Object> options = new HashMap<>();
+        options.put("name", playlistName);
+        options.put("public", true);
+
+        // Get user information
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
+        spotifyService.createPlaylist(USER_ID, options, new Callback<Playlist>() {
+            @Override
+            public void success(Playlist playlist, Response response) {
+                // Lấy ID của playlist mới được tạo
+                String playlistID = playlist.id;
+                Log.d(TAG, "Create playlist success");
+                // Reload playlist
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Error creating playlist on Spotify: " + error.getMessage());
+
+            }
+        });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-        playbackManager.Disconnect();
+    private void addToPlaylist(String selectedPlaylistId, Track mTrack) {
+
+        Map<String, Object> options = new HashMap<>();
+        Map<String, Object> bodyParams = new HashMap<>();
+        List<String> uris = new ArrayList<>();
+        uris.add(mTrack.uri); // Thêm URI của bài hát vào danh sách
+        bodyParams.put("uris", uris);
+//        bodyParams.put("position", ListManager.getInstance().getPlaylistList().size() + 1);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
+        // Gọi API để thêm bài hát vào playlist
+        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, options, bodyParams, new SpotifyCallback<Pager<PlaylistTrack>>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e(TAG, "Error creating song playlist on Spotify: " + spotifyError.getMessage());
+            }
+
+            @Override
+            public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                Log.d(TAG, "Create song playlist success");
+
+            }
+        });
     }
+
+    //
+
+
+    //     Follow artist
+    private void initializeFollowButtonState(ArtistSimple artist) {
+        // Check status of following artists
+        spotifyService.isFollowingArtists(artist.id, new SpotifyCallback<boolean[]>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+            }
+
+            @Override
+            public void success(boolean[] booleans, Response response) {
+                // Followed
+                if (booleans[0] == true) {
+                    setFollowButtonState(btnFollow, true);
+                } else {
+                    // Not Followed
+                    setFollowButtonState(btnFollow, false);
+                }
+            }
+        });
+    }
+
+    private void setFollowButtonState(Button button, boolean status) {
+        // Thay đổi văn bản của nút tùy thuộc vào trạng thái theo dõi
+        isFollowing = status;
+        if (isFollowing) {
+            button.setText("Bỏ theo dõi");
+        } else {
+            button.setText("Theo dõi");
+        }
+    }
+
+    private void unfollowArtists(String artistId) {
+        Log.e(TAG, "artistId : " + artistId);
+        spotifyService.unfollowArtists(artistId, new Callback<Object>() {
+            @Override
+            public void success(Object object, retrofit.client.Response response) {
+                Log.d(TAG, "UnFollow artist success");
+                Toast.makeText(PlayTrackActivity.this, "Đã bỏ theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+                // Cập nhật trạng thái và văn bản của nút
+                setFollowButtonState(btnFollow, false);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Error following artist on Spotify: " + error.getMessage());
+                Toast.makeText(PlayTrackActivity.this, "Đã xảy ra lỗi khi bỏ theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void followArtist(String artistId) {
+        spotifyService.followArtists(artistId, new Callback<Object>() {
+            @Override
+            public void success(Object object, retrofit.client.Response response) {
+                Log.d(TAG, "Follow artist success");
+                Toast.makeText(PlayTrackActivity.this, "Đã bắt đầu theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+                // Cập nhật trạng thái và văn bản của nút
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Error following artist on Spotify: " + error.getMessage());
+                Toast.makeText(PlayTrackActivity.this, "Đã xảy ra lỗi khi theo dõi nghệ sĩ!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @SuppressLint("ResourceType") // Ignore all illegal resources
     private void prepareData() {
@@ -186,6 +369,7 @@ public class PlayTrackActivity extends FragmentActivity {
         btn_replay = findViewById(R.id.btn_replay);
         btn_track_options = findViewById(R.id.track_options);
         btn_add_to_playlist = findViewById(R.id.btn_add_to_playlist);
+        btnFollow = findViewById(R.id.buttonFollow);
 
         tv_track_name = findViewById(R.id.track_name);
         tv_track_album = findViewById(R.id.track_album);
@@ -212,8 +396,38 @@ public class PlayTrackActivity extends FragmentActivity {
 
         // Get Track's Album
         Album album = getIntent().getParcelableExtra("Track's Album");
-        Glide.with(this).load((detailTrack.album.images.get(0).url == null) ? album.images.get(0).url
-                : detailTrack.album.images.get(0).url).override(Target.SIZE_ORIGINAL).into(track_img);
+        Glide.with(this).load((detailTrack.album.images.get(0).url == null) ? album.images.get(0).url : detailTrack.album.images.get(0).url).override(Target.SIZE_ORIGINAL).into(track_img);
+
+        List<ArtistSimple> artists = detailTrack.artists; // Danh sách các nghệ sĩ
+        StringBuilder artistNames = new StringBuilder();
+        for (ArtistSimple artist : artists) {
+            artistNames.append(artist.name).append(", "); // Lấy tên của mỗi nghệ sĩ và thêm vào chuỗi
+        }
+        // Loại bỏ dấu phẩy cuối cùng và gán vào TextView
+        TextView artistNameTextView = findViewById(R.id.artist_item_name);
+        artistNameTextView.setText(artistNames.toString().substring(0, artistNames.length() - 2));
+
+        if (!artists.isEmpty()) {
+            ArtistSimple firstArtist = artists.get(0);
+            // Chuyển đổi ArtistSimple sang Artist
+            String artistId = firstArtist.id;
+            spotifyService.getArtist(artistId, new Callback<Artist>() {
+
+                @Override
+                public void success(Artist artist, retrofit.client.Response response) {
+                    if (!artist.images.isEmpty()) {
+                        Image artistImage = artist.images.get(0);
+                        ImageView artistImageView = findViewById(R.id.artist_item_image);
+                        Glide.with(PlayTrackActivity.this).load(artistImage.url).into(artistImageView);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    // Xử lý lỗi khi không thể lấy thông tin về nghệ sĩ
+                }
+            });
+        }
     }
 
     private Subscription.EventCallback<PlayerState> mPlayerStateCallback = new Subscription.EventCallback<PlayerState>() {
@@ -221,7 +435,7 @@ public class PlayTrackActivity extends FragmentActivity {
         public void onEvent(PlayerState playerState) {
 
             if (playerState.track.name != detailTrack.name || playerState.track == null) {
-                playbackManager.play(detailTrack.uri);
+//                playbackManager.play(detailTrack.uri);
             }
 
             btn_play.setOnClickListener(v -> {
@@ -300,8 +514,7 @@ public class PlayTrackActivity extends FragmentActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 playbackManager.getPlayerApi().seekTo(seekBar.getProgress()).setErrorCallback(throwable -> {
                     // // Xử lý lỗi khi seekTo() gặp vấn đề
-                    Toast.makeText(PlayTrackActivity.this, "Error while seeking: " + throwable.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlayTrackActivity.this, "Error while seeking: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     // // Ví dụ: log lỗi
                     Log.e("SeekBarChangeListener", "Error while seeking", throwable);
                 });
@@ -309,84 +522,5 @@ public class PlayTrackActivity extends FragmentActivity {
         };
     }
 
-    private void showAddDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View addView = inflater.inflate(R.layout.dialog_new_playlist, null);
 
-        builder.setView(addView);
-
-        EditText editText = addView.findViewById(R.id.name_playlist);
-        Button btnCreate = addView.findViewById(R.id.btnCreate);
-        Button btnExit = addView.findViewById(R.id.btnExit);
-
-        AlertDialog alertDialog = builder.create();
-
-        // Set click listener
-        btnCreate.setOnClickListener(v -> {
-            // Lấy văn bản từ EditText
-            String playlistName = editText.getText().toString();
-            createPlaylistOnSpotify(playlistName);
-            alertDialog.dismiss();
-        });
-
-        btnExit.setOnClickListener(v -> {
-            alertDialog.dismiss();
-        });
-        alertDialog.show();
-    }
-
-    private void createPlaylistOnSpotify(String playlistName) {
-
-        // Tạo yêu cầu tạo playlist mới
-        Map<String, Object> options = new HashMap<>();
-        options.put("name", playlistName);
-        options.put("public", true);
-
-        // Get user information
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
-        spotifyService.createPlaylist(USER_ID, options, new Callback<Playlist>() {
-            @Override
-            public void success(Playlist playlist, Response response) {
-                // Lấy ID của playlist mới được tạo
-                String playlistID = playlist.id;
-                Log.d(TAG, "Create playlist success");
-                // Reload playlist
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "Error creating playlist on Spotify: " + error.getMessage());
-
-            }
-        });
-    }
-
-    private void addToPlaylist(String selectedPlaylistId, Track mTrack) {
-
-        Map<String, Object> options = new HashMap<>();
-        Map<String, Object> bodyParams = new HashMap<>();
-        List<String> uris = new ArrayList<>();
-        uris.add(mTrack.uri); // Thêm URI của bài hát vào danh sách
-        bodyParams.put("uris", uris);
-//        bodyParams.put("position", ListManager.getInstance().getPlaylistList().size() + 1);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
-        // Gọi API để thêm bài hát vào playlist
-        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, options, bodyParams,
-                new SpotifyCallback<Pager<PlaylistTrack>>() {
-                    @Override
-                    public void failure(SpotifyError spotifyError) {
-                        Log.e(TAG, "Error creating song playlist on Spotify: " + spotifyError.getMessage());
-                    }
-
-                    @Override
-                    public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-                        Log.d(TAG, "Create song playlist success");
-
-                    }
-                });
-    }
 }

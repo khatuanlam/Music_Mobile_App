@@ -11,25 +11,26 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/container_back"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:focusable="false"
-        android:paddingHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center_vertical"
         android:background="@color/colorTransparent"
-        android:id="@+id/container_back"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/back"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
             android:clickable="true"
-            android:drawableLeft="@drawable/ic_arrow_back_24dp"
-            android:background="@color/colorTransparent" />
+            android:drawableLeft="@drawable/ic_arrow_back_24dp" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,9 +65,9 @@
             android:id="@+id/buttonEditAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
-            android:layout_marginVertical="20dp"
             android:background="@drawable/button_black"
             android:fontFamily="@font/gotham_medium"
             android:paddingVertical="15dp"
@@ -92,6 +93,18 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16dp"
             android:textStyle="bold" />
+
+<!--        <TextView-->
+        <!--            android:id="@+id/textViewFollow"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:fontFamily="@font/gotham_medium"-->
+        <!--            android:text="Đang theo dõi"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textSize="18dp"-->
+        <!--            android:textStyle="bold" />-->
 
     </LinearLayout>
 
@@ -126,4 +139,6 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="20dp" />
+
+
 </LinearLayout>

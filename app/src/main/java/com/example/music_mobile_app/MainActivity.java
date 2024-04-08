@@ -107,6 +107,9 @@ public class MainActivity extends FragmentActivity {
                         editor.putString("imageUrl", imageUrl);
                         editor.putString("userId", userProfile.id);
                         editor.apply();
+
+                        // Save user data
+                        VariableManager.getInstance().setUser(userProfile);
                     }
                 }
             });

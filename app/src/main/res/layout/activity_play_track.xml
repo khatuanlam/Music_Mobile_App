@@ -208,9 +208,10 @@
 
                 </com.google.android.material.appbar.MaterialToolbar>
 
-
+                <include
+                    layout="@layout/item_artist"
+                    android:text="Followed Artist" />
             </com.google.android.material.appbar.AppBarLayout>
-
 
             <!-- Other components go here -->
 

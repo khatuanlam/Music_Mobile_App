@@ -51,4 +51,7 @@ public interface mSpotifyAPI {
     @GET("me/player/recently-played")
     Call<Pager<Track>> getRecentlyTracks(@Header("Authorization") String accessToken, @QueryMap Map<String, Object> var1);
 
+    @GET("/me/following/contains")
+    boolean isFollowingArtists();
+
 }

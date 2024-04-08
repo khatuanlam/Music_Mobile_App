@@ -15,10 +15,10 @@ public class ListenerManager {
         void onError(Throwable error);
     }
 
-    public interface OnConnectionCompleteListener {
-        void onConnected();
+    public interface OnCheckFollowListener {
+        void onFollowed(boolean status);
 
-        void onFailure(Throwable throwable);
+        void onNotFollow(Throwable throwable);
     }
 
     public interface ArtistCompleteListener {

@@ -34,6 +34,7 @@ import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.client.Response;
 
@@ -42,6 +43,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
     private final String TAG = this.getClass().getSimpleName();
     private List<Track> trackList;
     private List<AlbumSimple> albumList;
+    private List<Artist> artistList;
     private Fragment fragment;
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private int flag = 0;
@@ -107,25 +109,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
             } else {
                 //Set to album
                 itemView.setOnClickListener(v -> {
-                    FragmentManager manager = fragment.getChildFragmentManager();
                     MethodsManager.getInstance().getAlbum(mAlbum.id, new ListenerManager.AlbumCompleteListener() {
                         @Override
                         public void onComplete(Album album, List<Track> trackList) {
                             // Send detail album
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("AlbumDetail", (Parcelable) mAlbum);
-                            bundle.putParcelable("Album", (Parcelable) album);
-                            bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
-                            AlbumFragment albumFragment = new AlbumFragment();
-                            albumFragment.setArguments(bundle);
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            transaction.addToBackStack(null);
-                            manager.beginTransaction().replace(R.id.fragment, albumFragment).commit();
+                            sendDetailAlbum(album, trackList);
                         }
 
                         @Override
                         public void onError(Throwable error) {
-
+                            Log.e(TAG, "Cannot get detail album");
                         }
                     });
 
@@ -154,7 +147,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
             item_name.setText(albumSimple.name);
             item_artist.setText(albumSimple.album_type.toUpperCase());
         }
-    }
 
+
+        public void sendDetailAlbum(Album album, List<Track> trackList) {
+            FragmentManager manager = fragment.getChildFragmentManager();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("AlbumDetail", (Parcelable) mAlbum);
+            bundle.putParcelable("Album", (Parcelable) album);
+            bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
+            AlbumFragment albumFragment = new AlbumFragment();
+            albumFragment.setArguments(bundle);
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.addToBackStack(null);
+            manager.beginTransaction().replace(R.id.fragment, albumFragment).commit();
+        }
+    }
 
 }

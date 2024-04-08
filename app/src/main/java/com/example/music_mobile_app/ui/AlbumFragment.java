@@ -66,19 +66,15 @@ public class AlbumFragment extends Fragment {
     // private static ListManager listManager = MainActivity.listManager;
     private static VariableManager varManager = MainActivity.varManager;
 
-    public AlbumFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         manager = getParentFragmentManager();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         // Hide header

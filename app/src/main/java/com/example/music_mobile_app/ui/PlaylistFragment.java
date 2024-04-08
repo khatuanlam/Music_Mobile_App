@@ -105,7 +105,7 @@ public class PlaylistFragment extends Fragment {
 
         playlistName.setText(playlistDetail.name);
         playlistOwner.setText(playlistDetail.owner.display_name);
-        Glide.with(this).load((playlistDetail.images.isEmpty()) ? baseImage : playlistDetail.images.get(0).url)
+        Glide.with(this).load((playlistDetail.images == null) ? baseImage : playlistDetail.images.get(0).url)
                 .override(Target.SIZE_ORIGINAL).into(playlistImage);
 
     }
@@ -124,7 +124,8 @@ public class PlaylistFragment extends Fragment {
             }
             ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(),
                     getParentFragment());
-            adapter.setSend(true);
+            // Set send to detail
+            adapter.setSend(false);
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
         } else {
