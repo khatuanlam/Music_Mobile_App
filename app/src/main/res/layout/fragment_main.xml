@@ -145,10 +145,10 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/nav_download"
+                    android:id="@+id/nav_extension"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/ic_download_black_24dp" />
+                    android:background="@drawable/music_note_song" />
 
                 <TextView
                     android:id="@+id/nav_extension_text"

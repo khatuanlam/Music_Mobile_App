@@ -47,6 +47,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
     private Context context;
     private Fragment fragment;
     private Album mAlbum;
+    private List<Album> albumList;
     private int selectedItem = RecyclerView.NO_POSITION; // Khởi tạo biến để lưu vị trí item được chọn
     private int type = 0;
     private boolean isSend = false;
@@ -123,10 +124,10 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                     if (isSend) {
 
                     } else {
-                        Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
+                        Intent intent = new Intent(context, PlayTrackActivity.class);
                         intent.putExtra("Track", mTrack);
                         intent.putExtra("Track's Album", mAlbum);
-                        fragment.getActivity().startActivity(intent);
+                        context.startActivity(intent);
                     }
                 });
             } else {
@@ -137,19 +138,18 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                         EventBus.getDefault().post(mPlaylist);
                         notifyDataSetChanged();
                     } else {
-                        MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, fragment.getContext(),
-                                new ListenerManager.ListTrackOnCompleteListener() {
-                                    @Override
-                                    public void onComplete(List<Track> trackList) {
-                                        // Send detail playlist
-                                        sendDetailPlaylist(trackList);
-                                    }
+                        MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, context, new ListenerManager.ListTrackOnCompleteListener() {
+                            @Override
+                            public void onComplete(List<Track> trackList) {
+                                // Send detail playlist
+                                sendDetailPlaylist(trackList, mPlaylist);
+                            }
 
-                                    @Override
-                                    public void onError(Throwable error) {
-                                        Log.e(TAG, "Cannot not get " + mPlaylist.name);
-                                    }
-                                });
+                            @Override
+                            public void onError(Throwable error) {
+                                Log.e(TAG, "Cannot not get " + mPlaylist.name);
+                            }
+                        });
                     }
                 });
             }
@@ -177,10 +177,14 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             Glide.with(context).load(baseImage).override(Target.SIZE_ORIGINAL).into(item_image);
         }
 
-        private void sendDetailPlaylist(List<Track> trackList) {
+        public void bindAlbum(final Album album) {
+
+        }
+
+        private void sendDetailPlaylist(List<Track> trackList, PlaylistSimple playlist) {
             FragmentManager manager = fragment.getChildFragmentManager();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("PlaylistDetail", (Parcelable) mPlaylist);
+            bundle.putParcelable("PlaylistDetail", (Parcelable) playlist);
             bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
             PlaylistFragment playlistFragment = new PlaylistFragment();
             playlistFragment.setArguments(bundle);

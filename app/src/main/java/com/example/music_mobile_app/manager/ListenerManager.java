@@ -1,11 +1,14 @@
 package com.example.music_mobile_app.manager;
 
+import android.widget.Button;
+
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListenerManager {
@@ -13,12 +16,6 @@ public class ListenerManager {
         void onComplete(Album album, List<Track> trackList);
 
         void onError(Throwable error);
-    }
-
-    public interface OnCheckFollowListener {
-        void onFollowed(boolean status);
-
-        void onNotFollow(Throwable throwable);
     }
 
     public interface ArtistCompleteListener {
@@ -37,5 +34,15 @@ public class ListenerManager {
         void onComplete(List<Track> trackList);
 
         void onError(Throwable error);
+    }
+
+    public interface OnFollowCompleteListener {
+        void setFollowButtonState(Button button, boolean status);
+
+        void initializeFollowButtonState(String artistId);
+
+        void followArtist(String artistId);
+
+        void unfollowArtists(String artistId);
     }
 }

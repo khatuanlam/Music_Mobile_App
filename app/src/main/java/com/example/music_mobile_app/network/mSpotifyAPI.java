@@ -1,57 +1,57 @@
 package com.example.music_mobile_app.network;
 
-import com.example.music_mobile_app.manager.PlaybackManager;
 import com.example.music_mobile_app.model.User;
 
-import java.util.Map;
-
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.QueryMap;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public interface mSpotifyAPI {
 
-    @GET("me")
-    Call<User> getUserProfile(@Header("Authorization") String accessToken);
+public class mSpotifyAPI {
+    private static final String BASE_URL = "https://localhost:8080";
 
-    @PUT("me")
-    Call<Void> updateUserProfile(
-            @Header("Authorization") String authToken,
-            @Body User user
-    );
+    private mSpotifyService spotifyAPI;
 
-    @GET("me/player")
-    Call<PlaybackManager> getPlayer();
+    private String authToken;
 
-    @PUT("me/player/play")
-    Call<Void> startPlayer();
+    public String getAuthToken() {
+        return authToken;
+    }
 
-    @PUT("me/player/pause")
-    Call<Void> pausePlayer();
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
-    @POST("me/player/next")
-    Call<Void> skipToNext();
+    public mSpotifyAPI(String authToken) {
 
-    @POST("me/player/previous")
-    Call<Void> skipToPrevious();
+        // Khởi tạo retrofit client
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        // Thêm HttpLoggingInterceptor để log ra các yêu cầu API
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClient.addInterceptor(loggingInterceptor);
 
-    @PUT("me/player/repeat")
-    Call<Void> setRepeat();
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder().header("Authorization", "Bearer " + authToken).method(original.method(), original.body());
 
-    @GET("me/player/currently-playing")
-    Call<Track> getCurrentTrack();
+            // Loại bỏ việc mã hóa các ký tự đặc biệt trong URL
+            String url = original.url().toString();
+            url = url.replace("%3F", "?").replace("%3D", "=");
+            Request request = requestBuilder.url(url).build();
 
-    @GET("me/player/recently-played")
-    Call<Pager<Track>> getRecentlyTracks(@Header("Authorization") String accessToken, @QueryMap Map<String, Object> var1);
+            return chain.proceed(request);
+        });
 
-    @GET("/me/following/contains")
-    boolean isFollowingArtists();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).client(httpClient.build()).build();
+
+        spotifyAPI = retrofit.create(mSpotifyService.class);
+    }
 
 }
+
+

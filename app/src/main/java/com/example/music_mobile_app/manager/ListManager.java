@@ -16,7 +16,7 @@ public class ListManager {
 
     private List<PlaylistSimple> playlistList;
 
-    private List<Track> recentlyTracks;
+    private List<Track> favoriteTracks;
 
     private List<Track> recommendTracks;
 
@@ -47,7 +47,7 @@ public class ListManager {
 
     public ListManager() {
         playlistList = new ArrayList<>();
-        recentlyTracks = new ArrayList<>();
+        favoriteTracks = new ArrayList<>();
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
         albums = new ArrayList<>();
@@ -84,12 +84,12 @@ public class ListManager {
         this.topTracks = topTracks;
     }
 
-    public List<Track> getRecentlyTracks() {
-        return recentlyTracks;
+    public List<Track> getFavoriteTracks() {
+        return favoriteTracks;
     }
 
-    public void setRecentlyTracks(List<Track> recentlyTracks) {
-        this.recentlyTracks = recentlyTracks;
+    public void setFavoriteTracks(List<Track> favoriteTracks) {
+        this.favoriteTracks = favoriteTracks;
     }
 
     public List<Track> getRecommendTracks() {
@@ -118,7 +118,7 @@ public class ListManager {
     public void clear() {
         setAlbumTracks(null);
         setTopTracks(null);
-        setRecentlyTracks(null);
+        setFavoriteTracks(null);
         setAlbumTracks(null);
         setFollowArtists(null);
     }

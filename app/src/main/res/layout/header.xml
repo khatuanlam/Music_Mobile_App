@@ -12,6 +12,8 @@
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
+        android:padding="5sp"
+        android:layout_margin="5sp"
         android:src="@drawable/ic_arrow_back_24dp" />
 
 

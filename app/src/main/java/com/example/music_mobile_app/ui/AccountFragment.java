@@ -28,6 +28,7 @@ import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
+import com.example.music_mobile_app.manager.MethodsManager;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class AccountFragment extends Fragment {
             showAddDialog();
         });
 
-        setPlaylist(false);
+        setUserPlaylist(false);
 
         return view;
     }
@@ -120,8 +121,7 @@ public class AccountFragment extends Fragment {
         String name = sharedPreferences.getString("displayName", "None");
         tvName.setText(name);
         Glide.with(this).load(image).into(imageAvt);
-        LinearLayoutManager playList_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,
-                false);
+        LinearLayoutManager playList_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(playList_layout);
     }
 
@@ -168,7 +168,7 @@ public class AccountFragment extends Fragment {
                 String playlistID = playlist.id;
                 Log.d(TAG, "Create playlist success");
                 // Reload playlist
-                setPlaylist(true);
+                setUserPlaylist(true);
             }
 
             @Override
@@ -178,61 +178,18 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    private void setPlaylist(Boolean type) {
+    private void setUserPlaylist(boolean type) {
         List<PlaylistSimple> playlistsList = ListManager.getInstance().getPlaylistList();
-        if (playlistsList.isEmpty() || type == true) {
-            Map<String, Object> options = new HashMap<>();
-            options.put(SpotifyService.LIMIT, 20);
-            spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
-                @Override
-                public void failure(SpotifyError spotifyError) {
-                    Log.e(TAG, "failure: " + spotifyError.getMessage());
-                }
-
-                @Override
-                public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-                    Log.d(TAG, "Get playlist success: ");
-                    List<PlaylistSimple> mList = playlistSimplePager.items;
-                    ListManager.getInstance().setPlaylistList(mList);
-                    setPlaylist(false);
-                }
-            });
+        if (playlistsList.isEmpty()) {
+            // Nếu danh sách playlist chưa được lấy thì load lại để lấy
+            MethodsManager.getInstance().getUserPlaylists(type);
         }
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(),
-                getParentFragment());
+        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(), getParentFragment());
         adapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(adapter);
     }
 
 
-    //    private void getFollowedArtists() {
-//        Map<String, Object> options = new HashMap<>();
-//        options.put(SpotifyService.LIMIT, 50); // Set the limit as needed
-//
-//        spotifyService.getFollowedArtists(options, new SpotifyCallback<ArtistsCursorPager>() {
-//            @Override
-//            public void success(ArtistsCursorPager artistsCursorPager, Response response) {
-//                // Xử lý danh sách nghệ sĩ đã được follow ở đây
-//                List<Artist> followedArtists = artistsCursorPager.artists.items;
-//                // Bạn có thể làm bất cứ điều gì bạn muốn với danh sách này
-//            }
-//
-//            @Override
-//            public void failure(SpotifyError spotifyError) {
-//                Log.e(TAG, "failure: " + spotifyError.getErrorDetails());
-//            }
-//        });
-//    }
-//
-//    // Phương thức để hiển thị hoặc ẩn danh sách playlist
-//    private void togglePlaylistContainerVisibility() {
-//        LinearLayout playlistContainer = getView().findViewById(R.id.playlist_container);
-//        if (playlistContainer.getVisibility() == View.VISIBLE) {
-//            playlistContainer.setVisibility(View.GONE); // Nếu đang hiển thị, ẩn đi
-//        } else {
-//            playlistContainer.setVisibility(View.VISIBLE); // Nếu đang ẩn, hiển thị lên
-//        }
-//    }
 }
 

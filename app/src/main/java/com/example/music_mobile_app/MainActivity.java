@@ -16,7 +16,7 @@ import com.example.music_mobile_app.manager.ListManager;
 import kaaes.spotify.webapi.android.models.Image;
 
 import com.example.music_mobile_app.manager.VariableManager;
-import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.example.music_mobile_app.ui.MainFragment;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -32,7 +32,7 @@ import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public class MainActivity extends FragmentActivity {
 
-    public static mSpotifyService mSpotifyService;
+    public static mSpotifyAPI mSpotifyAPI;
     public static SpotifyService spotifyService;
     public static String authToken;
     private TextView tv_playerField;
@@ -123,7 +123,7 @@ public class MainActivity extends FragmentActivity {
         // Get kaaes spotify service
         spotifyService = api.getService();
         // Get project service
-        mSpotifyService = new mSpotifyService(authToken);
+        mSpotifyAPI = new mSpotifyAPI(authToken);
     }
 
     @Override

@@ -38,8 +38,8 @@ public class MainFragment extends Fragment {
     private Button favoriteLayout;
     private TextView searchText;
     private Button searchLayout;
-    private TextView downloadText;
-    private Button downloadLayout;
+    private TextView extentionText;
+    private Button extensionLayout;
     private CircleImageView account;
 
     @Override
@@ -50,34 +50,31 @@ public class MainFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         homeLayout = view.findViewById(R.id.nav_home);
         favoriteLayout = view.findViewById(R.id.nav_favorite);
         searchLayout = view.findViewById(R.id.nav_search);
-        downloadLayout = view.findViewById(R.id.nav_download);
+        extensionLayout = view.findViewById(R.id.nav_extension);
 
         homeText = view.findViewById(R.id.nav_home_text);
         favoriteText = view.findViewById(R.id.nav_favorite_text);
         searchText = view.findViewById(R.id.nav_search_text);
-        downloadText = view.findViewById(R.id.nav_extension_text);
+        extentionText = view.findViewById(R.id.nav_extension_text);
 
         homeLayout.setOnClickListener(mListener);
         favoriteLayout.setOnClickListener(mListener);
         searchLayout.setOnClickListener(mListener);
-        downloadLayout.setOnClickListener(mListener);
+        extensionLayout.setOnClickListener(mListener);
 
         // Setting avt img value
         account = view.findViewById(R.id.avt);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        Glide.with(this).load(sharedPreferences.getString("imageUrl",
-                "")).override(Target.SIZE_ORIGINAL).into(account);
+        Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
 
         account.setOnClickListener(v -> {
-            FragmentTransaction fragmentTransaction = manager.beginTransaction()
-                    .setCustomAnimations(0, 0);
+            FragmentTransaction fragmentTransaction = manager.beginTransaction().setCustomAnimations(0, 0);
             fragmentTransaction.replace(R.id.fragment, new AccountFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
@@ -96,34 +93,30 @@ public class MainFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
-                    if (view.isActivated())
-                        break;
+                    if (view.isActivated()) break;
                     transaction.replace(R.id.fragment, new HomeFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
                     setFocusMode(current_view);
                     break;
                 case R.id.nav_favorite:
                     Log.d(TAG, "FAVORITE");
-                    if (view.isActivated())
-                        break;
+                    if (view.isActivated()) break;
                     transaction.replace(R.id.fragment, new FavoriteFragment()).commit();
                     current_view = new IconNavbar(favoriteLayout, view, favoriteText, favorite);
                     setFocusMode(current_view);
                     break;
                 case R.id.nav_search:
                     Log.d(TAG, "SEARCH");
-                    if (view.isActivated())
-                        break;
+                    if (view.isActivated()) break;
                     transaction.replace(R.id.fragment, new SearchFragment()).commit();
                     current_view = new IconNavbar(searchLayout, view, searchText, search);
                     setFocusMode(current_view);
                     break;
-                case R.id.nav_download:
-                    Log.d(TAG, "DOWNLOAD");
-                    if (view.isActivated())
-                        break;
+                case R.id.nav_extension:
+                    Log.d(TAG, "EXTENSION");
+                    if (view.isActivated()) break;
                     transaction.replace(R.id.fragment, new ExtensionFragment()).commit();
-                    current_view = new IconNavbar(downloadLayout, view, downloadText, download);
+                    current_view = new IconNavbar(extensionLayout, view, extentionText, download);
                     setFocusMode(current_view);
                     break;
             }
@@ -167,7 +160,7 @@ public class MainFragment extends Fragment {
         home = getResources().getDrawable(R.drawable.ic_home_black_24dp, null);
         favorite = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
         search = getResources().getDrawable(R.drawable.ic_search_white_24dp, null);
-        download = getResources().getDrawable(R.drawable.ic_download_black_24dp, null);
+        download = getResources().getDrawable(R.drawable.music_note_song, null);
 
         focusMode = getResources().getColor(R.color.colorWhite, null);
         defocusMode = getResources().getColor(R.color.colorNavIcon, null);

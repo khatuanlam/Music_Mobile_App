@@ -23,6 +23,7 @@ import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
+import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.ui.AlbumFragment;
 
 import java.io.Serializable;
@@ -47,7 +48,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
     private Fragment fragment;
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private int flag = 0;
-    String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
+    private String baseImage = VariableManager.getInstance().baseImage;
 
     public ItemAdapter(List<Track> trackList, List<AlbumSimple> albumList, Fragment fragment) {
         this.trackList = trackList;

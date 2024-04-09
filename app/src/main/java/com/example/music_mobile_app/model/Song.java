@@ -1,4 +1,5 @@
 package com.example.music_mobile_app.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,27 +9,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class User {
+public class Song {
 
     public Long id;
 
+    public String name;
 
-    public String username;
+    public String image;
 
+    public String urlLyric;
 
-    public String password;
+    public String urlSong;
 
-    public String email;
+    public Integer popularity;
 
+    public String releaseDate;
 
-    public Boolean vip;
-
-
-    private String authorities;
-
-
-    private Boolean isActive;
+    public Boolean isActive;
 
 
 }

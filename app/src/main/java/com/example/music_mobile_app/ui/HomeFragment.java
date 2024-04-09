@@ -6,22 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.music_mobile_app.AuthLoginActivity;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.FollowingAdapter;
 import com.example.music_mobile_app.adapter.ItemAdapter;
 import com.example.music_mobile_app.manager.ListManager;
-import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.manager.MethodsManager;
+import com.example.music_mobile_app.network.mSpotifyAPI;
 
 
 import java.util.ArrayList;
@@ -40,14 +38,12 @@ import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Recommendations;
 import kaaes.spotify.webapi.android.models.Track;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit.client.Response;
 
 public class HomeFragment extends Fragment {
     public final String TAG = this.getClass().getSimpleName();
     private SpotifyService spotifyService = MainActivity.spotifyService;
-    private mSpotifyService mSpotifyService = MainActivity.mSpotifyService;
+    private mSpotifyAPI mSpotifyAPI = MainActivity.mSpotifyAPI;
     private RecyclerView recentlyTracksRecyclerView;
     private RecyclerView recommendationsRecyclerView;
     private RecyclerView topTracksRecyclerView;
@@ -60,7 +56,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FragmentManager manager = getParentFragmentManager();
     }
 
     @Nullable
@@ -80,7 +75,7 @@ public class HomeFragment extends Fragment {
 
 
     private void prepareData(View view) {
-        recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
+//        recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
         topTracksRecyclerView = view.findViewById(R.id.top_tracks);
         albumsRecycleView = view.findViewById(R.id.top_albums);
@@ -93,7 +88,7 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager albums_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager follow_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
+//        recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
         recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
         topTracksRecyclerView.setLayoutManager(topTracks_layout);
         albumsRecycleView.setLayoutManager(albums_layout);
@@ -106,34 +101,37 @@ public class HomeFragment extends Fragment {
         setTopTracks();
         setAlbums();
         setFollower();
+
+        //Get user's playlists
+        MethodsManager.getInstance().getUserPlaylists(false);
     }
 
 
-    private void setRecentlyTracks() {
-        List<Track> listTracks = listManager.getRecentlyTracks();
-        if (listTracks.isEmpty()) {
-            mSpotifyService.getRecentlyTracks(new Callback<Pager<Track>>() {
-                @Override
-                public void onResponse(Call<Pager<Track>> call, retrofit2.Response<Pager<Track>> response) {
-                    if (response.isSuccessful()) {
-                        Log.d(TAG, "Get recently success ");
-                        List<Track> mList = response.body().items;
-                        listManager.setRecentlyTracks(mList);
-                        setRecentlyTracks();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Pager<Track>> call, Throwable t) {
-                    Log.e(TAG, "Cannot get recentlyTracks: " + t.getMessage());
-                }
-            });
-        } else {
-            ItemAdapter adapter = new ItemAdapter(listTracks, null, getParentFragment());
-            adapter.notifyDataSetChanged();
-            recentlyTracksRecyclerView.setAdapter(adapter);
-        }
-    }
+//    private void setRecentlyTracks() {
+//        List<Track> listTracks = listManager.getRecentlyTracks();
+//        if (listTracks.isEmpty()) {
+//            spotifyService.getRecentlyTracks(new Callback<Pager<Track>>() {
+//                @Override
+//                public void onResponse(Call<Pager<Track>> call, retrofit2.Response<Pager<Track>> response) {
+//                    if (response.isSuccessful()) {
+//                        Log.d(TAG, "Get recently success ");
+//                        List<Track> mList = response.body().items;
+//                        listManager.setRecentlyTracks(mList);
+//                        setRecentlyTracks();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Pager<Track>> call, Throwable t) {
+//                    Log.e(TAG, "Cannot get recentlyTracks: " + t.getMessage());
+//                }
+//            });
+//        } else {
+//            ItemAdapter adapter = new ItemAdapter(listTracks, null, getParentFragment());
+//            adapter.notifyDataSetChanged();
+//            recentlyTracksRecyclerView.setAdapter(adapter);
+//        }
+//    }
 
     private void setRecommendations() {
         List<Track> listTracks = listManager.getRecommendTracks();

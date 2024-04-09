@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-
-    <corners android:radius="40dp" /> <!-- Điều chỉnh giá trị radius để có góc bo tròn mong muốn -->
-
+    <corners android:radius="10dp" /> <!-- Điều chỉnh giá trị radius để có góc bo tròn mong muốn -->
     <!-- Màu nền của button -->
     <solid android:color="@color/colorTransparent" />
-
     <!-- Viền của button-->
-    <stroke android:color="@color/white" android:width="2dp"/>
+    <stroke
+        android:width="2dp"
+        android:color="@color/white" />
 
 </shape>

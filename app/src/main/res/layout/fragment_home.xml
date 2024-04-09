@@ -18,40 +18,40 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:orientation="vertical"
-                android:padding="5dp">
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_margin="5dp"-->
+            <!--                android:orientation="vertical"-->
+            <!--                android:padding="5dp">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:orientation="vertical">-->
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5sp"
-                        android:padding="1dp"
-                        android:text="Recently Played Music"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+            <!--                    <TextView-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="5sp"-->
+            <!--                        android:padding="1dp"-->
+            <!--                        android:text="Recently Played Music"-->
+            <!--                        android:textAlignment="viewStart"-->
+            <!--                        android:textColor="@color/colorWhite"-->
+            <!--                        android:textSize="18sp"-->
+            <!--                        android:textStyle="bold" />-->
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recentlyTracks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="5dp" />
+            <!--                    <androidx.recyclerview.widget.RecyclerView-->
+            <!--                        android:id="@+id/recentlyTracks"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_gravity="center_horizontal"-->
+            <!--                        android:layout_margin="5dp" />-->
 
-                    <!--                    <include layout="@layout/recently_played_music"></include>-->
-                </LinearLayout>
+            <!--                    &lt;!&ndash;                    <include layout="@layout/recently_played_music"></include>&ndash;&gt;-->
+            <!--                </LinearLayout>-->
 
-            </LinearLayout>
+            <!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"

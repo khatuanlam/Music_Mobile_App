@@ -45,7 +45,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.PlaybackManager;
-import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
@@ -76,10 +76,9 @@ public class PlayTrackActivity extends FragmentActivity {
     private Album detailAlbum;
     private PlaybackManager playbackManager;
     private SpotifyService spotifyService = MainActivity.spotifyService;
-    private mSpotifyService mSpotifyService = MainActivity.mSpotifyService;
+    private mSpotifyAPI mSpotifyAPI = MainActivity.mSpotifyAPI;
     private String selectedPlaylistId;
     private static boolean isFollowing = false;
-    private static final String FOLLOW_PREF_KEY = "follow_pref_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +113,11 @@ public class PlayTrackActivity extends FragmentActivity {
             showAddToPlaylist();
         });
 
-        // Initial primal follow status
-        initializeFollowButtonState(detailTrack.artists.get(0));
 
         if (btnFollow != null) {
+            // Initial primal follow status
+            initializeFollowButtonState(detailTrack.artists.get(0).id);
+
             btnFollow.setOnClickListener(v -> {
                 if (isFollowing == false) {
                     // Nếu chưa theo dõi, thực hiện hành động theo dõi
@@ -291,9 +291,9 @@ public class PlayTrackActivity extends FragmentActivity {
 
 
     //     Follow artist
-    private void initializeFollowButtonState(ArtistSimple artist) {
+    private void initializeFollowButtonState(String artistId) {
         // Check status of following artists
-        spotifyService.isFollowingArtists(artist.id, new SpotifyCallback<boolean[]>() {
+        spotifyService.isFollowingArtists(artistId, new SpotifyCallback<boolean[]>() {
             @Override
             public void failure(SpotifyError spotifyError) {
             }
@@ -435,7 +435,7 @@ public class PlayTrackActivity extends FragmentActivity {
         public void onEvent(PlayerState playerState) {
 
             if (playerState.track.name != detailTrack.name || playerState.track == null) {
-//                playbackManager.play(detailTrack.uri);
+                playbackManager.play(detailTrack.uri);
             }
 
             btn_play.setOnClickListener(v -> {
@@ -450,6 +450,7 @@ public class PlayTrackActivity extends FragmentActivity {
             mSeekBar.setMax((int) playerState.track.duration);
             mTrackProgressBar.setDuration(playerState.track.duration);
             mTrackProgressBar.update(playerState.playbackPosition);
+
             if (playerState.isPaused) {
                 btn_play.setImageResource(R.drawable.ic_play_white_48dp);
             } else {

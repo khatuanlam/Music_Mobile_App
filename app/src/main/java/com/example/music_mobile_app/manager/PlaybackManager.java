@@ -37,6 +37,8 @@ public class PlaybackManager {
     public static PlaybackManager getInstance(Context context, Subscription.EventCallback<PlayerState> mPlayerStateCallback) {
         if (playbackManager == null) {
             playbackManager = new PlaybackManager(context, mPlayerStateCallback);
+        } else {
+            playbackManager.setPlayerState(mPlayerStateCallback);
         }
         return playbackManager;
     }

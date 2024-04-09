@@ -22,7 +22,10 @@ import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
+import kaaes.spotify.webapi.android.models.SavedTrack;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
+import kaaes.spotify.webapi.android.models.Tracks;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -81,8 +84,34 @@ public class MethodsManager {
                 public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
 //                    Log.d(TAG, "Get playlist success: ");
                     List<PlaylistSimple> mList = playlistSimplePager.items;
+                    // Lưu giá trị về bộ nhớ
                     ListManager.getInstance().setPlaylistList(mList);
                     getUserPlaylists(false);
+                }
+            });
+        }
+    }
+
+    public void getUserFavorite(boolean type) {
+        List<Track> favorite = ListManager.getInstance().getFavoriteTracks();
+        if (favorite.isEmpty() || type == true) {
+            Map<String, Object> options = new HashMap<>();
+            options.put(SpotifyService.LIMIT, 20);
+            spotifyService.getMySavedTracks(options, new SpotifyCallback<Pager<SavedTrack>>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+//                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+                }
+
+                @Override
+                public void success(Pager<SavedTrack> savedTrackPager, Response response) {
+                    List<Track> trackList = new ArrayList<>();
+                    for (SavedTrack savedTrack : savedTrackPager.items) {
+                        trackList.add(savedTrack.track);
+                    }
+                    Log.e("xxx", "success: " + trackList.size() + "");
+                    // Lưu giá trị về bộ nhớ
+                    ListManager.getInstance().setFavoriteTracks(trackList);
                 }
             });
         }
@@ -152,6 +181,21 @@ public class MethodsManager {
                     playlistTrack.add(item.track);
                 }
                 listener.onComplete(playlistTrack);
+            }
+        });
+    }
+
+    public void getArtistTopTrack(String artistId, String countryCode, ListenerManager.ListTrackOnCompleteListener listener) {
+        spotifyService.getArtistTopTrack(artistId, countryCode, new SpotifyCallback<Tracks>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                listener.onError(spotifyError);
+            }
+
+            @Override
+            public void success(Tracks tracks, Response response) {
+                List<Track> trackList = tracks.tracks;
+                listener.onComplete(trackList);
             }
         });
     }

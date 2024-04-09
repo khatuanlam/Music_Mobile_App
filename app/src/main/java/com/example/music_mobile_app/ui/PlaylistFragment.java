@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
+import com.example.music_mobile_app.manager.VariableManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +48,8 @@ public class PlaylistFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmentManager manager;
-
-    String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
-
     private PlaylistSimple playlistDetail;
+    private String baseImage = VariableManager.getVariableManager().baseImage;
 
     public PlaylistFragment() {
 
