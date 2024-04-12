@@ -4,11 +4,9 @@ package com.example.music_mobile_app.ui.mydatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,30 +18,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.popular.song.PopularSongsAdapter;
-import com.example.music_mobile_app.model.mydatabase.Album;
-import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
-import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.song.FilteredSongsViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class SubSearchFragment extends Fragment {
@@ -59,7 +40,7 @@ public class SubSearchFragment extends Fragment {
 
 
     public RecyclerView foundSongRecyclerView;
-    public PopularSongsAdapter popularSongsAdapter;
+    public ListSongAdapter listSongAdapter;
     public SubSearchFragment(long userId)
     {
         this.userId = userId;
@@ -85,8 +66,8 @@ public class SubSearchFragment extends Fragment {
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
 
 
-        popularSongsAdapter = new PopularSongsAdapter(getContext(), this, manager, new ArrayList<>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel);
-        foundSongRecyclerView.setAdapter(popularSongsAdapter);
+        listSongAdapter = new ListSongAdapter(getContext(), this, manager, new ArrayList<>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel, "Popular Song", null);
+        foundSongRecyclerView.setAdapter(listSongAdapter);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,12 +119,12 @@ public class SubSearchFragment extends Fragment {
                 if (editable.toString().isEmpty()) {
                     filteredSongsViewModel.getFilteredSongsBySongName("");
                     filteredSongsViewModel.getSongs().observe(getViewLifecycleOwner(), songs -> {
-                        popularSongsAdapter.setmDataList(songs);
+                        listSongAdapter.setmDataList(songs);
                     });
                 } else {
                     filteredSongsViewModel.getFilteredSongsBySongName(editText.getText().toString());
                     filteredSongsViewModel.getSongs().observe(getViewLifecycleOwner(), songs -> {
-                        popularSongsAdapter.setmDataList(songs);
+                        listSongAdapter.setmDataList(songs);
                     });
                 }
             }

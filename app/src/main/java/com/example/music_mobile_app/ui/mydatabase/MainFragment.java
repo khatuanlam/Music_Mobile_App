@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.main.TopAlbumPopularAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.main.TopFavoriteSongAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.main.TopSongPopularAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.main.YourPlaylistsAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopAlbumPopularAdapter;
+//import com.example.music_mobile_app.adapter.mydatabase.main.TopFavoriteSongAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopSongPopularAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.YourPlaylistsAdapter;
 import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
@@ -52,7 +52,7 @@ public class MainFragment extends Fragment {
 
     private TopSongPopularAdapter mSongAdapter;
 
-    private TopFavoriteSongAdapter mFavoriteSongAdapter;
+    private TopSongPopularAdapter mFavoriteSongAdapter;
     private TopAlbumPopularAdapter mAlbumAdapter;
 
     private YourPlaylistsAdapter mYourPlaylistsAdapter;
@@ -139,9 +139,9 @@ public class MainFragment extends Fragment {
         topPopularSongsRecyclerView.setAdapter(mSongAdapter);
         mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<Album>(), userId);
         topPopularAlbumsRecyclerView.setAdapter(mAlbumAdapter);
-        mFavoriteSongAdapter = new TopFavoriteSongAdapter(getActivity(), this, new ArrayList<>());
+        mFavoriteSongAdapter = new TopSongPopularAdapter(getActivity(), this, new ArrayList<>());
         favoriteSongsRecyclerView.setAdapter(mFavoriteSongAdapter);
-        mYourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<>());
+        mYourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<>(), userId);
         yourPlaylistsRecyclerView.setAdapter(mYourPlaylistsAdapter);
 
         favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);

@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.music_mobile_app.model.mydatabase.Album;
-import com.example.music_mobile_app.model.mydatabase.Song;
-import com.example.music_mobile_app.retrofit.mydatabase.AlbumService;
 import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
-import com.example.music_mobile_app.retrofit.mydatabase.SongService;
+import com.example.music_mobile_app.retrofit.mydatabase.RAlbumService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.AlbumService;
+
 
 import java.util.List;
 
@@ -18,16 +18,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class AlbumServiceImpl{
+public class AlbumServiceImpl implements AlbumService {
 
-    private final AlbumService albumService;
+    private final RAlbumService albumService;
     public AlbumServiceImpl()
     {
         Retrofit retrofit = MyDbRetrofit.getRetrofit();
-        this.albumService = retrofit.create(AlbumService.class);
+        this.albumService = retrofit.create(RAlbumService.class);
     }
 
-
+    @Override
     public LiveData<List<Album>> getAllAlbums() {
         final MutableLiveData<List<Album>> albums = new MutableLiveData<>();
         Call<List<Album>> call = albumService.getAllAlbums();
@@ -53,7 +53,7 @@ public class AlbumServiceImpl{
         return albums;
     }
 
-
+    @Override
     public LiveData<Album> getAlbumById(long id) {
         final MutableLiveData<Album> album = new MutableLiveData<>();
         Call<Album> call = albumService.getAlbumById(id);
@@ -79,7 +79,7 @@ public class AlbumServiceImpl{
         return album;
     }
 
-
+    @Override
     public LiveData<List<Album>> getTopPopularityAlbums() {
         final MutableLiveData<List<Album>> albums = new MutableLiveData<>();
         Call<List<Album>> call = albumService.getTopPopularAlbums(0, 10);

@@ -5,14 +5,13 @@ import com.example.music_mobile_app.model.mydatabase.Song;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface SongService {
+public interface RSongService {
     @GET("/Song")
     Call<List<Song>> getAllSongs();
 

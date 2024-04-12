@@ -1,8 +1,6 @@
 package com.example.music_mobile_app.retrofit.mydatabase;
 
-import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
-import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.retrofit.mydatabase.model.AddPlaylistBody;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface PlaylistService {
+public interface RPlaylistService {
     @GET("/Playlist")
     Call<List<Playlist>> getAllPlaylists();
 

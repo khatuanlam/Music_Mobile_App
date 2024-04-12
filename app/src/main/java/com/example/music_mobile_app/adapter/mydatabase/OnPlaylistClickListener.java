@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.adapter.mydatabase.myinterface;
+package com.example.music_mobile_app.adapter.mydatabase;
 
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 

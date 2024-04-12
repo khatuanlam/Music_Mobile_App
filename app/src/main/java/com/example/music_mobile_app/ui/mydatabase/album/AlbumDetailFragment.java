@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.album.AlbumSongsAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.favorite.FavoriteSongsAdapter;
+
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
@@ -43,7 +43,7 @@ public class AlbumDetailFragment extends Fragment {
     private Album album;
     private FragmentManager manager;
 
-    private AlbumSongsAdapter mFavoriteSongsAdapter;
+    private ListSongAdapter mFavoriteSongsAdapter;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
 
     private RecyclerView songOfAlbumRecyclerView;
@@ -95,7 +95,15 @@ public class AlbumDetailFragment extends Fragment {
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
 
-        mFavoriteSongsAdapter = new AlbumSongsAdapter(getContext(), this, manager, new ArrayList<Song>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel );
+        mFavoriteSongsAdapter = new ListSongAdapter(getContext(),
+                this,
+                manager,
+                new ArrayList<Song>(),
+                favoriteSongsViewModel,
+                userId,
+                songsOfPlaylistViewModel,
+                "Album Song",
+                null);
         songOfAlbumRecyclerView.setAdapter(mFavoriteSongsAdapter);
 
         songsOfAlbumViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.popular.song.PopularSongsAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
@@ -42,7 +42,7 @@ public class AllPopularSongsFragment extends Fragment {
     private ImageView imageViewBack;
     private FragmentManager manager;
 
-    private PopularSongsAdapter popularSongsAdapter;
+    private ListSongAdapter listSongAdapter;
 
     private RecyclerView songOfAlbumRecyclerView;
 
@@ -83,13 +83,13 @@ public class AllPopularSongsFragment extends Fragment {
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
 
-        popularSongsAdapter = new PopularSongsAdapter(getActivity(), this, manager, new ArrayList<Song>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel);
-        songOfAlbumRecyclerView.setAdapter(popularSongsAdapter);
+        listSongAdapter = new ListSongAdapter(getActivity(), this, manager, new ArrayList<Song>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel, "Popular Song", null);
+        songOfAlbumRecyclerView.setAdapter(listSongAdapter);
 
         topPopularSongViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
             @Override
             public void onChanged(List<Song> songs) {
-                popularSongsAdapter.setmDataList(songs);
+                listSongAdapter.setmDataList(songs);
                 Log.i("FAVORITE","CAP NHAT");
                 Log.i("FAVORITE",String.valueOf(songs.size()));
             }
@@ -123,7 +123,7 @@ public class AllPopularSongsFragment extends Fragment {
         allPlaylistViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
             @Override
             public void onChanged(List<Playlist> playlists) {
-                popularSongsAdapter.setOpenPlaylists(playlists);
+                listSongAdapter.setOpenPlaylists(playlists);
             }
         });
 

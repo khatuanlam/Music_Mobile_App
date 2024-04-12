@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -45,6 +49,7 @@ public class MainActivity extends FragmentActivity {
 //        setServiceAPI();
 
 //        getUserProfile();
+        createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT);
     }
 
 
@@ -105,4 +110,17 @@ public class MainActivity extends FragmentActivity {
         super.onStop();
         // Aaand we will finish off here.
     }
+    public void createNotificationChannel(String channelId, String channelName, int importance) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            // Configure the channel (optional)
+            channel.setDescription("Kenh thong bao cua Firebase");
+//            channel.setLightColor(Color.GREEN); // Optional LED light color
+            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional vibration pattern
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 }

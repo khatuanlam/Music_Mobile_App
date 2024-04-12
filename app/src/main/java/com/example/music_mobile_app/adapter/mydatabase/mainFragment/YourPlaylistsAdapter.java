@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.adapter.mydatabase.main;
+package com.example.music_mobile_app.adapter.mydatabase.mainFragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,11 +26,14 @@ public class YourPlaylistsAdapter extends RecyclerView.Adapter<YourPlaylistsAdap
 
     private FragmentManager manager;
 
-    public YourPlaylistsAdapter(Context context, Fragment fragment, FragmentManager manager, List<Playlist> dataList) {
+    private long userId;
+
+    public YourPlaylistsAdapter(Context context, Fragment fragment, FragmentManager manager, List<Playlist> dataList, long userId) {
         this.context = context;
         this.fragment = fragment;
         this.manager = manager;
         mDataList = dataList;
+        this.userId = userId;
     }
 
     public void setmDataList(List<Playlist> mDataList) {
@@ -73,11 +76,10 @@ public class YourPlaylistsAdapter extends RecyclerView.Adapter<YourPlaylistsAdap
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         Playlist playlist = mDataList.get(position);
-                        PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment(playlist);
+                        PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment(playlist, userId);
                         manager.beginTransaction()
                                 .replace(R.id.fragment, playlistDetailFragment)
                                 .commit();
-//                        Toast.makeText(context, album.getName(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

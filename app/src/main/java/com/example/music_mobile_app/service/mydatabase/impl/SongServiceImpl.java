@@ -7,7 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
-import com.example.music_mobile_app.retrofit.mydatabase.SongService;
+import com.example.music_mobile_app.retrofit.mydatabase.RSongService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.SongService;
 import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
 import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
@@ -18,18 +19,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class SongServiceImpl {
+public class SongServiceImpl implements SongService {
 
-    private final SongService songService;
+    private final RSongService RSongService;
     public SongServiceImpl()
     {
         Retrofit retrofit = MyDbRetrofit.getRetrofit();
-        songService = retrofit.create(SongService.class);
+        RSongService = retrofit.create(RSongService.class);
     }
 
+    @Override
     public MutableLiveData<List<Song>> getAllSongs() {
         final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
-        Call<List<Song>> call = songService.getAllSongs();
+        Call<List<Song>> call = RSongService.getAllSongs();
         call.enqueue(new Callback<List<Song>>() {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
@@ -39,6 +41,7 @@ public class SongServiceImpl {
                     Log.i("getAllSongs","LOI");
                     songs.setValue(null);
                 }
+
             }
 
             @Override
@@ -51,9 +54,10 @@ public class SongServiceImpl {
         return songs;
     }
 
+    @Override
     public LiveData<List<Song>> getAllSongsFromAlbum(long id) {
         final MutableLiveData<List<Song>> liveData = new MutableLiveData<>();
-        Call<List<Song>> call = songService.getAllSongsFromAlbum(id);
+        Call<List<Song>> call = RSongService.getAllSongsFromAlbum(id);
         call.enqueue(new Callback<List<Song>>() {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
@@ -63,6 +67,7 @@ public class SongServiceImpl {
                     Log.i("getAllSongsFromAlbum","LOI");
                     liveData.setValue(null);
                 }
+
             }
 
             @Override
@@ -76,10 +81,10 @@ public class SongServiceImpl {
         return liveData;
     }
 
-
+    @Override
     public LiveData<List<Song>> getAllSongsFromPlaylist(long id) {
         final MutableLiveData<List<Song>> liveData = new MutableLiveData<>();
-        Call<List<Song>> call = songService.getAllSongsFromPlaylist(id);
+        Call<List<Song>> call = RSongService.getAllSongsFromPlaylist(id);
         call.enqueue(new Callback<List<Song>>() {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
@@ -89,6 +94,7 @@ public class SongServiceImpl {
                     Log.i("getAllSongsFromPlaylist","LOI");
                     liveData.setValue(null);
                 }
+
             }
 
             @Override
@@ -101,10 +107,10 @@ public class SongServiceImpl {
         return liveData;
     }
 
-
+    @Override
     public LiveData<Song> getSongById(long id) {
         final MutableLiveData<Song> song = new MutableLiveData<>();
-        Call<Song> call = songService.getSongById(id);
+        Call<Song> call = RSongService.getSongById(id);
         call.enqueue(new Callback<Song>() {
             @Override
             public void onResponse(Call<Song> call, Response<Song> response) {
@@ -126,11 +132,11 @@ public class SongServiceImpl {
         return song;
     }
 
-
+    @Override
     public LiveData<List<Song>> getTopPopularitySongs() {
         final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
 
-        Call<List<Song>> call = songService.getTopPopularSongs(0, 10);
+        Call<List<Song>> call = RSongService.getTopPopularSongs(0, 10);
         call.enqueue(new Callback<List<Song>>() {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
@@ -140,6 +146,7 @@ public class SongServiceImpl {
                     Log.i("getTopPopularitySongs","LOI");
                     songs.setValue(null);
                 }
+
             }
 
             @Override
@@ -152,11 +159,11 @@ public class SongServiceImpl {
         return songs;
     }
 
-
+    @Override
     public LiveData<List<Song>> getAllFavoriteSongsFromIdUser(long idUser) {
         final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
 
-        Call<List<Song>> call = songService.getAllFavoriteSongsFromIdUser(idUser);
+        Call<List<Song>> call = RSongService.getAllFavoriteSongsFromIdUser(idUser);
         call.enqueue(new Callback<List<Song>>() {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
@@ -169,6 +176,7 @@ public class SongServiceImpl {
                     Log.i("GET ALL SONGS","LOI");
                     songs.setValue(null);
                 }
+
             }
 
             @Override
@@ -181,11 +189,11 @@ public class SongServiceImpl {
         return songs;
     }
 
-
+    @Override
     public LiveData<Song> postFavoriteSongToUser(long idSong, long idUser, PostCallback postCallback) {
         final MutableLiveData<Song> song = new MutableLiveData<>();
 
-        Call<Song> call = songService.postFavoriteSongToUser(idSong, idUser);
+        Call<Song> call = RSongService.postFavoriteSongToUser(idSong, idUser);
         call.enqueue(new Callback<Song>() {
             @Override
             public void onResponse(Call<Song> call, Response<Song> response) {
@@ -201,6 +209,7 @@ public class SongServiceImpl {
                         postCallback.onPostFailed();
                     }
                 }
+
             }
 
             @Override
@@ -216,11 +225,11 @@ public class SongServiceImpl {
         return song;
     }
 
-
+    @Override
     public LiveData<Song> deleteFavoriteSongByIdUser(long idSong, long idUser, DeleteCallback deleteCallback) {
         final MutableLiveData<Song> song = new MutableLiveData<>();
 
-        Call<Song> call = songService.deleteFavoriteSongByIdUser(idSong, idUser);
+        Call<Song> call = RSongService.deleteFavoriteSongByIdUser(idSong, idUser);
         call.enqueue(new Callback<Song>() {
             @Override
             public void onResponse(Call<Song> call, Response<Song> response) {
@@ -239,6 +248,7 @@ public class SongServiceImpl {
                         deleteCallback.onDeleteFailed();
                     }
                 }
+
             }
 
             @Override
@@ -253,11 +263,11 @@ public class SongServiceImpl {
         });
         return song;
     }
-
+    @Override
     public LiveData<List<Song>> getfilteredSongs(String songName){
         final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
 
-        Call<List<Song>> call = songService.getfilteredSongs(songName);
+        Call<List<Song>> call = RSongService.getfilteredSongs(songName);
         call.enqueue(new Callback<List<Song>>() {
             @Override
             public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
@@ -266,6 +276,7 @@ public class SongServiceImpl {
                 } else {
                     songs.setValue(null);
                 }
+
             }
             @Override
             public void onFailure(Call<List<Song>> call, Throwable t) {

@@ -19,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.playlist.SongOfPlaylistAdapter;
+//import com.example.music_mobile_app.adapter.mydatabase.playlist.SongOfPlaylistAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
@@ -31,19 +32,23 @@ import java.util.List;
 
 public class PlaylistDetailFragment extends Fragment {
 
+    private FavoriteSongsViewModel favoriteSongsViewModel;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
     private TextView textView;
     private ImageView imageView, imageViewBack;
     private Playlist playlist;
     private FragmentManager manager;
 
-    private SongOfPlaylistAdapter mSongOfPlaylistAdapter;
+    private ListSongAdapter mSongOfPlaylistAdapter;
 
     private RecyclerView songOfPlaylistRecyclerView;
 
-    public PlaylistDetailFragment(Playlist playlist)
+    private long userId;
+
+    public PlaylistDetailFragment(Playlist playlist, long userId)
     {
         this.playlist = playlist;
+        this.userId = userId;
     }
 
     @Override
@@ -79,8 +84,17 @@ public class PlaylistDetailFragment extends Fragment {
 
 
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
-
-        mSongOfPlaylistAdapter = new SongOfPlaylistAdapter(getActivity(), this, new ArrayList<Song>(), playlist, songsOfPlaylistViewModel);
+        favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);
+        mSongOfPlaylistAdapter = new ListSongAdapter(
+                getContext(),
+                this,
+                manager,
+                new ArrayList<Song>(),
+                favoriteSongsViewModel,
+                userId,
+                songsOfPlaylistViewModel,
+                "Playlist Song",
+                playlist);
         songOfPlaylistRecyclerView.setAdapter(mSongOfPlaylistAdapter);
 
         songsOfPlaylistViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
@@ -105,9 +119,29 @@ public class PlaylistDetailFragment extends Fragment {
                 }
             }
         });
+        favoriteSongsViewModel.getIsPostSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isSuccess) {
+                if(isSuccess == null)
+                    return;
+                if (isSuccess) {
+                    Toast.makeText(getContext(), "ĐÃ THÊM VÀO DANH SÁCH YÊU THÍCH", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "CÓ LỖI XẢY RA", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
         songsOfPlaylistViewModel.getAllSongsByPlaylistID(playlist.getId());
 
         return view;
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        favoriteSongsViewModel.getIsPostSuccess().removeObservers(this);
+        songsOfPlaylistViewModel.getIsDeleteSuccess().removeObservers(this);
+        songsOfPlaylistViewModel.getSongs().removeObservers(this);
     }
  }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.service.mydatabase.impl.PlaylistServiceImpl;
+import com.example.music_mobile_app.service.mydatabase.myinterface.PlaylistService;
 import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
 import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class PlaylistRepository {
 
-    private PlaylistServiceImpl playlistService;
+    private PlaylistService playlistService;
 
     public PlaylistRepository() {
         this.playlistService = new PlaylistServiceImpl();

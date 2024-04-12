@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData;
 
 import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.service.mydatabase.impl.AlbumServiceImpl;
-import com.example.music_mobile_app.service.mydatabase.impl.SongServiceImpl;
+import com.example.music_mobile_app.service.mydatabase.myinterface.AlbumService;
 
 import java.util.List;
 
 public class AlbumRepository {
 
-    private AlbumServiceImpl albumService;
+    private AlbumService albumService;
 
     public AlbumRepository() {
         this.albumService = new AlbumServiceImpl();

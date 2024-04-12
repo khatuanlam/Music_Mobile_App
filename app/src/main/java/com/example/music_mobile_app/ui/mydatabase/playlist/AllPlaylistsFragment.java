@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -19,17 +18,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.main.YourPlaylistsAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.popular.song.PopularSongsAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.YourPlaylistsAdapter;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
-import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
-import com.example.music_mobile_app.viewmodel.mydatabase.TopPopularSongViewModel;
-import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 
 import java.util.ArrayList;
@@ -116,7 +110,7 @@ public class AllPlaylistsFragment extends Fragment {
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
 
 
-        yourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<Playlist>());
+        yourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<Playlist>(), userId);
         songOfAlbumRecyclerView.setAdapter(yourPlaylistsAdapter);
 
         allPlaylistViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {

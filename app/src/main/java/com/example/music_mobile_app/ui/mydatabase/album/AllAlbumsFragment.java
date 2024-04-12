@@ -6,26 +6,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.main.TopAlbumPopularAdapter;
-import com.example.music_mobile_app.adapter.mydatabase.popular.song.PopularSongsAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopAlbumPopularAdapter;
 import com.example.music_mobile_app.model.mydatabase.Album;
-import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.album.TopPopularAlbumViewModel;
-import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

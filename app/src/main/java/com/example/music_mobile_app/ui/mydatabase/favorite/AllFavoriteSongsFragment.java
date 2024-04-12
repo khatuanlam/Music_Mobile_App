@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.mydatabase.favorite.FavoriteSongsAdapter;
+//import com.example.music_mobile_app.adapter.mydatabase.favorite.FavoriteSongsAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +31,12 @@ import java.util.List;
 public class AllFavoriteSongsFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
+    private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
     private TextView textView;
     private ImageView imageViewBack;
     private FragmentManager manager;
 
-    private FavoriteSongsAdapter mFavoriteSongsAdapter;
+    private ListSongAdapter mFavoriteSongsAdapter;
 
     private RecyclerView songOfAlbumRecyclerView;
 
@@ -70,9 +73,17 @@ public class AllFavoriteSongsFragment extends Fragment {
         songOfAlbumRecyclerView.setLayoutManager(topsong_layoutManager);
 
         favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);
+        songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
 
-
-        mFavoriteSongsAdapter = new FavoriteSongsAdapter(getActivity(), this, new ArrayList<Song>(), favoriteSongsViewModel, id);
+        mFavoriteSongsAdapter = new ListSongAdapter(getContext(),
+                this,
+                manager,
+                new ArrayList<Song>(),
+                favoriteSongsViewModel,
+                id,
+                songsOfPlaylistViewModel,
+                "Favorite Song",
+                null);
         songOfAlbumRecyclerView.setAdapter(mFavoriteSongsAdapter);
 
 
@@ -97,6 +108,19 @@ public class AllFavoriteSongsFragment extends Fragment {
                 }
             }
         });
+        songsOfPlaylistViewModel.getIsPostSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isPostSuccess) {
+                if(isPostSuccess == null)
+                    return;
+                if (isPostSuccess) {
+                    Toast.makeText(getContext(), "ĐÃ THÊM VÀO PLAYLIST", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "CÓ LỖI XẢY RA", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
 
         favoriteSongsViewModel.getAllFavoriteSongsByUserId(id);
 
@@ -107,6 +131,7 @@ public class AllFavoriteSongsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         favoriteSongsViewModel.getSongs().removeObservers(this);
+        songsOfPlaylistViewModel.getIsPostSuccess().removeObservers(this);
     }
  }
 

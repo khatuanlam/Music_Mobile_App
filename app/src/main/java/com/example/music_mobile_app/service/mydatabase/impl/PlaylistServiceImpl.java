@@ -1,17 +1,15 @@
 package com.example.music_mobile_app.service.mydatabase.impl;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
-import com.example.music_mobile_app.retrofit.mydatabase.PlaylistService;
+import com.example.music_mobile_app.retrofit.mydatabase.RPlaylistService;
 import com.example.music_mobile_app.retrofit.mydatabase.model.AddPlaylistBody;
+import com.example.music_mobile_app.service.mydatabase.myinterface.PlaylistService;
 import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
 import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
@@ -22,18 +20,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class PlaylistServiceImpl {
-    private final PlaylistService playlistService;
+public class PlaylistServiceImpl implements PlaylistService {
+    private final RPlaylistService RPlaylistService;
     public PlaylistServiceImpl()
     {
         Retrofit retrofit = MyDbRetrofit.getRetrofit();
-        playlistService = retrofit.create(PlaylistService.class);
+        RPlaylistService = retrofit.create(RPlaylistService.class);
     }
 
-
+    @Override
     public LiveData<List<Playlist>> getAllPlaylists() {
         final MutableLiveData<List<Playlist>> playlists = new MutableLiveData<>();
-        Call<List<Playlist>> call = playlistService.getAllPlaylists();
+        Call<List<Playlist>> call = RPlaylistService.getAllPlaylists();
         call.enqueue(new Callback<List<Playlist>>() {
             @Override
             public void onResponse(Call<List<Playlist>> call, Response<List<Playlist>> response) {
@@ -54,11 +52,11 @@ public class PlaylistServiceImpl {
         });
         return playlists;
     }
-
+    @Override
     public LiveData<List<Playlist>> getAllPlaylistsByIdUser(long id) {
         final MutableLiveData<List<Playlist>> playlists = new MutableLiveData<>();
 
-        Call<List<Playlist>> call = playlistService.getAllPlaylistsByIdUser(id);
+        Call<List<Playlist>> call = RPlaylistService.getAllPlaylistsByIdUser(id);
         call.enqueue(new Callback<List<Playlist>>() {
             @Override
             public void onResponse(Call<List<Playlist>> call, Response<List<Playlist>> response) {
@@ -80,11 +78,11 @@ public class PlaylistServiceImpl {
         return playlists;
     }
 
-
+    @Override
     public LiveData<Playlist> getPlaylistById(long id) {
         final MutableLiveData<Playlist> playlist = new MutableLiveData<>();
 
-        Call<Playlist> call = playlistService.getPlaylistById(id);
+        Call<Playlist> call = RPlaylistService.getPlaylistById(id);
         call.enqueue(new Callback<Playlist>() {
             @Override
             public void onResponse(Call<Playlist> call, Response<Playlist> response) {
@@ -105,11 +103,11 @@ public class PlaylistServiceImpl {
         });
         return playlist;
     }
-
+    @Override
     public LiveData<Playlist> deleteSongFromPlaylist(long idPlaylist, long idSong, DeleteCallback deleteCallback) {
         final MutableLiveData<Playlist> playlist = new MutableLiveData<>();
 
-        Call<Playlist> call = playlistService.deleteSongFromPlaylist(idPlaylist, idSong);
+        Call<Playlist> call = RPlaylistService.deleteSongFromPlaylist(idPlaylist, idSong);
         call.enqueue(new Callback<Playlist>() {
             @Override
             public void onResponse(Call<Playlist> call, Response<Playlist> response) {
@@ -128,6 +126,7 @@ public class PlaylistServiceImpl {
                         deleteCallback.onDeleteFailed();
                     }
                 }
+
             }
 
             @Override
@@ -142,11 +141,11 @@ public class PlaylistServiceImpl {
         });
         return playlist;
     }
-
+    @Override
     public LiveData<Playlist> postSongToPlaylist(long idPlaylist, long idSong, PostCallback postCallback) {
         final MutableLiveData<Playlist> playlist = new MutableLiveData<>();
 
-        Call<Playlist> call = playlistService.postSongToPlaylist(idPlaylist, idSong);
+        Call<Playlist> call = RPlaylistService.postSongToPlaylist(idPlaylist, idSong);
         call.enqueue(new Callback<Playlist>() {
             @Override
             public void onResponse(Call<Playlist> call, Response<Playlist> response) {
@@ -162,6 +161,7 @@ public class PlaylistServiceImpl {
                         postCallback.onPostFailed();
                     }
                 }
+
             }
 
             @Override
@@ -177,10 +177,11 @@ public class PlaylistServiceImpl {
         });
         return playlist;
     }
+    @Override
     public LiveData<Playlist> addPlaylistToUser( long idUser, String name, PostCallback postCallback) {
         final MutableLiveData<Playlist> playlist = new MutableLiveData<>();
 
-        Call<Playlist> call = playlistService.addPlaylistToUser(idUser, new AddPlaylistBody(name));
+        Call<Playlist> call = RPlaylistService.addPlaylistToUser(idUser, new AddPlaylistBody(name));
         call.enqueue(new Callback<Playlist>() {
             @Override
             public void onResponse(Call<Playlist> call, Response<Playlist> response) {

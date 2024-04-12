@@ -4,6 +4,6 @@
         android:id="@+id/mydb_menu_item_song_playlist_remove"
         android:title="Xóa khỏi playlist"/>
     <item
-        android:id="@+id/mydb_menu_item_song_playlist_download"
+        android:id="@+id/mydb_menu_item_song_download"
         android:title="Tải xuống"/>
 </menu>

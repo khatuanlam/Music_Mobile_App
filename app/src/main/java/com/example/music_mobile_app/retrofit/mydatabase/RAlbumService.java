@@ -1,7 +1,6 @@
 package com.example.music_mobile_app.retrofit.mydatabase;
 
 import com.example.music_mobile_app.model.mydatabase.Album;
-import com.example.music_mobile_app.model.mydatabase.Song;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface AlbumService {
+public interface RAlbumService {
     @GET("/Album")
     Call<List<Album>> getAllAlbums();
 
