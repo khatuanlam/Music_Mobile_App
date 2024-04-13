@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.song.FilteredSongsViewModel;
@@ -41,9 +42,11 @@ public class SubSearchFragment extends Fragment {
 
     public RecyclerView foundSongRecyclerView;
     public ListSongAdapter listSongAdapter;
-    public SubSearchFragment(long userId)
+    public LiteSongRepository liteSongRepository;
+    public SubSearchFragment(long userId, LiteSongRepository liteSongRepository)
     {
         this.userId = userId;
+        this.liteSongRepository = liteSongRepository;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class SubSearchFragment extends Fragment {
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
 
 
-        listSongAdapter = new ListSongAdapter(getContext(), this, manager, new ArrayList<>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel, "Popular Song", null);
+        listSongAdapter = new ListSongAdapter(getContext(), this, manager, new ArrayList<>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel, "Popular Song", null, liteSongRepository);
         foundSongRecyclerView.setAdapter(listSongAdapter);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

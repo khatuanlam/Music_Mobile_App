@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.playlist.PlaylistDetailFragment;
 
 import java.util.List;
@@ -27,13 +28,14 @@ public class YourPlaylistsAdapter extends RecyclerView.Adapter<YourPlaylistsAdap
     private FragmentManager manager;
 
     private long userId;
-
-    public YourPlaylistsAdapter(Context context, Fragment fragment, FragmentManager manager, List<Playlist> dataList, long userId) {
+    public LiteSongRepository liteSongRepository;
+    public YourPlaylistsAdapter(Context context, Fragment fragment, FragmentManager manager, List<Playlist> dataList, long userId, LiteSongRepository liteSongRepository) {
         this.context = context;
         this.fragment = fragment;
         this.manager = manager;
         mDataList = dataList;
         this.userId = userId;
+        this.liteSongRepository = liteSongRepository;
     }
 
     public void setmDataList(List<Playlist> mDataList) {
@@ -76,7 +78,7 @@ public class YourPlaylistsAdapter extends RecyclerView.Adapter<YourPlaylistsAdap
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         Playlist playlist = mDataList.get(position);
-                        PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment(playlist, userId);
+                        PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment(playlist, userId, liteSongRepository);
                         manager.beginTransaction()
                                 .replace(R.id.fragment, playlistDetailFragment)
                                 .commit();

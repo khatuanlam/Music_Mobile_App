@@ -23,6 +23,7 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
@@ -44,11 +45,12 @@ public class PlaylistDetailFragment extends Fragment {
     private RecyclerView songOfPlaylistRecyclerView;
 
     private long userId;
-
-    public PlaylistDetailFragment(Playlist playlist, long userId)
+    public LiteSongRepository liteSongRepository;
+    public PlaylistDetailFragment(Playlist playlist, long userId, LiteSongRepository liteSongRepository)
     {
         this.playlist = playlist;
         this.userId = userId;
+        this.liteSongRepository = liteSongRepository;
     }
 
     @Override
@@ -94,7 +96,8 @@ public class PlaylistDetailFragment extends Fragment {
                 userId,
                 songsOfPlaylistViewModel,
                 "Playlist Song",
-                playlist);
+                playlist,
+                liteSongRepository);
         songOfPlaylistRecyclerView.setAdapter(mSongOfPlaylistAdapter);
 
         songsOfPlaylistViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {

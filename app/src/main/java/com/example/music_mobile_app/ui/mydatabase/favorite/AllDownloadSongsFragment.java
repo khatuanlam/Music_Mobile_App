@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.ui.mydatabase.album;
+package com.example.music_mobile_app.ui.mydatabase.favorite;
 
 
 import android.os.Bundle;
@@ -17,16 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
-
+import com.example.music_mobile_app.adapter.mydatabase.ListDownloadSongAdapter;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
-import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.model.sqlite.LiteSong;
 import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
-import com.example.music_mobile_app.viewmodel.mydatabase.album.SongsOfAlbumViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
@@ -34,30 +32,24 @@ import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylis
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlbumDetailFragment extends Fragment {
-
-    private SongsOfAlbumViewModel songsOfAlbumViewModel;
+public class AllDownloadSongsFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
+    private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
+    private AllPlaylistViewModel allPlaylistViewModel;
     private TextView textView;
-    private ImageView imageView, imageViewBack;
-    private Album album;
+    private ImageView imageViewBack;
     private FragmentManager manager;
 
-    private ListSongAdapter mFavoriteSongsAdapter;
-    private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
+    private ListDownloadSongAdapter mFavoriteSongsAdapter;
 
-    private RecyclerView songOfAlbumRecyclerView;
-    private AllPlaylistViewModel allPlaylistViewModel;
+    private RecyclerView downloadSongsRecyclerView;
 
-
-    private long userId;
-    public LiteSongRepository liteSongRepository;
-
-    public AlbumDetailFragment(Album album, long userId, LiteSongRepository liteSongRepository)
+    private long id;
+    private LiteSongRepository liteSongRepository;
+    public AllDownloadSongsFragment(long id, LiteSongRepository liteSongRepository)
     {
-        this.album = album;
-        this.userId = userId;
+        this.id = id;
         this.liteSongRepository = liteSongRepository;
     }
 
@@ -70,10 +62,8 @@ public class AlbumDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.mydb_fragment_album_detail, container, false);
-        textView = view.findViewById(R.id.mydb_album_detail_fragment_textView);
-        imageView = view.findViewById(R.id.mydb_album_detail_fragment_imageView);
-        imageViewBack = view.findViewById(R.id.mydb_album_detail_fragment_back);
+        View view = inflater.inflate(R.layout.mydb_fragment_downloaded_songs, container, false);
+        imageViewBack = view.findViewById(R.id.mydb_download_songs_fragment_back);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,46 +74,32 @@ public class AlbumDetailFragment extends Fragment {
 
             }
         });
-        textView.setText(album.getName());
-        Glide.with(this)
-                .load(album.getImage())
-                .into(imageView);
-
-        songOfAlbumRecyclerView = view.findViewById(R.id.mydb_album_detail_fragment_songs_recyclerView);
+        downloadSongsRecyclerView = view.findViewById(R.id.mydb_download_songs_fragment_songs_recyclerView);
         LinearLayoutManager topsong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        songOfAlbumRecyclerView.setLayoutManager(topsong_layoutManager);
+        downloadSongsRecyclerView.setLayoutManager(topsong_layoutManager);
 
-        songsOfAlbumViewModel = new ViewModelProvider(this).get(SongsOfAlbumViewModel.class);
         favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
 
-        mFavoriteSongsAdapter = new ListSongAdapter(getContext(),
+        mFavoriteSongsAdapter = new ListDownloadSongAdapter(getContext(),
                 this,
                 manager,
-                new ArrayList<Song>(),
+                new ArrayList<LiteSong>(),
                 favoriteSongsViewModel,
-                userId,
-                songsOfPlaylistViewModel,
-                "Album Song",
-                null,
-                liteSongRepository);
-        songOfAlbumRecyclerView.setAdapter(mFavoriteSongsAdapter);
+                id,
+                songsOfPlaylistViewModel);
+        downloadSongsRecyclerView.setAdapter(mFavoriteSongsAdapter);
 
-        songsOfAlbumViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
-            @Override
-            public void onChanged(List<Song> songs) {
-                mFavoriteSongsAdapter.setmDataList(songs);
-                Log.i("ALBUM DETAIL","CAP NHAT");
-                Log.i("ALBUM DETAIL",String.valueOf(songs.size()));
-            }
-        });
+        List<LiteSong> songs = liteSongRepository.getAllSongs();
+        mFavoriteSongsAdapter.setmDataList(songs);
+
         favoriteSongsViewModel.getIsPostSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
-            public void onChanged(Boolean isDeleteSuccess) {
-                if(isDeleteSuccess == null)
+            public void onChanged(Boolean isSuccess) {
+                if(isSuccess == null)
                     return;
-                if (isDeleteSuccess) {
+                if (isSuccess) {
                     Toast.makeText(getContext(), "ĐÃ THÊM VÀO DANH SÁCH YÊU THÍCH", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "CÓ LỖI XẢY RA", Toast.LENGTH_SHORT).show();
@@ -144,6 +120,7 @@ public class AlbumDetailFragment extends Fragment {
                 }
             }
         });
+
         allPlaylistViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
             @Override
             public void onChanged(List<Playlist> playlists) {
@@ -151,14 +128,11 @@ public class AlbumDetailFragment extends Fragment {
             }
         });
 
-        songsOfAlbumViewModel.getAllSongsByAlbum(album.getId());
-        allPlaylistViewModel.getAllPlaylistsByIdUser(userId);
         return view;
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        songsOfAlbumViewModel.getSongs().removeObservers(this);
         favoriteSongsViewModel.getIsPostSuccess().removeObservers(this);
         songsOfPlaylistViewModel.getIsPostSuccess().removeObservers(this);
         allPlaylistViewModel.getPlaylists().removeObservers(this);

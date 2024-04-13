@@ -1,6 +1,11 @@
 package com.example.music_mobile_app;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -8,6 +13,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +23,7 @@ import android.widget.Toast;
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
 import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
 import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
 import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
 import com.example.music_mobile_app.service.mydatabase.myinterface.LoginService;
@@ -39,9 +46,12 @@ public class MainActivity extends FragmentActivity {
     public static SpotifyService spotifyService;
 
     public LoginService loginService;
+    public static MusicDatabaseHelper musicDatabaseHelper;
     public static String authToken;
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final int REQUEST_CODE_STORAGE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,7 @@ public class MainActivity extends FragmentActivity {
 
         FragmentManager manager = getSupportFragmentManager();
         loginService = new LoginServiceImpl();
+        musicDatabaseHelper = new MusicDatabaseHelper(this);
 
 //        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
 //        authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
@@ -78,9 +89,21 @@ public class MainActivity extends FragmentActivity {
                 Log.i("MLogin Activity", message);
             }
         });
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+            } else {
+                Log.i(TAG, "Storage permission denied");
+            }
+        }
+    }
     private void getUserProfile() {
         mSpotifyService.getUserProfile(new Callback<User>() {
             @Override

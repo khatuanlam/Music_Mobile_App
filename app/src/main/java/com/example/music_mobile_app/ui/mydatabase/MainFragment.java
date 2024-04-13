@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopAlbumPopularAdapter;
 //import com.example.music_mobile_app.adapter.mydatabase.main.TopFavoriteSongAdapter;
@@ -26,7 +27,10 @@ import com.example.music_mobile_app.adapter.mydatabase.mainFragment.YourPlaylist
 import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
+import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
 import com.example.music_mobile_app.ui.mydatabase.album.AllAlbumsFragment;
+import com.example.music_mobile_app.ui.mydatabase.favorite.AllDownloadSongsFragment;
 import com.example.music_mobile_app.ui.mydatabase.favorite.AllFavoriteSongsFragment;
 import com.example.music_mobile_app.ui.mydatabase.playlist.AllPlaylistsFragment;
 import com.example.music_mobile_app.ui.mydatabase.popular.song.AllPopularSongsFragment;
@@ -46,13 +50,11 @@ import java.util.List;
 
 public class MainFragment extends Fragment {
 
-    private InterstitialAd mInterstitialAd;
-    public static String TAG= "Mobile Ads";
 
     public static long userId = 1; //SET BIẾN NÀY THÀNH ID CỦA USER ĐƯỢC TRẢ VỀ KHI GỌI /SpotifyLogin/{idSpotify}
 
     private EditText editText;
-    private Button btnViewAllFavoriteSongs, btnViewAllAlbums, btnViewAllPlaylists, btnViewAllPopularSongs;
+    private Button btnViewAllFavoriteSongs, btnViewAllAlbums, btnViewAllPlaylists, btnViewAllPopularSongs, btnViewAllDownload;
     private FragmentManager manager;
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
@@ -74,10 +76,15 @@ public class MainFragment extends Fragment {
 
     private RecyclerView yourPlaylistsRecyclerView;
 
+
+    private LiteSongRepository liteSongRepository;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
+        liteSongRepository = new LiteSongRepository(MainActivity.musicDatabaseHelper);
     }
 
     @Override
@@ -90,11 +97,12 @@ public class MainFragment extends Fragment {
         btnViewAllAlbums = view.findViewById(R.id.mydb_search_viewTopPopularAlbums_btn);
         btnViewAllPopularSongs = view.findViewById(R.id.mydb_search_viewTopPopularSongs_btn);
         btnViewAllPlaylists = view.findViewById(R.id.mydb_search_viewAllPlaylists_btn);
+        btnViewAllDownload = view.findViewById(R.id.mydb_search_viewAllDownload_btn);
 
         btnViewAllFavoriteSongs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllFavoriteSongsFragment fragment = new AllFavoriteSongsFragment(userId);
+                AllFavoriteSongsFragment fragment = new AllFavoriteSongsFragment(userId, liteSongRepository);
                 manager.beginTransaction()
                         .replace(R.id.fragment, fragment)
                         .commit();
@@ -104,7 +112,7 @@ public class MainFragment extends Fragment {
         btnViewAllAlbums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllAlbumsFragment allAlbumsFragment = new AllAlbumsFragment(userId);
+                AllAlbumsFragment allAlbumsFragment = new AllAlbumsFragment(userId, liteSongRepository);
                 manager.beginTransaction()
                         .replace(R.id.fragment, allAlbumsFragment)
                         .commit();
@@ -114,7 +122,7 @@ public class MainFragment extends Fragment {
         btnViewAllPopularSongs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllPopularSongsFragment allPopularSongsFragment = new AllPopularSongsFragment(userId);
+                AllPopularSongsFragment allPopularSongsFragment = new AllPopularSongsFragment(userId, liteSongRepository);
                 manager.beginTransaction()
                         .replace(R.id.fragment, allPopularSongsFragment)
                         .commit();
@@ -123,9 +131,18 @@ public class MainFragment extends Fragment {
         btnViewAllPlaylists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllPlaylistsFragment allPlaylistsFragment = new AllPlaylistsFragment(userId);
+                AllPlaylistsFragment allPlaylistsFragment = new AllPlaylistsFragment(userId, liteSongRepository);
                 manager.beginTransaction()
                         .replace(R.id.fragment, allPlaylistsFragment)
+                        .commit();
+            }
+        });
+        btnViewAllDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AllDownloadSongsFragment allDownloadSongsFragment = new AllDownloadSongsFragment(userId, liteSongRepository);
+                manager.beginTransaction()
+                        .replace(R.id.fragment, allDownloadSongsFragment)
                         .commit();
             }
         });
@@ -147,11 +164,11 @@ public class MainFragment extends Fragment {
 
         mSongAdapter = new TopSongPopularAdapter(getActivity(), this, new ArrayList<Song>());
         topPopularSongsRecyclerView.setAdapter(mSongAdapter);
-        mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<Album>(), userId);
+        mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<Album>(), userId, liteSongRepository);
         topPopularAlbumsRecyclerView.setAdapter(mAlbumAdapter);
         mFavoriteSongAdapter = new TopSongPopularAdapter(getActivity(), this, new ArrayList<>());
         favoriteSongsRecyclerView.setAdapter(mFavoriteSongAdapter);
-        mYourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<>(), userId);
+        mYourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<>(), userId, liteSongRepository);
         yourPlaylistsRecyclerView.setAdapter(mYourPlaylistsAdapter);
 
         favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);
@@ -200,62 +217,12 @@ public class MainFragment extends Fragment {
                 if (hasFocus) {
 
                     manager.beginTransaction()
-                            .replace(R.id.fragment, new SubSearchFragment(userId))
+                            .replace(R.id.fragment, new SubSearchFragment(userId, liteSongRepository))
                             .commit();
                 }
             }
         });
-        AdRequest adRequest = new AdRequest.Builder().build();
 
-        InterstitialAd.load(requireContext(),"ca-app-pub-3940256099942544/1033173712", adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        mInterstitialAd = interstitialAd;
-                        mInterstitialAd.show((Activity) requireContext());
-                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                            @Override
-                            public void onAdClicked() {
-                                Log.d(TAG, "Ad was clicked.");
-                            }
-
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                Log.d(TAG, "Ad dismissed fullscreen content.");
-//                                mInterstitialAd = null;
-                            }
-
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                Log.e(TAG, "Ad failed to show fullscreen content.");
-                                mInterstitialAd = null;
-                            }
-
-                            @Override
-                            public void onAdImpression() {
-                                Log.d(TAG, "Ad recorded an impression.");
-                            }
-
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                Log.d(TAG, "Ad showed fullscreen content.");
-                            }
-                        });
-                        Log.i(TAG, "onAdLoaded");
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error
-                        Log.d(TAG, loadAdError.toString());
-                        mInterstitialAd = null;
-                    }
-                });
-//        if (mInterstitialAd != null) {
-//            mInterstitialAd.show((Activity) requireContext());
-//        } else {
-//            Log.d(TAG, "The interstitial ad wasn't ready yet.");
-//        }
         return view;
     }
     @Override

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopAlbumPopularAdapter;
 import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.album.TopPopularAlbumViewModel;
 
@@ -36,8 +37,10 @@ public class AllAlbumsFragment extends Fragment {
     private RecyclerView songOfAlbumRecyclerView;
 
     private long userId;
-    public AllAlbumsFragment(long userId){
+    public LiteSongRepository liteSongRepository;
+    public AllAlbumsFragment(long userId, LiteSongRepository liteSongRepository){
         this.userId = userId;
+        this.liteSongRepository = liteSongRepository;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,7 @@ public class AllAlbumsFragment extends Fragment {
         topPopularSongViewModel = new ViewModelProvider(this).get(TopPopularAlbumViewModel.class);
 
 
-        topAlbumPopularAdapter = new TopAlbumPopularAdapter(getContext(), this, manager, new ArrayList<>(), userId);
+        topAlbumPopularAdapter = new TopAlbumPopularAdapter(getContext(), this, manager, new ArrayList<>(), userId, liteSongRepository);
         songOfAlbumRecyclerView.setAdapter(topAlbumPopularAdapter);
 
         topPopularSongViewModel.getAlbums().observe(getViewLifecycleOwner(), new Observer<List<Album>>() {

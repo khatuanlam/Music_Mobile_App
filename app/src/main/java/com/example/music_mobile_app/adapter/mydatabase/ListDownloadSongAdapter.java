@@ -3,6 +3,9 @@ package com.example.music_mobile_app.adapter.mydatabase;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,20 +25,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
-import com.example.music_mobile_app.model.mydatabase.Song;
-import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
-import com.example.music_mobile_app.service.mydatabase.impl.DownloadServiceImpl;
-import com.example.music_mobile_app.service.mydatabase.myinterface.DownloadCallback;
-import com.example.music_mobile_app.service.mydatabase.myinterface.DownloadService;
+import com.example.music_mobile_app.model.sqlite.LiteSong;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongViewHolder> implements OnPlaylistClickListener {
+public class ListDownloadSongAdapter extends RecyclerView.Adapter<ListDownloadSongAdapter.LiteSongViewHolder> implements OnPlaylistClickListener {
     private Fragment fragment;
-    private List<Song> mDataList;
+    private List<LiteSong> mDataList;
     private Context context;
 
     private Playlist selectedPlaylist;
@@ -51,13 +52,8 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
     private  FragmentManager manager;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
 
+    private LiteSong selectedSong;
 
-    private String type;
-    private Song selectedSong;
-
-    public Playlist playlist;
-
-    public LiteSongRepository liteSongRepository;
 
     public void setOpenPlaylists(List<Playlist> playlists)
     {
@@ -65,7 +61,7 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
     }
 
 
-    public ListSongAdapter(Context context, Fragment fragment, FragmentManager manager, List<Song> dataList, FavoriteSongsViewModel favoriteSongsViewModel, long id, SongsOfPlaylistViewModel songsOfPlaylistViewModel, String type, Playlist playlist, LiteSongRepository liteSongRepository) {
+    public ListDownloadSongAdapter(Context context, Fragment fragment, FragmentManager manager, List<LiteSong> dataList, FavoriteSongsViewModel favoriteSongsViewModel, long id, SongsOfPlaylistViewModel songsOfPlaylistViewModel) {
         this.context = context;
         this.fragment = fragment;
         mDataList = dataList;
@@ -73,9 +69,6 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
         this.favoriteSongsViewModel = favoriteSongsViewModel;
         this.songsOfPlaylistViewModel = songsOfPlaylistViewModel;
         this.userId = id;
-        this.type = type;
-        this.playlist = playlist;
-        this.liteSongRepository = liteSongRepository;
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -104,24 +97,24 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
 
         selectedPlaylist = playlist;
         alertDialog.dismiss();
-        songsOfPlaylistViewModel.postSongToPlaylist(selectedSong.getId(), playlist.getId());
+        songsOfPlaylistViewModel.postSongToPlaylist(selectedSong.getId_mydb(), playlist.getId());
     }
-    public void setmDataList(List<Song> mDataList) {
+    public void setmDataList(List<LiteSong> mDataList) {
         this.mDataList = mDataList;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LiteSongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mydb_list_item_song_top_popular_dai, parent, false);
-        return new SongViewHolder(view);
+                .inflate(R.layout.mydb_list_item_downloadsong, parent, false);
+        return new LiteSongViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
-        Song song = mDataList.get(position);
+    public void onBindViewHolder(@NonNull LiteSongViewHolder holder, int position) {
+        LiteSong song = mDataList.get(position);
         holder.bind(song);
     }
 
@@ -132,23 +125,23 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
 
 
 
-    public class SongViewHolder extends RecyclerView.ViewHolder {
+    public class LiteSongViewHolder extends RecyclerView.ViewHolder {
         public TextView textView, textviewPopularity, textViewStt, textViewSingerName;
         public ImageView imageView;
 
         public ImageView moreVert;
 
-        public Song song;
+        public LiteSong song;
 
 
-        public SongViewHolder(View itemView) {
+        public LiteSongViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.mydb_list_item_song_popular_dai_songNameTextView);
-            textviewPopularity = itemView.findViewById(R.id.mydb_list_item_song_popular_dai_soLuotThich);
-            textViewStt = itemView.findViewById(R.id.mydb_list_item_song_popular_dai_stt);
+            textView = itemView.findViewById(R.id.mydb_list_item_downloadsong_songNameTextView);
+            textviewPopularity = itemView.findViewById(R.id.mydb_list_item_downloadsong_soLuotThich);
+            textViewStt = itemView.findViewById(R.id.mydb_list_item_downloadsong_stt);
 
-            imageView = itemView.findViewById(R.id.mydb_list_item_song_popular_dai_imageView);
-            moreVert = itemView.findViewById(R.id.mydb_list_item_song_popular_dai_more);
+            imageView = itemView.findViewById(R.id.mydb_list_item_downloadsong_imageView);
+            moreVert = itemView.findViewById(R.id.mydb_list_item_downloadsong_more);
 
             moreVert.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,46 +150,39 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
                 }
             });
 
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MediaPlayer mediaPlayer = new MediaPlayer();
+                    try {
+                        String encodedFileName = URLEncoder.encode(song.getPath(), "UTF-8");
+                        mediaPlayer.setDataSource(context, Uri.parse("file:///storage/emulated/0/Download/" +song.getId_mydb()+".mp3"));
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    } catch (IOException e) {
+                        Log.i("PHAT NHAC", "LOIIII");
+                        throw new RuntimeException(e);
+                    }
+
+
+                }
+            });
+
         }
         private void showPopupMenu(View view) {
             PopupMenu popupMenu = new PopupMenu(context, view);
-
-            if (type.equals("Popular Song") || type.equals("Album Song")) {
-                popupMenu.inflate(R.menu.mydb_list_item_song);
-            } else if (type.equals("Favorite Song")) {
-                popupMenu.inflate(R.menu.mydb_list_item_song_favorite);
-            } else if (type.equals("Playlist Song")) {
-                popupMenu.inflate(R.menu.mydb_list_item_song_playlist);
-            } else {
-            }
+            popupMenu.inflate(R.menu.mydb_list_item_downloadsong);
 
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.mydb_menu_item_song_addToFavorite:
-                            favoriteSongsViewModel.postFavoriteSongToUser(song.getId(), userId);
+                            favoriteSongsViewModel.postFavoriteSongToUser(song.getId_mydb(), userId);
                             break;
                         case R.id.mydb_menu_item_song_openPlaylist:
                             selectedSong = song;
                             showPlaylistListDialog();
-                            break;
-                        case R.id.mydb_menu_item_song_download:
-
-                            DownloadService downloadService = new DownloadServiceImpl(context);
-                            downloadService.downloadMp3(song.getUrlSong(), String.valueOf(song.getId()), new DownloadCallback() {
-                                @Override
-                                public void onDownloadComplete(String urlString) {
-                                    liteSongRepository.insertSong(song, urlString);
-                                    Toast.makeText(context, "CHUẨN BỊ TẢI",Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            break;
-                        case R.id.mydb_menu_item_song_favorite_remove:
-                            favoriteSongsViewModel.deleteFavoriteSongByIdUser(song.getId(), userId);
-                            break;
-                        case R.id.mydb_menu_item_song_playlist_remove:
-                            songsOfPlaylistViewModel.deleteSongFromPlaylist(song.getId(), playlist.getId());
                             break;
                         default:
                             break;
@@ -219,13 +205,10 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
 
             alertDialog.show();
         }
-        public void bind(Song song) {
+        public void bind(LiteSong song) {
             this.song = song;
             textView.setText(song.getName());
-            textviewPopularity.setText(song.getPopularity() + " ❤️");
-            if(type.equals("Popular Song")) {
-                textViewStt.setText(String.valueOf(getAdapterPosition() + 1));
-            }
+            textViewStt.setText(String.valueOf(getAdapterPosition() + 1));
             if (song.getImage() != null && !song.getImage().isEmpty()) {
                 Glide.with(fragment)
                         .load(song.getImage())

@@ -1,6 +1,7 @@
 package com.example.music_mobile_app.ui.mydatabase.popular.song;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -21,17 +23,26 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.TopPopularSongViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllPopularSongsFragment extends Fragment {
 
+    private InterstitialAd mInterstitialAd;
+    public static String TAG= "Mobile Ads";
     private TopPopularSongViewModel topPopularSongViewModel;
     private AllPlaylistViewModel allPlaylistViewModel;
 
@@ -47,10 +58,12 @@ public class AllPopularSongsFragment extends Fragment {
     private RecyclerView songOfAlbumRecyclerView;
 
     private long userId;
+    public LiteSongRepository liteSongRepository;
 
-    public AllPopularSongsFragment(long id)
+    public AllPopularSongsFragment(long id, LiteSongRepository liteSongRepository)
     {
         this.userId = id;
+        this.liteSongRepository = liteSongRepository;
     }
 
     @Override
@@ -83,7 +96,7 @@ public class AllPopularSongsFragment extends Fragment {
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
 
-        listSongAdapter = new ListSongAdapter(getActivity(), this, manager, new ArrayList<Song>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel, "Popular Song", null);
+        listSongAdapter = new ListSongAdapter(getActivity(), this, manager, new ArrayList<Song>(), favoriteSongsViewModel, userId, songsOfPlaylistViewModel, "Popular Song", null, liteSongRepository);
         songOfAlbumRecyclerView.setAdapter(listSongAdapter);
 
         topPopularSongViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
@@ -129,6 +142,55 @@ public class AllPopularSongsFragment extends Fragment {
 
         topPopularSongViewModel.loadSong();
         allPlaylistViewModel.getAllPlaylistsByIdUser(userId);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(requireContext(),"ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        mInterstitialAd = interstitialAd;
+                        mInterstitialAd.show((Activity) requireContext());
+                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                            @Override
+                            public void onAdClicked() {
+                                Log.d(TAG, "Ad was clicked.");
+                            }
+
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                Log.d(TAG, "Ad dismissed fullscreen content.");
+//                                mInterstitialAd = null;
+                            }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                Log.e(TAG, "Ad failed to show fullscreen content.");
+                                mInterstitialAd = null;
+                            }
+
+                            @Override
+                            public void onAdImpression() {
+                                Log.d(TAG, "Ad recorded an impression.");
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                Log.d(TAG, "Ad showed fullscreen content.");
+                            }
+                        });
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+
         return view;
     }
     @Override

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.album.AlbumDetailFragment;
 
 import java.util.List;
@@ -27,13 +28,14 @@ public class TopAlbumPopularAdapter extends RecyclerView.Adapter<TopAlbumPopular
     private Context context;
 
     private long userId;
-
-    public TopAlbumPopularAdapter(Context context, Fragment fragment,FragmentManager manager, List<Album> dataList, long userId) {
+    public LiteSongRepository liteSongRepository;
+    public TopAlbumPopularAdapter(Context context, Fragment fragment,FragmentManager manager, List<Album> dataList, long userId, LiteSongRepository liteSongRepository) {
         this.context = context;
         this.fragment = fragment;
         this.manager = manager;
         mDataList = dataList;
         this.userId = userId;
+        this.liteSongRepository = liteSongRepository;
     }
 
     public void setmDataList(List<Album> mDataList) {
@@ -76,7 +78,7 @@ public class TopAlbumPopularAdapter extends RecyclerView.Adapter<TopAlbumPopular
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         Album album = mDataList.get(position);
-                        AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment(album, userId);
+                        AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment(album, userId ,liteSongRepository);
                         manager.beginTransaction()
                                 .replace(R.id.fragment, albumDetailFragment)
                                 .commit();

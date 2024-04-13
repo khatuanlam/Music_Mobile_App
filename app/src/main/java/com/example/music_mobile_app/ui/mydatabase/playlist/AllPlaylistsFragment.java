@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.mainFragment.YourPlaylistsAdapter;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 
@@ -43,10 +44,11 @@ public class AllPlaylistsFragment extends Fragment {
     private RecyclerView songOfAlbumRecyclerView;
 
     private long userId;
-
-    public AllPlaylistsFragment(long id)
+    public LiteSongRepository liteSongRepository;
+    public AllPlaylistsFragment(long id, LiteSongRepository liteSongRepository)
     {
         this.userId = id;
+        this.liteSongRepository = liteSongRepository;
     }
 
     @Override
@@ -110,7 +112,7 @@ public class AllPlaylistsFragment extends Fragment {
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
 
 
-        yourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<Playlist>(), userId);
+        yourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<Playlist>(), userId, liteSongRepository);
         songOfAlbumRecyclerView.setAdapter(yourPlaylistsAdapter);
 
         allPlaylistViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {

@@ -20,9 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_mobile_app.R;
 //import com.example.music_mobile_app.adapter.mydatabase.favorite.FavoriteSongsAdapter;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ public class AllFavoriteSongsFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
+    private AllPlaylistViewModel allPlaylistViewModel;
     private TextView textView;
     private ImageView imageViewBack;
     private FragmentManager manager;
@@ -41,10 +45,11 @@ public class AllFavoriteSongsFragment extends Fragment {
     private RecyclerView songOfAlbumRecyclerView;
 
     private long id;
-
-    public AllFavoriteSongsFragment(long id)
+public LiteSongRepository liteSongRepository;
+    public AllFavoriteSongsFragment(long id, LiteSongRepository liteSongRepository)
     {
         this.id = id;
+        this.liteSongRepository = liteSongRepository;
     }
 
     @Override
@@ -74,6 +79,7 @@ public class AllFavoriteSongsFragment extends Fragment {
 
         favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
+        allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
 
         mFavoriteSongsAdapter = new ListSongAdapter(getContext(),
                 this,
@@ -83,7 +89,8 @@ public class AllFavoriteSongsFragment extends Fragment {
                 id,
                 songsOfPlaylistViewModel,
                 "Favorite Song",
-                null);
+                null,
+                liteSongRepository);
         songOfAlbumRecyclerView.setAdapter(mFavoriteSongsAdapter);
 
 
@@ -121,6 +128,12 @@ public class AllFavoriteSongsFragment extends Fragment {
                 }
             }
         });
+        allPlaylistViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
+            @Override
+            public void onChanged(List<Playlist> playlists) {
+                mFavoriteSongsAdapter.setOpenPlaylists(playlists);
+            }
+        });
 
         favoriteSongsViewModel.getAllFavoriteSongsByUserId(id);
 
@@ -132,6 +145,7 @@ public class AllFavoriteSongsFragment extends Fragment {
         super.onDestroyView();
         favoriteSongsViewModel.getSongs().removeObservers(this);
         songsOfPlaylistViewModel.getIsPostSuccess().removeObservers(this);
+        allPlaylistViewModel.getPlaylists().removeObservers(this);
     }
  }
 

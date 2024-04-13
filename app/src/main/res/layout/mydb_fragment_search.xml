@@ -189,6 +189,44 @@
                         </LinearLayout>
 
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="1dp"
+                                android:text="Đã tải"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+<!--                            <androidx.recyclerview.widget.RecyclerView-->
+<!--                                android:id="@+id/mydb_main_playlists_recyclerView"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_margin="5dp" />-->
+
+                            <Button
+                                android:id="@+id/mydb_search_viewAllDownload_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Xem tất cả" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
