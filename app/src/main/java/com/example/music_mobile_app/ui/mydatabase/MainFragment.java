@@ -1,6 +1,7 @@
 package com.example.music_mobile_app.ui.mydatabase;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -32,13 +34,22 @@ import com.example.music_mobile_app.viewmodel.mydatabase.TopPopularSongViewModel
 import com.example.music_mobile_app.viewmodel.mydatabase.album.TopPopularAlbumViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
 
-    private long userId;
+    private InterstitialAd mInterstitialAd;
+    public static String TAG= "Mobile Ads";
+
+    public static long userId = 1; //SET BIẾN NÀY THÀNH ID CỦA USER ĐƯỢC TRẢ VỀ KHI GỌI /SpotifyLogin/{idSpotify}
 
     private EditText editText;
     private Button btnViewAllFavoriteSongs, btnViewAllAlbums, btnViewAllPlaylists, btnViewAllPopularSongs;
@@ -67,7 +78,6 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
-        userId = 1;
     }
 
     @Override
@@ -195,6 +205,57 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(requireContext(),"ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        mInterstitialAd = interstitialAd;
+                        mInterstitialAd.show((Activity) requireContext());
+                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                            @Override
+                            public void onAdClicked() {
+                                Log.d(TAG, "Ad was clicked.");
+                            }
+
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                Log.d(TAG, "Ad dismissed fullscreen content.");
+//                                mInterstitialAd = null;
+                            }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                Log.e(TAG, "Ad failed to show fullscreen content.");
+                                mInterstitialAd = null;
+                            }
+
+                            @Override
+                            public void onAdImpression() {
+                                Log.d(TAG, "Ad recorded an impression.");
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                Log.d(TAG, "Ad showed fullscreen content.");
+                            }
+                        });
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+//        if (mInterstitialAd != null) {
+//            mInterstitialAd.show((Activity) requireContext());
+//        } else {
+//            Log.d(TAG, "The interstitial ad wasn't ready yet.");
+//        }
         return view;
     }
     @Override

@@ -17,6 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1714508663170152~2170443080"/>
+
         <activity
             android:name=".PlayTrackActivity"
             android:exported="true"

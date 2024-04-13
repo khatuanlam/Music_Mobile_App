@@ -17,7 +17,13 @@ import android.widget.Toast;
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
 import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginService;
 import com.example.music_mobile_app.ui.MainFragment;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.List;
 
@@ -31,6 +37,8 @@ public class MainActivity extends FragmentActivity {
 
     public static mSpotifyService mSpotifyService;
     public static SpotifyService spotifyService;
+
+    public LoginService loginService;
     public static String authToken;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -41,6 +49,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         FragmentManager manager = getSupportFragmentManager();
+        loginService = new LoginServiceImpl();
 
 //        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
 //        authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
@@ -50,6 +59,25 @@ public class MainActivity extends FragmentActivity {
 
 //        getUserProfile();
         createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT);
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.i("KHOI TAO ADS SDK","THANH CONG");
+            }
+        });
+
+
+        loginService.loginWithMyDatabase("id của account spotify", new LoginCallback() {
+            @Override
+            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
+                com.example.music_mobile_app.ui.mydatabase.MainFragment.userId = user.getId();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.i("MLogin Activity", message);
+            }
+        });
     }
 
 
