@@ -7,6 +7,7 @@ import com.example.music_mobile_app.model.User;
 
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -37,6 +38,13 @@ public interface mSpotifyService {
 
     @GET("/Playlist")
     Call<List<Playlist>> getAllPlaylists();
+
+    @PUT("playlists/{playlist_id}/images")
+    Call<Void> uploadPlaylistImage(
+            @Header("Authorization") String authorization,
+            @Path("playlist_id") String playlistId,
+            @Body RequestBody image
+    );
 
     @DELETE("/Playlist/DeleteSong/{idPlaylist}/{idSong}")
     Call<Playlist> deleteSongFromPlaylist(@Path("idPlaylist") long idPlaylist, @Path("idSong") long idSong);

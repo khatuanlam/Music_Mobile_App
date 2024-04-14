@@ -30,6 +30,7 @@
                 android:layout_marginVertical="15dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/sontungmtp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -71,10 +72,29 @@
             android:layout_marginTop="20dp"
             android:gravity="end">
 
+            <!--            <Button-->
+            <!--                android:id="@+id/btn_flow"-->
+            <!--                android:layout_width="27dp"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                android:background="@drawable/ic_overflow" />-->
+
+
+            <!--            <View-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:layout_weight="1" />-->
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_baseline_edit_white_24" />
+
             <Button
                 android:id="@+id/btn_add_to_fav"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/ic_like_black_24dp" />
 
             <Button
