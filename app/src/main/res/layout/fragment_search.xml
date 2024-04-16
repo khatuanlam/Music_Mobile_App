@@ -3,25 +3,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/search_fragment"
     tools:context=".ui.SearchFragment">
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham_bold"
+            android:text="Tìm kiếm"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="32dp" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:padding="8dp">
 
-            <EditText
-                android:id="@+id/search_searchTextBox"
+            <LinearLayout
+                android:id="@+id/container_search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:drawable/editbox_background"
-                android:padding="8dp"
-                android:drawableLeft="@android:drawable/ic_search_category_default"
-                android:hint="Bạn muốn tìm gì" />
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/button_white"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:src="@drawable/ic_search"></ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="Bạn muốn nghe gì?"
+                    android:textColor="@color/colorGrayLight"
+                    android:textSize="20dp">
+
+                </TextView>
+            </LinearLayout>
+
+            <!--            <EditText-->
+            <!--                android:id="@+id/search_searchTextBox"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:background="@android:drawable/editbox_background"-->
+            <!--                android:padding="8dp"-->
+            <!--                android:drawableLeft="@android:drawable/ic_search_category_default"-->
+            <!--                android:clickable="true"-->
+            <!--                android:focusableInTouchMode="true"-->
+            <!--                android:hint="Bạn muốn tìm gì" />-->
 
         </RelativeLayout>
 
@@ -30,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
 
     </LinearLayout>
 

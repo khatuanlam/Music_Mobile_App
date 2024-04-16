@@ -1,12 +1,13 @@
 package com.example.music_mobile_app.manager;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListManager {
@@ -15,8 +16,7 @@ public class ListManager {
 
     private List<PlaylistSimple> playlistList;
 
-
-    private List<Track> recentlyTracks;
+    private List<Track> favoriteTracks;
 
     private List<Track> recommendTracks;
 
@@ -24,6 +24,7 @@ public class ListManager {
     private List<AlbumSimple> albums;
     private List<Track> albumTracks;
 
+    private List<Artist> followArtists;
 
     public List<AlbumSimple> getAlbums() {
         return albums;
@@ -46,11 +47,12 @@ public class ListManager {
 
     public ListManager() {
         playlistList = new ArrayList<>();
-        recentlyTracks = new ArrayList<>();
+        favoriteTracks = new ArrayList<>();
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
         albums = new ArrayList<>();
         albumTracks = new ArrayList<>();
+        followArtists = new ArrayList<>();
     }
 
     public List<AlbumSimple> getFavoriteAlbums() {
@@ -64,6 +66,7 @@ public class ListManager {
     public List<PlaylistSimple> getPlaylistList() {
         return playlistList;
     }
+
 
     public void setPlaylistList(List<PlaylistSimple> playlistList) {
         this.playlistList = playlistList;
@@ -81,13 +84,12 @@ public class ListManager {
         this.topTracks = topTracks;
     }
 
-
-    public List<Track> getRecentlyTracks() {
-        return recentlyTracks;
+    public List<Track> getFavoriteTracks() {
+        return favoriteTracks;
     }
 
-    public void setRecentlyTracks(List<Track> recentlyTracks) {
-        this.recentlyTracks = recentlyTracks;
+    public void setFavoriteTracks(List<Track> favoriteTracks) {
+        this.favoriteTracks = favoriteTracks;
     }
 
     public List<Track> getRecommendTracks() {
@@ -102,4 +104,22 @@ public class ListManager {
         return listManager;
     }
 
+    public List<Artist> getFollowArtists() {
+        return followArtists;
+    }
+
+    public void setFollowArtists(List<Artist> followArtists) {
+        if (followArtists == null) {
+            followArtists = new ArrayList<>();
+        }
+        this.followArtists = followArtists;
+    }
+
+    public void clear() {
+        setAlbumTracks(null);
+        setTopTracks(null);
+        setFavoriteTracks(null);
+        setAlbumTracks(null);
+        setFollowArtists(null);
+    }
 }

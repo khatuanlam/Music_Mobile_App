@@ -1,29 +1,34 @@
 package com.example.music_mobile_app.model;
-import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 public class User {
-    @SerializedName("display_name")
-    private String displayName;
 
-    @SerializedName("images")
-    private List<UserImage> images;
+    public Long id;
 
-    public String getDisplayName() {
-        return displayName;
-    }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
+    public String username;
 
-    public List<UserImage> getImages() {
-        return images;
-    }
 
-    public void setImages(List<UserImage> images) {
-        this.images = images;
-    }
+    public String password;
+
+    public String email;
+
+
+    public Boolean vip;
+
+
+    private String authorities;
+
+
+    private Boolean isActive;
+
 
 }

@@ -1,7 +1,6 @@
 package com.example.music_mobile_app.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -22,10 +21,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.AccountActivity;
-import com.example.music_mobile_app.AuthLoginActivity;
-import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.model.IconNavbar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,10 +38,9 @@ public class MainFragment extends Fragment {
     private Button favoriteLayout;
     private TextView searchText;
     private Button searchLayout;
-    private TextView downloadText;
-    private Button downloadLayout;
+    private TextView extentionText;
+    private Button extensionLayout;
     private CircleImageView account;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,42 +52,33 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
         homeLayout = view.findViewById(R.id.nav_home);
         favoriteLayout = view.findViewById(R.id.nav_favorite);
         searchLayout = view.findViewById(R.id.nav_search);
-        downloadLayout = view.findViewById(R.id.nav_download);
+        extensionLayout = view.findViewById(R.id.nav_extension);
 
         homeText = view.findViewById(R.id.nav_home_text);
         favoriteText = view.findViewById(R.id.nav_favorite_text);
         searchText = view.findViewById(R.id.nav_search_text);
-        downloadText = view.findViewById(R.id.nav_extension_text);
+        extentionText = view.findViewById(R.id.nav_extension_text);
 
         homeLayout.setOnClickListener(mListener);
         favoriteLayout.setOnClickListener(mListener);
         searchLayout.setOnClickListener(mListener);
-        downloadLayout.setOnClickListener(mListener);
+        extensionLayout.setOnClickListener(mListener);
 
         // Setting avt img value
         account = view.findViewById(R.id.avt);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        //Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
+        Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
 
-        AccountFragment accountFragment = new AccountFragment();
-        if (getActivity() != null) {
-            account.setOnClickListener(v -> {
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(0, 0);;
-                fragmentTransaction.replace(R.id.fragment_container, accountFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            });
-        }
-
-        // Home
-        manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
-
+        account.setOnClickListener(v -> {
+            FragmentTransaction fragmentTransaction = manager.beginTransaction().setCustomAnimations(0, 0);
+            fragmentTransaction.replace(R.id.fragment, new AccountFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
 
         return view;
     }
@@ -101,6 +88,8 @@ public class MainFragment extends Fragment {
         public void onClick(View view) {
             // Add animation here
             FragmentTransaction transaction = manager.beginTransaction().setCustomAnimations(0, 0);
+
+            // All main fragment
             switch (view.getId()) {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
@@ -123,11 +112,11 @@ public class MainFragment extends Fragment {
                     current_view = new IconNavbar(searchLayout, view, searchText, search);
                     setFocusMode(current_view);
                     break;
-                case R.id.nav_download:
-                    Log.d(TAG, "DOWNLOAD");
+                case R.id.nav_extension:
+                    Log.d(TAG, "EXTENSION");
                     if (view.isActivated()) break;
-                    transaction.replace(R.id.fragment, new DownloadFragment()).commit();
-                    current_view = new IconNavbar(downloadLayout, view, downloadText, download);
+                    transaction.replace(R.id.fragment, new ExtensionFragment()).commit();
+                    current_view = new IconNavbar(extensionLayout, view, extentionText, download);
                     setFocusMode(current_view);
                     break;
             }
@@ -171,7 +160,7 @@ public class MainFragment extends Fragment {
         home = getResources().getDrawable(R.drawable.ic_home_black_24dp, null);
         favorite = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
         search = getResources().getDrawable(R.drawable.ic_search_white_24dp, null);
-        download = getResources().getDrawable(R.drawable.ic_download_black_24dp, null);
+        download = getResources().getDrawable(R.drawable.music_note_song, null);
 
         focusMode = getResources().getColor(R.color.colorWhite, null);
         defocusMode = getResources().getColor(R.color.colorNavIcon, null);

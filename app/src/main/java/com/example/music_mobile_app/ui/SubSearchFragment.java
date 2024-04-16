@@ -27,8 +27,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Pager;
@@ -40,14 +42,16 @@ import retrofit.client.Response;
 
 
 public class SubSearchFragment extends Fragment {
+    private final String TAG = this.getClass().getSimpleName();
+
     public SubSearchFragment() {
     }
 
+    private CircleImageView avt;
     private EditText editText;
     private ImageView imageView;
     private FragmentManager manager;
     private SpotifyService spotifyService = MainActivity.spotifyService;
-
     private SubSearchInformationFragment subSearchInformationFragment;
     private SubSearchRecyclerViewFoundSongFragment subSearchRecyclerViewFoundSongFragment;
 
@@ -70,6 +74,18 @@ public class SubSearchFragment extends Fragment {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.search_subSearchMainFragmentContainer, subSearchInformationFragment)
                 .commit();
+
+        //ẩn avt trong main fragment
+        // Lấy tham chiếu đến MainFragment
+        MainFragment mainFragment = (MainFragment) getParentFragment();
+
+        // Kiểm tra mainFragment không null và có tham chiếu đến avt
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
+
+        //onclick back
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +93,7 @@ public class SubSearchFragment extends Fragment {
                 manager.beginTransaction()
                         .replace(R.id.fragment, searchFragment)
                         .commit();
+                avt.setVisibility(View.VISIBLE);
 
             }
         });
@@ -105,8 +122,8 @@ public class SubSearchFragment extends Fragment {
 
                             List<Track> trackList = getTrack(editText.getText().toString());
                             List<Artist> artistList = getArtist(editText.getText().toString());
-
-                            subSearchRecyclerViewFoundSongFragment = new SubSearchRecyclerViewFoundSongFragment(trackList, artistList);
+                            List<AlbumSimple> albumSimpleList = getAlbums(editText.getText().toString());
+                            subSearchRecyclerViewFoundSongFragment = new SubSearchRecyclerViewFoundSongFragment(trackList, artistList, albumSimpleList);
                             getChildFragmentManager().beginTransaction()
                                     .replace(R.id.search_subSearchMainFragmentContainer, subSearchRecyclerViewFoundSongFragment)
                                     .commit();
@@ -118,6 +135,8 @@ public class SubSearchFragment extends Fragment {
                 }, 1000);
             }
         });
+
+
         return view;
     }
 
@@ -163,6 +182,13 @@ public class SubSearchFragment extends Fragment {
         options.put("limit", 10);
         ArtistsPager artistsPager = spotifyService.searchArtists(q, options);
         return artistsPager.artists.items;
+    }
 
+    public List<AlbumSimple> getAlbums(String q) {
+        List<AlbumSimple> albumSimpleList = spotifyService.searchAlbums(q).albums.items;
+        if (albumSimpleList.isEmpty()) {
+            Log.d(TAG, "Search " + q + " not found");
+        }
+        return albumSimpleList;
     }
 }

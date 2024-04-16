@@ -1,3 +1,4 @@
+
 package com.example.music_mobile_app;
 
 import android.content.Context;
@@ -14,11 +15,11 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 
-
 public class AuthLoginActivity extends FragmentActivity {
 
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String CLIENT_ID = "f09a7b545f474f08bdda45aeaed7b310";
+    public static final String CLIENT_ID = "95fe47fe6b524ab2ba54354da461321a";
+
     @SuppressWarnings("SpellCheckingInspection")
     public static final String REDIRECT_URI = "http://localhost:8888/callback";
 
@@ -40,13 +41,14 @@ public class AuthLoginActivity extends FragmentActivity {
 
     private void openLoginWindow() {
 
-        AuthorizationRequest.Builder builder =
-                new AuthorizationRequest.Builder(CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
+        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(CLIENT_ID,
+                AuthorizationResponse.Type.TOKEN, REDIRECT_URI);
 
         builder.setScopes(new String[]{"streaming",
-                "user-read-private", "user-top-read", "user-read-recently-played","user-follow-read",
+                "user-read-private", "user-top-read", "user-read-recently-played",
                 "playlist-modify-public", "playlist-read-private", " playlist-modify-private",
-                "user-library-read", "user-read-playback-state","user-follow-modify", "user-modify-playback-state", "user-read-currently-playing"});
+                "user-library-read", "user-read-playback-state", "user-modify-playback-state", "user-follow-modify",
+                "user-read-currently-playing", "user-follow-read"});
 
         AuthorizationRequest request = builder.build();
 
@@ -65,14 +67,15 @@ public class AuthLoginActivity extends FragmentActivity {
                 // Response was successful and contains auth token
                 case TOKEN:
                     String accessToken = response.getAccessToken();
-                    //set auth_token, connectionParams
+                    // set auth_token, connectionParams
                     newIntent(accessToken);
                     break;
 
-                //                    ConnectionParams connectionParams = new ConnectionParams.Builder(CLIENT_ID).setRedirectUri(REDIRECT_URI).build();
-//                    Gson gson = new Gson();
-//                    String connectionParamsJson = gson.toJson(connectionParams);
-//                    editor.putString("CONNECTION_PARAMS_KEY", connectionParamsJson);
+                // ConnectionParams connectionParams = new
+                // ConnectionParams.Builder(CLIENT_ID).setRedirectUri(REDIRECT_URI).build();
+                // Gson gson = new Gson();
+                // String connectionParamsJson = gson.toJson(connectionParams);
+                // editor.putString("CONNECTION_PARAMS_KEY", connectionParamsJson);
 
                 case ERROR:
                     Log.e(TAG, "Auth error: " + response.getError());
@@ -110,5 +113,4 @@ public class AuthLoginActivity extends FragmentActivity {
                 MainActivity.class);
         startActivity(intent);
     }
-
 }

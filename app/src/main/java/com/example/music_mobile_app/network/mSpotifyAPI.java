@@ -1,66 +1,55 @@
 package com.example.music_mobile_app.network;
 
-import com.example.music_mobile_app.manager.PlaybackManager;
 import com.example.music_mobile_app.model.User;
 
-import java.util.Map;
-
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
-
-public interface mSpotifyAPI {
-
-    @GET("me")
-    Call<User> getUserProfile(@Header("Authorization") String accessToken);
-
-    @PUT("me")
-    Call<Void> updateUserProfile(
-            @Header("Authorization") String authToken,
-            @Body User user
-    );
-
-    @GET("me/player")
-    Call<PlaybackManager> getPlayer();
-
-    @PUT("me/player/play")
-    Call<Void> startPlayer();
-
-    @PUT("me/player/pause")
-    Call<Void> pausePlayer();
-
-    @POST("me/player/next")
-    Call<Void> skipToNext();
-
-    @POST("me/player/previous")
-    Call<Void> skipToPrevious();
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
-    @PUT("me/player/repeat")
-    Call<Void> setRepeat();
+public class mSpotifyAPI {
+    private static final String BASE_URL = "https://localhost:8080";
 
+    private mSpotifyService spotifyAPI;
 
-    @GET("me/player/currently-playing")
-    Call<Track> getCurrentTrack();
+    private String authToken;
 
-    @GET("me/player/recently-played")
-    Call<Pager<Track>> getRecentlyTracks(@Header("Authorization") String accessToken, @QueryMap Map<String, Object> var1);
+    public String getAuthToken() {
+        return authToken;
+    }
 
-    @DELETE("/me/following?type=user")
-    Call<Pager<Artist>> unfollowArtists(@Header("Authorization") String token, @Query("ids") String artistId);
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
-    @PUT("v1/me/following?type=artist")
-    Call<Pager<Artist>> followArtist(@Query("ids") String artistId, @Header("Authorization") String authToken);
-    @GET("/me/following/contains?type=artist")
-    Call<Pager<Artist>> isFollowingArtists(@Header("Authorization") String token, @Query("ids") String artistId);
+    public mSpotifyAPI(String authToken) {
+
+        // Khởi tạo retrofit client
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        // Thêm HttpLoggingInterceptor để log ra các yêu cầu API
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClient.addInterceptor(loggingInterceptor);
+
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder().header("Authorization", "Bearer " + authToken).method(original.method(), original.body());
+
+            // Loại bỏ việc mã hóa các ký tự đặc biệt trong URL
+            String url = original.url().toString();
+            url = url.replace("%3F", "?").replace("%3D", "=");
+            Request request = requestBuilder.url(url).build();
+
+            return chain.proceed(request);
+        });
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).client(httpClient.build()).build();
+
+        spotifyAPI = retrofit.create(mSpotifyService.class);
+    }
+
 }

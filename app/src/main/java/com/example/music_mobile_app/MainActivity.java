@@ -9,13 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.music_mobile_app.manager.ListManager;
 
 import kaaes.spotify.webapi.android.models.Image;
 
 import com.example.music_mobile_app.manager.VariableManager;
-import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.example.music_mobile_app.ui.MainFragment;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -31,13 +32,12 @@ import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public class MainActivity extends FragmentActivity {
 
-    public static mSpotifyService mSpotifyService;
+    public static mSpotifyAPI mSpotifyAPI;
     public static SpotifyService spotifyService;
     public static String authToken;
-
+    private TextView tv_playerField;
     public static final ListManager listManager = ListManager.getInstance();
     public static final VariableManager varManager = VariableManager.getInstance();
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -54,8 +54,12 @@ public class MainActivity extends FragmentActivity {
         FragmentManager manager = getSupportFragmentManager();
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
+
+
         setServiceAPI();
+
         getUserProfile();
+
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
     }
@@ -63,49 +67,54 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setContentView(R.layout.activity_main);
-        
+
     }
 
     private void getUserProfile() {
-        spotifyService.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, spotifyError.getErrorDetails().message);
-            }
-
-            @Override
-            public void success(UserPrivate userPrivate, retrofit.client.Response response) {
-
-                UserPrivate userProfile = userPrivate;
-                if (userProfile != null) {
-                    String displayName = userProfile.display_name;
-                    String imageUrl = null;
-                    List<Image> images = userProfile.images;
-                    if (images != null && !images.isEmpty()) {
-                        // Choose the first image as default
-                        Image largestImage = images.get(0);
-
-                        // Iterate through images to find a larger one
-                        for (Image image : images) {
-                            if (image.width > largestImage.height && image.height > largestImage.height) {
-                                largestImage = image;
-                            }
-                        }
-                        imageUrl = largestImage.url;
-                    }
-
-                    SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("displayName", displayName);
-                    editor.putString("imageUrl", imageUrl);
-                    editor.putString("userId", userProfile.id);
-                    editor.apply();
+        UserPrivate userPrivate = varManager.getUser();
+        if (userPrivate.id == null) {
+            spotifyService.getMe(new SpotifyCallback<UserPrivate>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, spotifyError.getMessage());
                 }
-            }
-        });
-    }
 
+                @Override
+                public void success(UserPrivate userPrivate, retrofit.client.Response response) {
+                    UserPrivate userProfile = userPrivate;
+                    varManager.setUser(userProfile);
+                    if (userProfile != null) {
+                        String displayName = userProfile.display_name;
+                        String imageUrl = null;
+                        List<Image> images = userProfile.images;
+                        if (images != null && !images.isEmpty()) {
+                            // Choose the first image as default
+                            Image largestImage = images.get(0);
+
+                            // Iterate through images to find a larger one
+                            for (Image image : images) {
+                                if (image.width > largestImage.height && image.height > largestImage.height) {
+                                    largestImage = image;
+                                }
+                            }
+                            imageUrl = largestImage.url;
+                        }
+                        getUserProfile();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("displayName", displayName);
+                        editor.putString("imageUrl", imageUrl);
+                        editor.putString("userId", userProfile.id);
+                        editor.apply();
+
+                        // Save user data
+                        VariableManager.getInstance().setUser(userProfile);
+                    }
+                }
+            });
+        }
+    }
 
     private void setServiceAPI() {
         Log.d(TAG, "Setting Spotify API Service");
@@ -114,9 +123,8 @@ public class MainActivity extends FragmentActivity {
         // Get kaaes spotify service
         spotifyService = api.getService();
         // Get project service
-        mSpotifyService = new mSpotifyService(authToken);
+        mSpotifyAPI = new mSpotifyAPI(authToken);
     }
-
 
     @Override
     protected void onStop() {
