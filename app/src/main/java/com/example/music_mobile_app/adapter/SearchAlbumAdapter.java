@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -75,6 +76,18 @@ public class SearchAlbumAdapter extends RecyclerView.Adapter<SearchAlbumAdapter.
     public void onBindViewHolder(@NonNull GenreViewHolder holder, int position) {
         AlbumSimple albumSimple = mDataList.get(position);
         holder.bind(albumSimple);
+        holder.imageView.setOnClickListener(v -> {
+            AlbumFragment albumFragment = new AlbumFragment();
+            Bundle args = new Bundle();
+            args.putString("albumId", albumSimple.id);
+            args.putString("albumName", albumSimple.name);
+            albumFragment.setArguments(args);
+
+            FragmentTransaction transaction = fragment.getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.album_fragment_container, albumFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
     }
 
     @Override

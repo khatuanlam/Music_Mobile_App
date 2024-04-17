@@ -1,22 +1,37 @@
 package com.example.music_mobile_app;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.music_mobile_app.manager.ListManager;
 
 import kaaes.spotify.webapi.android.models.Image;
 
 import com.example.music_mobile_app.manager.VariableManager;
+import com.example.music_mobile_app.model.extension.User;
 import com.example.music_mobile_app.network.mSpotifyAPI;
+import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
+import com.example.music_mobile_app.service.mydatabase.extension_interface.LoginCallback;
+import com.example.music_mobile_app.service.mydatabase.extension_interface.LoginService;
+import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
 import com.example.music_mobile_app.ui.MainFragment;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -35,21 +50,29 @@ public class MainActivity extends FragmentActivity {
     public static mSpotifyAPI mSpotifyAPI;
     public static SpotifyService spotifyService;
     public static String authToken;
+
+    // Login in our server
+    public LoginService loginService;
+    public static MusicDatabaseHelper musicDatabaseHelper;
     private TextView tv_playerField;
     public static final ListManager listManager = ListManager.getInstance();
     public static final VariableManager varManager = VariableManager.getInstance();
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_STORAGE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-                Log.i("KHOI TAO ADS SDK", "THANH CONG");
-            }
-        });
+
+        // Kiểm tra trạng thái kết nối mạng
+        if (!isNetworkAvailable()) {
+            // Hiển thị thông báo khi không có kết nối mạng
+            Toast.makeText(this, "Không có kết nối mạng", Toast.LENGTH_SHORT).show();
+        }
+
+        loginService = new LoginServiceImpl();
+        musicDatabaseHelper = new MusicDatabaseHelper(this);
 
         FragmentManager manager = getSupportFragmentManager();
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
@@ -61,6 +84,27 @@ public class MainActivity extends FragmentActivity {
         getUserProfile();
 
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
+
+        createNotificationChannel("firebase's notification", "Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT);
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.i("KHOI TAO ADS SDK", "THANH CONG");
+            }
+        });
+        loginService.loginWithMyDatabase("id của account spotify", new LoginCallback() {
+
+            @Override
+            public void onSuccess(User user) {
+                com.example.music_mobile_app.ui.ExtensionFragment.userId = user.id;
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.i("MLogin Activity", message);
+            }
+        });
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
 
     }
 
@@ -130,5 +174,28 @@ public class MainActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
+    }
+
+    public void createNotificationChannel(String channelId, String channelName, int importance) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            // Configure the channel (optional)
+            channel.setDescription("Kenh thong bao cua Firebase");
+//            channel.setLightColor(Color.GREEN); // Optional LED light color
+            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional vibration pattern
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    // Phương thức để kiểm tra trạng thái kết nối mạng
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        }
+        return false;
     }
 }

@@ -75,20 +75,17 @@ public class HomeFragment extends Fragment {
 
 
     private void prepareData(View view) {
-//        recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
         topTracksRecyclerView = view.findViewById(R.id.top_tracks);
         albumsRecycleView = view.findViewById(R.id.top_albums);
         followRecycleView = view.findViewById(R.id.follower_recyclerView);
 
 
-        LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager albums_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager follow_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-//        recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
         recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
         topTracksRecyclerView.setLayoutManager(topTracks_layout);
         albumsRecycleView.setLayoutManager(albums_layout);
@@ -100,38 +97,14 @@ public class HomeFragment extends Fragment {
         setRecommendations();
         setTopTracks();
         setAlbums();
-        setFollower();
+        setFollowArtist();
 
         //Get user's playlists
         MethodsManager.getInstance().getUserPlaylists(false);
+        //Get user's favorites
+        MethodsManager.getInstance().getUserFavorite(false);
     }
 
-
-//    private void setRecentlyTracks() {
-//        List<Track> listTracks = listManager.getRecentlyTracks();
-//        if (listTracks.isEmpty()) {
-//            spotifyService.getRecentlyTracks(new Callback<Pager<Track>>() {
-//                @Override
-//                public void onResponse(Call<Pager<Track>> call, retrofit2.Response<Pager<Track>> response) {
-//                    if (response.isSuccessful()) {
-//                        Log.d(TAG, "Get recently success ");
-//                        List<Track> mList = response.body().items;
-//                        listManager.setRecentlyTracks(mList);
-//                        setRecentlyTracks();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<Pager<Track>> call, Throwable t) {
-//                    Log.e(TAG, "Cannot get recentlyTracks: " + t.getMessage());
-//                }
-//            });
-//        } else {
-//            ItemAdapter adapter = new ItemAdapter(listTracks, null, getParentFragment());
-//            adapter.notifyDataSetChanged();
-//            recentlyTracksRecyclerView.setAdapter(adapter);
-//        }
-//    }
 
     private void setRecommendations() {
         List<Track> listTracks = listManager.getRecommendTracks();
@@ -218,7 +191,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void setFollower() {
+    private void setFollowArtist() {
         List<Artist> followedArtists = ListManager.getInstance().getFollowArtists();
         if (followedArtists.isEmpty()) {
             Map<String, Object> options = new HashMap<>();
@@ -239,7 +212,7 @@ public class HomeFragment extends Fragment {
                     Log.d(TAG, "Get followed artists success");
                     List<Artist> followedArtists = artistsCursorPager.artists.items;
                     listManager.setFollowArtists(followedArtists);
-                    setFollower();
+                    setFollowArtist();
                 }
             });
         } else {

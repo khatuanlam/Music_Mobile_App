@@ -13,7 +13,6 @@ public class Album {
 
     public Long id;
 
-
     public String name;
 
 

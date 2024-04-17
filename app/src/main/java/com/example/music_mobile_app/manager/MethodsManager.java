@@ -47,7 +47,6 @@ public class MethodsManager {
         Map<String, Object> options = new HashMap<>();
         options.put("name", playlistName);
         options.put("public", true);
-
         // Get user information
         SharedPreferences sharedPreferences = fragment.getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String USER_ID = sharedPreferences.getString("userId", "Not found UserId");

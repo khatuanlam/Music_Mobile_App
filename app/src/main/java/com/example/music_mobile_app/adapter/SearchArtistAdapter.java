@@ -1,5 +1,8 @@
 package com.example.music_mobile_app.adapter;
 
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +13,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.manager.ListenerManager;
+import com.example.music_mobile_app.manager.MethodsManager;
+import com.example.music_mobile_app.ui.ArtistFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.Track;
 
 public class SearchArtistAdapter extends RecyclerView.Adapter<SearchArtistAdapter.FoundArtistViewHolder> {
     private Fragment fragment;
@@ -36,8 +46,7 @@ public class SearchArtistAdapter extends RecyclerView.Adapter<SearchArtistAdapte
     @NonNull
     @Override
     public FoundArtistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_search_found_artist, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_search_found_artist, parent, false);
         return new FoundArtistViewHolder(view);
     }
 
@@ -49,16 +58,16 @@ public class SearchArtistAdapter extends RecyclerView.Adapter<SearchArtistAdapte
 
     @Override
     public int getItemCount() {
-        if (mDataList == null)
-            return 0;
+        if (mDataList == null) return 0;
         return mDataList.size();
     }
 
     public class FoundArtistViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewArtistType;
 
-        public Artist artist;
+        public Artist mArtist;
         public TextView textViewArtistName;
+
         public ImageView imageView;
         public CardView cardView;
 
@@ -74,22 +83,46 @@ public class SearchArtistAdapter extends RecyclerView.Adapter<SearchArtistAdapte
             cardView = itemView.findViewById(R.id.list_item_search_found_artist_cardview);
             optionsImageView = itemView.findViewById(R.id.list_item_search_found_artist_options);
 
+            itemView.setOnClickListener(v -> {
+                MethodsManager.getInstance().getArtistTopTrack(mArtist.id, "", new ListenerManager.ListTrackOnCompleteListener() {
+                    @Override
+                    public void onComplete(List<Track> trackList) {
+                        // Send detail artist
+                        sendToDetailArtist(mArtist, trackList);
+                    }
 
+                    @Override
+                    public void onError(Throwable error) {
+                        Log.e(fragment.getTag(), "Cannot get this " + mArtist.name);
+                    }
+                });
+            });
         }
 
         public void bind(Artist artist) {
-            this.artist = artist;
+            this.mArtist = artist;
             textViewArtistName.setText(artist.name);
             textViewArtistType.setText(artist.type);
 
             if (artist.images.size() > 0) {
-                Glide.with(fragment)
-                        .load(artist.images.get(0).url)
-                        .into(imageView);
+                Glide.with(fragment).load(artist.images.get(0).url).into(imageView);
             }
 
         }
+    }
 
+    public void sendToDetailArtist(Artist artist, List<Track> artistTopTrack) {
+        FragmentManager manager = fragment.getChildFragmentManager();
+        ArtistFragment artistFragment = new ArtistFragment();
+        // Attach artistdetail
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("ArtistDetail", (Parcelable) artist);
+        bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(artistTopTrack));
+        artistFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.addToBackStack(null);
+        manager.beginTransaction().replace(R.id.fragment, artistFragment).commit();
     }
 
 }

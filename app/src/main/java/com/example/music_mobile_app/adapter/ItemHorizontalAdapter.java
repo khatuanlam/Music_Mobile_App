@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -39,7 +40,7 @@ import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> {
+public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> implements AdapterView.OnItemLongClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
     private List<Track> trackList;
@@ -53,6 +54,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
     private boolean isSend = false;
 
     private static String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
+
 
     public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context, Fragment fragment) {
         this.trackList = trackList;
@@ -87,6 +89,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         }
         // Thiết lập màu nền cho item dựa trên selectedItem
         holder.itemView.setBackgroundColor(position == selectedItem ? ContextCompat.getColor(context, R.color.purple_50) : Color.TRANSPARENT);
+
     }
 
     @Override
@@ -101,6 +104,11 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
 
     public void setSend(boolean send) {
         isSend = send;
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
     }
 
     protected class ItemHorizontalHolder extends RecyclerView.ViewHolder {
@@ -152,6 +160,10 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                         });
                     }
                 });
+                //
+                itemView.setOnLongClickListener(v -> {
+                    return true;
+                });
             }
         }
 
@@ -192,5 +204,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             transaction.addToBackStack(null);
             manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
         }
+
+
     }
 }

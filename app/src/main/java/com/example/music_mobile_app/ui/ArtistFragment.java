@@ -67,7 +67,6 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FragmentManager manager = getParentFragmentManager();
 
     }
 
@@ -84,26 +83,6 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
 
         initView();
 
-        if (btnFollow != null) {
-            initializeFollowButtonState(mArtist.id);
-            btnFollow.setOnClickListener(v -> {
-                if (isFollowing == false) {
-                    // Nếu chưa theo dõi, thực hiện hành động theo dõi
-                    followArtist(mArtist.id);
-                    setFollowButtonState(btnFollow, true);
-                } else {
-                    // Nếu đang theo dõi, thực hiện hành động bỏ theo dõi
-                    unfollowArtists(mArtist.id);
-                    // Cập nhật trạng thái và văn bản của nút
-                    setFollowButtonState(btnFollow, false);
-                }
-            });
-            // Reload follow artist
-            ListManager.getInstance().setFollowArtists(null);
-        } else {
-            // Nếu btnFollow là null, hiển thị thông báo lỗi
-            Log.e(TAG, "Button btnFollow is null");
-        }
         return view;
     }
 
@@ -147,6 +126,28 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
 
         } else {
             Log.e(TAG, "Cannot get album detail");
+        }
+
+        // Get follow artist state
+        if (btnFollow != null) {
+            initializeFollowButtonState(mArtist.id);
+            btnFollow.setOnClickListener(v -> {
+                if (isFollowing == false) {
+                    // Nếu chưa theo dõi, thực hiện hành động theo dõi
+                    followArtist(mArtist.id);
+                    setFollowButtonState(btnFollow, true);
+                } else {
+                    // Nếu đang theo dõi, thực hiện hành động bỏ theo dõi
+                    unfollowArtists(mArtist.id);
+                    // Cập nhật trạng thái và văn bản của nút
+                    setFollowButtonState(btnFollow, false);
+                }
+            });
+            // Reload follow artist
+            ListManager.getInstance().setFollowArtists(null);
+        } else {
+            // Nếu btnFollow là null, hiển thị thông báo lỗi
+            Log.e(TAG, "Button btnFollow is null");
         }
 
     }

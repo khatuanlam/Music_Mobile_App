@@ -70,12 +70,6 @@ public class AuthLoginActivity extends FragmentActivity {
                     newIntent(accessToken);
                     break;
 
-                // ConnectionParams connectionParams = new
-                // ConnectionParams.Builder(CLIENT_ID).setRedirectUri(REDIRECT_URI).build();
-                // Gson gson = new Gson();
-                // String connectionParamsJson = gson.toJson(connectionParams);
-                // editor.putString("CONNECTION_PARAMS_KEY", connectionParamsJson);
-
                 case ERROR:
                     Log.e(TAG, "Auth error: " + response.getError());
                     break;

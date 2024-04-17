@@ -51,34 +51,10 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        homeLayout = view.findViewById(R.id.nav_home);
-        favoriteLayout = view.findViewById(R.id.nav_favorite);
-        searchLayout = view.findViewById(R.id.nav_search);
-        extensionLayout = view.findViewById(R.id.nav_extension);
+        prepareData(view);
 
-        homeText = view.findViewById(R.id.nav_home_text);
-        favoriteText = view.findViewById(R.id.nav_favorite_text);
-        searchText = view.findViewById(R.id.nav_search_text);
-        extentionText = view.findViewById(R.id.nav_extension_text);
 
-        homeLayout.setOnClickListener(mListener);
-        favoriteLayout.setOnClickListener(mListener);
-        searchLayout.setOnClickListener(mListener);
-        extensionLayout.setOnClickListener(mListener);
-
-        // Setting avt img value
-        account = view.findViewById(R.id.avt);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
-
-        account.setOnClickListener(v -> {
-            FragmentTransaction fragmentTransaction = manager.beginTransaction().setCustomAnimations(0, 0);
-            fragmentTransaction.replace(R.id.fragment, new AccountFragment());
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        });
 
         return view;
     }
@@ -166,4 +142,37 @@ public class MainFragment extends Fragment {
         defocusMode = getResources().getColor(R.color.colorNavIcon, null);
 
     }
+
+    private void prepareData(View view) {
+
+        homeLayout = view.findViewById(R.id.nav_home);
+        favoriteLayout = view.findViewById(R.id.nav_favorite);
+        searchLayout = view.findViewById(R.id.nav_search);
+        extensionLayout = view.findViewById(R.id.nav_extension);
+
+        homeText = view.findViewById(R.id.nav_home_text);
+        favoriteText = view.findViewById(R.id.nav_favorite_text);
+        searchText = view.findViewById(R.id.nav_search_text);
+        extentionText = view.findViewById(R.id.nav_extension_text);
+
+        homeLayout.setOnClickListener(mListener);
+        favoriteLayout.setOnClickListener(mListener);
+        searchLayout.setOnClickListener(mListener);
+        extensionLayout.setOnClickListener(mListener);
+
+        // Setting avt img value
+        account = view.findViewById(R.id.avt);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        Glide.with(this).load(sharedPreferences.getString("imageUrl", "")).override(Target.SIZE_ORIGINAL).into(account);
+
+        account.setOnClickListener(v -> {
+            FragmentTransaction fragmentTransaction = manager.beginTransaction().setCustomAnimations(0, 0);
+            fragmentTransaction.replace(R.id.fragment, new AccountFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
+
+    }
+
+
 }

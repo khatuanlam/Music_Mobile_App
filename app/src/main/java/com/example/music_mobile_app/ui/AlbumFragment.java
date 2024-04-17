@@ -83,37 +83,8 @@ public class AlbumFragment extends Fragment {
 
         prepareData(view);
 
-        // Onclick back
-        btnBack.setOnClickListener(v -> {
-            manager.popBackStack();
-        });
+        initView();
 
-        // Get detail album
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            albumDetail = (AlbumSimple) bundle.getParcelable("AlbumDetail");
-            mAlbum = (Album) bundle.getParcelable("Album");
-            ArrayList<Parcelable> parcelableList = bundle.getParcelableArrayList("ListTrack");
-            List<Track> trackList = new ArrayList<>();
-            // Chuyển đổi từ parcelableList sang List<Track>
-            for (Parcelable parcelable : parcelableList) {
-                if (parcelable instanceof Track) {
-                    trackList.add((Track) parcelable);
-                }
-            }
-            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, mAlbum, new ArrayList<>(),
-                    getContext(), getParentFragment());
-            recyclerView.setAdapter(adapter);
-        } else {
-            Log.e(TAG, "Cannot get album detail");
-        }
-
-        albumName.setText(mAlbum.name);
-        albumYear.setText(mAlbum.release_date);
-        albumArtist.setText(mAlbum.artists.get(0).name);
-        Glide.with(this)
-                .load((albumDetail.images.get(0).url != null) ? albumDetail.images.get(0).url : baseImage)
-                .override(Target.SIZE_ORIGINAL).into(albumImage);
         return view;
     }
 
@@ -145,6 +116,40 @@ public class AlbumFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void initView() {
+        // Onclick back
+        btnBack.setOnClickListener(v -> {
+            manager.popBackStack();
+        });
+
+        // Get detail album
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            albumDetail = (AlbumSimple) bundle.getParcelable("AlbumDetail");
+            mAlbum = (Album) bundle.getParcelable("Album");
+            ArrayList<Parcelable> parcelableList = bundle.getParcelableArrayList("ListTrack");
+            List<Track> trackList = new ArrayList<>();
+            // Chuyển đổi từ parcelableList sang List<Track>
+            for (Parcelable parcelable : parcelableList) {
+                if (parcelable instanceof Track) {
+                    trackList.add((Track) parcelable);
+                }
+            }
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, mAlbum, new ArrayList<>(),
+                    getContext(), getParentFragment());
+            recyclerView.setAdapter(adapter);
+        } else {
+            Log.e(TAG, "Cannot get album detail");
+        }
+
+        albumName.setText(mAlbum.name);
+        albumYear.setText(mAlbum.release_date);
+        albumArtist.setText(mAlbum.artists.get(0).name);
+        Glide.with(this)
+                .load((albumDetail.images.get(0).url != null) ? albumDetail.images.get(0).url : baseImage)
+                .override(Target.SIZE_ORIGINAL).into(albumImage);
     }
 
 }

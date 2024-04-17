@@ -1,9 +1,9 @@
 package com.example.music_mobile_app.network;
 
 import com.example.music_mobile_app.model.Album;
-import com.example.music_mobile_app.model.Playlist;
-import com.example.music_mobile_app.model.Song;
-import com.example.music_mobile_app.model.User;
+import com.example.music_mobile_app.model.extension.Playlist;
+import com.example.music_mobile_app.model.extension.Song;
+import com.example.music_mobile_app.model.extension.User;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public interface mSpotifyService {
     @POST("/Playlist/AddSong/{idPlaylist}/{idSong}")
     Call<Playlist> postSongToPlaylist(@Path("idPlaylist") long idPlaylist, @Path("idSong") long idSong);
 
-//    @POST("/Playlist/{idUser}")
+    //    @POST("/Playlist/{idUser}")
 //    Call<Playlist> addPlaylistToUser(@Path("idUser") long idUser, @Body AddPlaylistBody addPlaylistBody);
     @GET("/Playlist")
     Call<List<Playlist>> getAllPlaylistsByIdUser(@Query("idUser") long id);

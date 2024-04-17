@@ -86,10 +86,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         public void sendToDetailArtist(Artist artist, List<Track> artistTopTrack) {
             FragmentManager manager = fragment.getChildFragmentManager();
             ArtistFragment artistFragment = new ArtistFragment();
-
             // Attach artistdetail
             Bundle bundle = new Bundle();
-            bundle.putParcelable("ArtistDetail", (Parcelable) mArtist);
+            bundle.putParcelable("ArtistDetail", (Parcelable) artist);
             bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(artistTopTrack));
             artistFragment.setArguments(bundle);
 

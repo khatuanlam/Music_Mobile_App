@@ -75,7 +75,6 @@ public class SubSearchFragment extends Fragment {
                 .replace(R.id.search_subSearchMainFragmentContainer, subSearchInformationFragment)
                 .commit();
 
-        //ẩn avt trong main fragment
         // Lấy tham chiếu đến MainFragment
         MainFragment mainFragment = (MainFragment) getParentFragment();
 

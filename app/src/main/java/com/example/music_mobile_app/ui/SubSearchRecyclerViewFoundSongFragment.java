@@ -26,10 +26,9 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
     private RecyclerView recyclerView;
-
     private RecyclerView recyclerViewArtist;
     private RecyclerView recyclerViewAlbum;
-    private RecyclerView recyclerViewFound;
+
     public List<Track> trackList;
     public List<Artist> artistList;
     public List<AlbumSimple> albumList;
@@ -70,6 +69,7 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.LayoutManager layoutManagerArtist = new LinearLayoutManager(getActivity());
         RecyclerView.LayoutManager layoutManagerAlbum = new LinearLayoutManager(getActivity());
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerViewArtist.setLayoutManager(layoutManagerArtist);
         recyclerViewAlbum.setLayoutManager(layoutManagerAlbum);
@@ -103,4 +103,8 @@ public class SubSearchRecyclerViewFoundSongFragment extends Fragment {
 
     }
 
+    public void setAlbumList(List<AlbumSimple> albumList) {
+        this.albumList = albumList;
+        mAdapterALbum.setmDataList(albumList);
+    }
 }

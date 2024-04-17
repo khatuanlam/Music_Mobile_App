@@ -1,4 +1,4 @@
-package com.example.music_mobile_app.model;
+package com.example.music_mobile_app.model.extension;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,6 @@ public class Playlist {
     public Long id;
 
     public String name;
-
 
     public String createDate;
 

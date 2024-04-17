@@ -47,7 +47,7 @@ public class FavoriteFragment extends Fragment {
 
         prepareData(view);
 
-        setFavoriteTracks();
+        initView();
 
         return view;
     }
@@ -60,7 +60,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void initView() {
-
+        setFavoriteTracks();
     }
 
     private void setFavoriteTracks() {
@@ -70,9 +70,17 @@ public class FavoriteFragment extends Fragment {
             MethodsManager.getInstance().getUserFavorite(true);
             Toast.makeText(getActivity(), "List is empty", Toast.LENGTH_SHORT).show();
         }
+        if (trackList != null) {
+            quantity.setText(trackList.size() + " bài hát");
+        }
         ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), getParentFragment());
         adapter.notifyDataSetChanged();
 
         recyclerview.setAdapter(adapter);
+    }
+
+    private void getFavoriteAlbums() {
+
+
     }
 }

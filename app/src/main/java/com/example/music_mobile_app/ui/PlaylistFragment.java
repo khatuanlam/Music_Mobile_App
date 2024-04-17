@@ -1,5 +1,6 @@
 package com.example.music_mobile_app.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -86,7 +87,7 @@ public class PlaylistFragment extends Fragment {
             manager.popBackStack();
         });
 
-        setPlaylist();
+        initView();
 
         return view;
 
@@ -109,6 +110,10 @@ public class PlaylistFragment extends Fragment {
 
     }
 
+    private void initView() {
+        setPlaylist();
+    }
+
     private void setPlaylist() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -126,20 +131,35 @@ public class PlaylistFragment extends Fragment {
             // Set send to detail
             adapter.setSend(false);
             adapter.notifyDataSetChanged();
+            recyclerView.setOnLongClickListener((View.OnLongClickListener) adapter);
             recyclerView.setAdapter(adapter);
         } else {
             Log.e(TAG, "Cannot get album detail");
         }
     }
 
-    private void removeTrackFromPlaylist(String playlistId, Track mTrack) {
+    private void showConfirmationDialog(String playlistId, String trackUri) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Xác nhận xóa");
+        builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này?");
+        builder.setPositiveButton("Xóa", (dialog, which) -> {
+            // Gọi phương thức để xóa bài hát
+            removeTrackFromPlaylist(playlistId, trackUri);
+        });
+        builder.setNegativeButton("Hủy", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.show();
+    }
+
+    private void removeTrackFromPlaylist(String playlistId, String trackUri) {
         // Tạo một instance của TracksToRemove và thêm các TrackToRemove vào danh sách
         TracksToRemove tracksToRemove = new TracksToRemove();
         tracksToRemove.tracks = new ArrayList<>();
 
         // Tạo một TrackToRemove và thêm trackId vào URI
         TrackToRemove trackToRemove = new TrackToRemove();
-        trackToRemove.uri = mTrack.uri;
+        trackToRemove.uri = trackUri;
         tracksToRemove.tracks.add(trackToRemove);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
