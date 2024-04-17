@@ -2,60 +2,65 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/background"
     tools:context=".ui.AlbumFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/gotham_bold"
-                android:text="Yêu thích"
-                android:textColor="@color/white"
-                android:textSize="32dp" />
-
-            <TextView
-                android:id="@+id/quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/gotham_medium"
-                android:text="10 bài hát"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="end">
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="Yêu thích"
+                    android:textColor="@color/white"
+                    android:textSize="32dp" />
+
+                <TextView
+                    android:id="@+id/quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/gotham_medium"
+                    android:text="10 bài hát"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_play_favorite"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
+                android:layout_gravity="end|center_vertical"
                 android:background="@drawable/ic_play" />
+
         </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favorite_recyclerview"

@@ -1,9 +1,14 @@
 package com.example.music_mobile_app.ui;
 
+import static android.view.View.GONE;
+
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,10 +18,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import com.example.music_mobile_app.R;
 
+import com.example.music_mobile_app.util.HandleBackground;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -24,12 +31,16 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ExtensionFragment extends Fragment {
     private InterstitialAd mInterstitialAd;
     private static final String TAG = "INTERSTITIAL AD";
 
     private Spinner spinner;
     private Button button;
+    private FrameLayout content_container;
+    private Drawable backgroundDrawable;
 
     public ExtensionFragment() {
     }
@@ -105,6 +116,18 @@ public class ExtensionFragment extends Fragment {
         spinner = view.findViewById(R.id.download_spinner_filter);
         button = view.findViewById(R.id.download_testLoadAds);
 
+        //Kiểm tra nếu avatar header bị ẩn => set hiện
+        CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
+        if(header.getVisibility()==GONE){
+            header.setVisibility(View.VISIBLE);
+        }
+
+        //get background framelayout
+        content_container = view.findViewById(R.id.content_container);
+        backgroundDrawable = content_container.getBackground();
+
+        handleBackground();
+
         String[] options = { "Mới nhất", "Cũ nhất" };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item,
                 options);
@@ -133,6 +156,22 @@ public class ExtensionFragment extends Fragment {
             }
         });
         return view;
+    }
+    private  void handleBackground(){
+        // Lấy giá trị màu integer từ tài nguyên màu
+        int startColorInt = ContextCompat.getColor(getContext(), R.color.teal_700);
+        // Chuyển đổi giá trị màu integer thành mã hex
+        String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha channel)
+
+        // Xử lý background
+        HandleBackground backgroundHandler = new HandleBackground();
+        backgroundHandler.handleBackground(startColorHex, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+            @Override
+            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                // Set the updated Drawable as the background of your view
+                content_container.setBackground(updatedDrawable);
+            }
+        });
     }
 
 }

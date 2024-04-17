@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Update background thay đổi theo ảnh artist-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.ArtistFragment">
@@ -24,9 +26,13 @@
                 android:id="@+id/artistAvatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/overlay_dark"
                 android:foregroundGravity="fill"
                 android:scaleType="centerCrop" />
+            <!-- Overlay View để tạo độ tối -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#88000000" /> <!-- Màu đen với độ trong suốt 0.53 (88% độ tối) -->
 
             <TextView
                 android:id="@+id/textArtistName"
@@ -43,55 +49,62 @@
                 android:textSize="120px" />
         </FrameLayout>
 
+
+<!--     Start Update layout butotn Theo dõi và Play-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/followerNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:text="1,1 Tr người nghe hàng tháng"
+                android:textColor="@color/colorWhite" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/followerNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="1,1 Tr người nghe hàng tháng"
-                    android:textColor="@color/colorGrayLight" />
-
-                <Button
-                    android:id="@+id/playArtistButton"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="end"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/ic_play" />
-
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnFollow"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_gravity="start|center_vertical"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     android:background="@drawable/button_transparent"
                     android:clickable="true"
                     android:text="Theo dõi"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+<!--Dùng view để căn button nằm sát cạnh layout-->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/playArtistButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/ic_play" />
+
             </LinearLayout>
         </LinearLayout>
-
+<!--    End update-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerArtistMusicView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:background="@color/black" />
+            android:layout_margin="10dp" />
 
     </LinearLayout>
 

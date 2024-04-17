@@ -12,9 +12,12 @@ import androidx.palette.graphics.Palette;
 
 public class HandleBackground {
     // Generate palette synchronously and return it.
-    ImageView image;
-    Drawable backgroundDrawable ;
-    GradientDrawable gradientDrawable ;
+    private String hexColor;
+    private ImageView image;
+    private Drawable backgroundDrawable ;
+    private GradientDrawable gradientDrawable ;
+    private  int backgroundColor;
+
 
     public void handleBackground(ImageView image, Drawable backgroundDrawable, OnPaletteGeneratedListener listener )
     {
@@ -22,12 +25,13 @@ public class HandleBackground {
         this.backgroundDrawable = backgroundDrawable;
         generateColorAlbumImage(listener);
     }
-    public Palette createPaletteSync(Bitmap bitmap) {
-        Palette p = Palette.from(bitmap).generate();
-        return p;
+
+    public void handleBackground(String hexColor, Drawable backgroundDrawable, OnPaletteGeneratedListener listener)
+    {
+        this.hexColor = hexColor;
+        this.backgroundDrawable = backgroundDrawable;
+        updateStartColor(listener);
     }
-
-
 
     private void generateColorAlbumImage(final OnPaletteGeneratedListener listener) {
         // Trích xuất Bitmap từ ImageView
@@ -38,38 +42,31 @@ public class HandleBackground {
             @Override
             public void onGenerated(Palette palette) {
                 // Lấy màu chủ đạo từ Palette
-                Palette.Swatch darkMutedSwatch = palette.getLightMutedSwatch();
+                Palette.Swatch LightMutedSwatch = palette.getLightMutedSwatch();
+                Palette.Swatch LightVibrantSwatch = palette.getLightVibrantSwatch();
 
-                if (darkMutedSwatch != null) {
-                    int backgroundColor = darkMutedSwatch.getRgb();
-
-                    // Convert the RGB color to hexadecimal
-                    String hexColor = String.format("#%06X", (0xFFFFFF & backgroundColor));
-                    System.out.println("Vibrant Swatch Color: " + hexColor);
-                    // Bạn có thể sử dụng màu dominantColor ở đây
-                    // Ví dụ: setBackgroundColor, setTextColor, v.v.
-                    updateStartColor(hexColor);
-
-                    // Notify the listener that the Palette is ready
-                    if (listener != null) {
-                        listener.onPaletteGenerated(gradientDrawable);
-                    }
+                if (LightMutedSwatch != null) {
+                    backgroundColor = LightMutedSwatch.getRgb();
                 }
+                else{
+                    backgroundColor = LightVibrantSwatch.getRgb();
+                }
+                // Convert the RGB color to hexadecimal
+                hexColor = String.format("#%06X", (0xFFFFFFFF & backgroundColor));
+                System.out.println("Vibrant Swatch Color: " + hexColor);
+                // Bạn có thể sử dụng màu dominantColor ở đây
+                // Ví dụ: setBackgroundColor, setTextColor, v.v.
+                updateStartColor(listener);
+
             }
         });
     }
 
 
-    private GradientDrawable updateStartColor(String hexColor) {
+    private GradientDrawable updateStartColor(final OnPaletteGeneratedListener listener) {
 
         // Convert hexColor to RGB integer
         int newStartColor = Color.parseColor(hexColor);
-
-//        // Find the ImageView within the fragment's layout
-//        FrameLayout frameLayout = getView().findViewById(R.id.fragment_container);
-
-        // Get the existing background drawable
-//        Drawable backgroundDrawable = frameLayout.getBackground();
 
         if (backgroundDrawable instanceof GradientDrawable) {
             gradientDrawable = (GradientDrawable) backgroundDrawable;
@@ -89,9 +86,14 @@ public class HandleBackground {
             }
 
         }
+        // Notify the listener that the Palette is ready
+        if (listener != null) {
+            listener.onPaletteGenerated(gradientDrawable);
+        }
         return gradientDrawable;
     }
     public interface OnPaletteGeneratedListener {
         void onPaletteGenerated(GradientDrawable gradientDrawable);
     }
 }
+

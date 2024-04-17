@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -99,6 +100,11 @@ public class MainActivity extends FragmentActivity {
                             }
                             imageUrl = largestImage.url;
                         }
+                        //Update sửa lỗi không hiển thị avatar khi user chưa set avatar
+                        else {
+                            imageUrl = "android.resource://" + getPackageName() + "/drawable/default_avt";
+                        }
+
                         getUserProfile();
 
                         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
@@ -130,5 +136,14 @@ public class MainActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

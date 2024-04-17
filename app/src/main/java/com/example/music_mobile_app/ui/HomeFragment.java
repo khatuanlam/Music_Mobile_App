@@ -1,14 +1,19 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +25,7 @@ import com.example.music_mobile_app.adapter.ItemAdapter;
 import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.network.mSpotifyAPI;
+import com.example.music_mobile_app.util.HandleBackground;
 
 
 import java.util.ArrayList;
@@ -28,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -51,6 +58,9 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView followRecycleView;
 
+    private TextView title;
+    private Drawable backgroundDrawable;
+
     public final ListManager listManager = MainActivity.listManager;
 
     @Override
@@ -63,16 +73,35 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         // Show header
-        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
         header.setVisibility(View.VISIBLE);
 
         prepareData(view);
+
+        handleBackground();
 
         updateUI();
 
         return view;
     }
 
+
+    private  void handleBackground(){
+        // Lấy giá trị màu integer từ tài nguyên màu
+        int startColorInt = ContextCompat.getColor(getContext(), R.color.purple_100);
+        // Chuyển đổi giá trị màu integer thành mã hex
+        String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha channel)
+
+        // Xử lý background
+        HandleBackground backgroundHandler = new HandleBackground();
+        backgroundHandler.handleBackground(startColorHex, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+            @Override
+            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                // Set the updated Drawable as the background of your view
+                title.setBackground(updatedDrawable);
+            }
+        });
+    }
 
     private void prepareData(View view) {
 //        recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
@@ -93,6 +122,10 @@ public class HomeFragment extends Fragment {
         topTracksRecyclerView.setLayoutManager(topTracks_layout);
         albumsRecycleView.setLayoutManager(albums_layout);
         followRecycleView.setLayoutManager(follow_layout);
+
+        //get background title
+        title = view.findViewById(R.id.title);
+        backgroundDrawable = title.getBackground();
     }
 
     private void updateUI() {

@@ -18,9 +18,10 @@
             android:layout_marginLeft="5sp"
             android:padding="1dp"
             android:text="Followed Artist"
-            android:textAlignment="viewStart"
+            android:fontFamily="@font/gotham_bold"
+            android:textAlignment="center"
             android:textColor="@color/colorWhite"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView

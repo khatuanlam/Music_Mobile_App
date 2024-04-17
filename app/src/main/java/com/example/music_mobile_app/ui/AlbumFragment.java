@@ -19,12 +19,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
@@ -40,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -53,7 +56,8 @@ public class AlbumFragment extends Fragment {
 
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private final String TAG = this.getClass().getSimpleName();
-    private ImageView albumImage, btnBack;
+    private ImageView albumImage;
+    private ImageButton btnBack;
     private FrameLayout frameLayout;
     private Drawable backgroundDrawable;
     private RecyclerView recyclerView;
@@ -78,7 +82,7 @@ public class AlbumFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         // Hide header
-        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
         header.setVisibility(View.GONE);
 
         prepareData(view);
@@ -113,23 +117,36 @@ public class AlbumFragment extends Fragment {
         albumArtist.setText(mAlbum.artists.get(0).name);
         Glide.with(this)
                 .load((albumDetail.images.get(0).url != null) ? albumDetail.images.get(0).url : baseImage)
-                .override(Target.SIZE_ORIGINAL).into(albumImage);
+                .override(Target.SIZE_ORIGINAL)
+                .into(new ImageViewTarget<Drawable>(albumImage) {
+                    @Override
+                    protected void setResource(@Nullable Drawable resource) {
+                        // Khi quá trình tải ảnh hoàn thành, resource sẽ chứa Drawable
+                        if (resource != null) {
+                            // setImageDrawable cho artistImage
+                            albumImage.setImageDrawable(resource);
+
+                            // Xử lý background => Đổi màu theo ảnh của artist
+                            HandleBackground backgroundHandler = new HandleBackground();
+                            backgroundHandler.handleBackground(albumImage, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+                                @Override
+                                public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                                    // Set the updated Drawable as the background of your view
+                                    frameLayout.setBackground(updatedDrawable);
+                                }
+                            });
+                        } else {
+                            // Xử lý khi không thể tải được Drawable
+                        }
+                    }
+                });
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // // Create an instance of HandleBackground and call handleBackground method
-        // HandleBackground backgroundHandler = new HandleBackground();
-        // backgroundHandler.handleBackground(albumImage, backgroundDrawable, new
-        // HandleBackground.OnPaletteGeneratedListener() {
-        // @Override
-        // public void onPaletteGenerated(GradientDrawable updatedDrawable) {
-        // // Set the updated Drawable as the background of your view
-        // frameLayout.setBackground(updatedDrawable);
-        // }
-        // });
+
     }
 
     private void prepareData(View view) {

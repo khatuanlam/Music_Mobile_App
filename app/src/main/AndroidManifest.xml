@@ -16,7 +16,9 @@
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="true"
+        >
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -28,6 +30,16 @@
             android:theme="@style/Theme.AppCompat" />
 
         <activity
+            android:name=".PlayerActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat"></activity>
@@ -35,14 +47,12 @@
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
-        <activity
-            android:name=".EditAccountActivity"
-            android:theme="@style/Theme.AppCompat" />
+
         <activity
             android:name=".AuthLoginActivity"
             android:exported="true"
