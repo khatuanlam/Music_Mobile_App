@@ -3,6 +3,7 @@ package com.example.music_mobile_app.adapter.mydatabase;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -158,6 +159,11 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
             });
 
         }
+        public void sendCustomBroadcast(String content) {
+            Intent intent = new Intent("com.example.MY_DOWNLOAD_BROADCAST");
+            intent.putExtra("content", content);
+            context.sendBroadcast(intent);
+        }
         private void showPopupMenu(View view) {
             PopupMenu popupMenu = new PopupMenu(context, view);
 
@@ -188,7 +194,8 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
                                 @Override
                                 public void onDownloadComplete(String urlString) {
                                     liteSongRepository.insertSong(song, urlString);
-                                    Toast.makeText(context, "CHUẨN BỊ TẢI",Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "CHUẨN BỊ TẢI",Toast.LENGTH_SHORT).show();
+                                    sendCustomBroadcast(song.getName());
                                 }
                             });
                             break;

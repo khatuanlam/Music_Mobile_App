@@ -12,17 +12,23 @@ import androidx.fragment.app.FragmentManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
 import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.receiver.MyCorruptInternetReceiver;
+import com.example.music_mobile_app.receiver.MyDownloadReceiver;
 import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
 import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
 import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
@@ -53,6 +59,9 @@ public class MainActivity extends FragmentActivity {
 
     private static final int REQUEST_CODE_STORAGE = 100;
 
+    public MyCorruptInternetReceiver myCorruptInternetReceiver;
+    public MyDownloadReceiver myDownloadReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +78,9 @@ public class MainActivity extends FragmentActivity {
 //        setServiceAPI();
 
 //        getUserProfile();
-        createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT);
+        createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
+        createNotificationChannel("download's notification","Download Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -89,6 +100,15 @@ public class MainActivity extends FragmentActivity {
                 Log.i("MLogin Activity", message);
             }
         });
+        myCorruptInternetReceiver = new MyCorruptInternetReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(myCorruptInternetReceiver, intentFilter);
+
+
+        myDownloadReceiver = new MyDownloadReceiver();
+        IntentFilter intentFilter1 = new IntentFilter("com.example.MY_DOWNLOAD_BROADCAST");
+        registerReceiver(myDownloadReceiver, intentFilter1);
+
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
 
     }
@@ -157,21 +177,28 @@ public class MainActivity extends FragmentActivity {
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+//        if (myCorruptInternetReceiver != null) {
+//            unregisterReceiver(myCorruptInternetReceiver);
+//            myCorruptInternetReceiver = null;
+//        }
+    }
+    @Override
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
     }
-    public void createNotificationChannel(String channelId, String channelName, int importance) {
+    public void createNotificationChannel(String channelId, String channelName, int importance, String description) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-            // Configure the channel (optional)
-            channel.setDescription("Kenh thong bao cua Firebase");
-//            channel.setLightColor(Color.GREEN); // Optional LED light color
+            channel.setDescription(description);
             channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional vibration pattern
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);
         }
     }
+
 
 }
