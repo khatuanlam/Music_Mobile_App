@@ -132,7 +132,7 @@ public class SubSearchFragment extends Fragment {
                         }
 
                     }
-                }, 1000);
+                }, 2000);
             }
         });
 

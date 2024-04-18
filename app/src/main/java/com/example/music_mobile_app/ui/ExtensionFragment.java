@@ -123,7 +123,7 @@ public class ExtensionFragment extends Fragment {
         }
 
         //get background framelayout
-        content_container = view.findViewById(R.id.content_container);
+        content_container = view.findViewById(R.id.frame_container);
         backgroundDrawable = content_container.getBackground();
 
         handleBackground();

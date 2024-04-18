@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,14 +30,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class FavoriteFragment extends Fragment {
-
     private RecyclerView recyclerview;
-    private FrameLayout content_container;
+    private FrameLayout frame_container;
     private Drawable backgroundDrawable;
+    private ProgressBar loadingProgressBar;
+
+    private boolean loading = true;
+
+
 
     private TextView quantity;
 
@@ -65,9 +67,26 @@ public class FavoriteFragment extends Fragment {
 
         handleBackground();
 
+
+        //Loading đợi xử lý data
+        handleLoading();
+
         setFavoriteTracks();
 
         return view;
+    }
+
+    private void handleLoading(){
+        if(loading){
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            recyclerview.setVisibility(View.GONE);
+        }
+        else {
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.GONE);
+            recyclerview.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -83,7 +102,7 @@ public class FavoriteFragment extends Fragment {
             @Override
             public void onPaletteGenerated(GradientDrawable updatedDrawable) {
                 // Set the updated Drawable as the background of your view
-                content_container.setBackground(updatedDrawable);
+                frame_container.setBackground(updatedDrawable);
             }
         });
     }
@@ -91,29 +110,51 @@ public class FavoriteFragment extends Fragment {
     private void prepareData(View view) {
         quantity = view.findViewById(R.id.quantity);
         recyclerview = view.findViewById(R.id.favorite_recyclerview);
-        content_container = view.findViewById(R.id.content_container);
+        frame_container = view.findViewById(R.id.frame_container);
         LinearLayoutManager favorite_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerview.setLayoutManager(favorite_layout);
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
 
         //get background framelayout
-        content_container = view.findViewById(R.id.content_container);
-        backgroundDrawable = content_container.getBackground();
+        backgroundDrawable = frame_container.getBackground();
     }
 
     private void initView() {
 
     }
 
+
+    //MaiThy - Update setFavoriteTracks xử lý set lại recyclerview khi trackList.isEmpty
+    // và loading khi đợi set recyclerview
     private void setFavoriteTracks() {
         List<Track> trackList = ListManager.getInstance().getFavoriteTracks();
         if (trackList.isEmpty()) {
-            // Nếu danh sách favorite chưa được lấy thì load lại để lấy
-            MethodsManager.getInstance().getUserFavorite(true);
-            Toast.makeText(getActivity(), "List is empty", Toast.LENGTH_SHORT).show();
+            MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+                @Override
+                public void onFavoriteTracksLoaded(List<Track> trackList) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (trackList.isEmpty()) {
+                                Toast.makeText(getActivity(), "List is empty", Toast.LENGTH_SHORT).show();
+                            } else {
+                                ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), getParentFragment());
+                                recyclerview.setAdapter(adapter);
+                                loading = false;
+                                handleLoading();
+                            }
+                        }
+                    });
+                }
+            });
         }
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), getParentFragment());
-        adapter.notifyDataSetChanged();
+        else{
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), getParentFragment());
+            recyclerview.setAdapter(adapter);
+            loading = false;
+            handleLoading();
+        }
 
-        recyclerview.setAdapter(adapter);
+
     }
 }

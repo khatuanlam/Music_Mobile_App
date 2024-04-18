@@ -92,15 +92,45 @@ public class MethodsManager {
         }
     }
 
-    public void getUserFavorite(boolean type) {
+    //    public void getUserFavorite(boolean type) {
+//        List<Track> favorite = ListManager.getInstance().getFavoriteTracks();
+//        if (favorite.isEmpty() || type == true) {
+//            Map<String, Object> options = new HashMap<>();
+//            options.put(SpotifyService.LIMIT, 20);
+//            spotifyService.getMySavedTracks(options, new SpotifyCallback<Pager<SavedTrack>>() {
+//                @Override
+//                public void failure(SpotifyError spotifyError) {
+////                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+//                }
+//
+//                @Override
+//                public void success(Pager<SavedTrack> savedTrackPager, Response response) {
+//                    List<Track> trackList = new ArrayList<>();
+//                    for (SavedTrack savedTrack : savedTrackPager.items) {
+//                        trackList.add(savedTrack.track);
+//                    }
+//                    Log.e("xxx", "success: " + trackList.size() + "");
+//                    // Lưu giá trị về bộ nhớ
+//                    ListManager.getInstance().setFavoriteTracks(trackList);
+//                }
+//            });
+//        }
+//    }
+
+    //MaiThy - Update getUserFavorite xử lý gọi callback khi hoàn thành
+    public interface OnFavoriteTracksLoadedListener {
+        void onFavoriteTracksLoaded(List<Track> trackList);
+    }
+
+    public void getUserFavorite(boolean type, final OnFavoriteTracksLoadedListener callback) {
         List<Track> favorite = ListManager.getInstance().getFavoriteTracks();
-        if (favorite.isEmpty() || type == true) {
+        if (favorite.isEmpty() || type) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 20);
             spotifyService.getMySavedTracks(options, new SpotifyCallback<Pager<SavedTrack>>() {
                 @Override
                 public void failure(SpotifyError spotifyError) {
-//                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+                    // Xử lý lỗi
                 }
 
                 @Override
@@ -109,13 +139,23 @@ public class MethodsManager {
                     for (SavedTrack savedTrack : savedTrackPager.items) {
                         trackList.add(savedTrack.track);
                     }
-                    Log.e("xxx", "success: " + trackList.size() + "");
-                    // Lưu giá trị về bộ nhớ
+                    // Lưu giá trị vào ListManager
                     ListManager.getInstance().setFavoriteTracks(trackList);
+
+                    // Gọi callback khi hoàn thành
+                    if (callback != null) {
+                        callback.onFavoriteTracksLoaded(trackList);
+                    }
                 }
             });
+        } else {
+            // Sử dụng danh sách yêu thích đã lưu nếu có
+            if (callback != null) {
+                callback.onFavoriteTracksLoaded(favorite);
+            }
         }
     }
+
 
     public void getAlbum(String albumId, ListenerManager.AlbumCompleteListener listener) {
         spotifyService.getAlbum(albumId, new SpotifyCallback<Album>() {

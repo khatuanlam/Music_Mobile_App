@@ -13,13 +13,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -118,7 +116,7 @@ public class PlaylistFragment extends Fragment {
         playlistOwner.setText(playlistDetail.owner.display_name);
 
         //get background framelayout
-        fragment_container = view.findViewById(R.id.content_container);
+        fragment_container = view.findViewById(R.id.frame_container);
         backgroundDrawable = fragment_container.getBackground();
 
         Glide.with(this).load((playlistDetail.images == null) ? baseImage : playlistDetail.images.get(0).url)

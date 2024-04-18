@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class MainFragment extends Fragment {
     private TextView extentionText;
     private Button extensionLayout;
     private CircleImageView account;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+
     View.OnClickListener mListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -99,6 +103,7 @@ public class MainFragment extends Fragment {
                     transaction.replace(R.id.fragment, new HomeFragment()).commit();
                     current_view = new IconNavbar(homeLayout, view, homeText, home);
                     setFocusMode(current_view);
+
                     break;
                 case R.id.nav_favorite:
                     Log.d(TAG, "FAVORITE");
