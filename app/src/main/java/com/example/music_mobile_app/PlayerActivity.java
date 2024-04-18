@@ -1,80 +1,44 @@
 package com.example.music_mobile_app;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
-import com.example.music_mobile_app.manager.ListManager;
-import com.example.music_mobile_app.manager.PlaybackManager;
 import com.example.music_mobile_app.model.Song;
 import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.spotify.protocol.client.Subscription;
-import com.spotify.protocol.types.PlayerState;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistSimple;
-import kaaes.spotify.webapi.android.models.Image;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Playlist;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.PlaylistTrack;
-import kaaes.spotify.webapi.android.models.Track;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class PlayerActivity extends FragmentActivity {
 
     private static final String TAG = PlayerActivity.class.getSimpleName();
 
-    private ImageButton btn_prev;
-    private ImageView btn_back, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist;
+    private ImageView btn_prev, btn_back, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist;
     private TextView tv_track_name, tv_track_arist, tv_currentTime, tv_durationTime;
     private RecyclerView recyclerView;
     private Button buttonAddPlaylist, buttonAddSong, btnFollow;
@@ -86,13 +50,16 @@ public class PlayerActivity extends FragmentActivity {
     private String selectedPlaylistId;
     private MediaPlayer mediaPlayer;
     private TrackProgressBar mTrackProgressBar;
+
     private boolean isPlaying = false;
     // Khởi tạo một biến boolean để theo dõi trạng thái của nguồn dữ liệu của MediaPlayer
     private boolean isMediaPlayerInitialized = false;
 
     List<Song> songList;
 
-    private int currentSongIndex = -1; // Biến này để theo dõi vị trí của bài hát hiện tại đang được phát
+    private int currentSongIndex = -1; // Theo dõi vị trí của bài hát hiện tại đang được phát
+    private boolean replay = false;
+    private boolean shuffle = false;
 
 
     @Override
@@ -147,6 +114,37 @@ public class PlayerActivity extends FragmentActivity {
         btn_prev.setOnClickListener(v -> {
             playNextSong(false);
         });
+
+        // Bắt sự kiện click cho nút replay
+        btn_replay.setOnClickListener(v -> {
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_restart_white_36dp);
+            if(replay == false)
+            {
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.teal_200), PorterDuff.Mode.SRC_IN);
+                replay = true;
+            }
+            else{
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_IN);
+                replay = false;
+            }
+            btn_replay.setImageDrawable(drawable);
+        });
+
+        // Bắt sự kiện click cho nút replay
+        btn_shuffle.setOnClickListener(v -> {
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_random_white_36dp);
+            if(shuffle == false)
+            {
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.teal_200), PorterDuff.Mode.SRC_IN);
+                shuffle = true;
+            }
+            else{
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_IN);
+                shuffle = false;
+            }
+            btn_shuffle.setImageDrawable(drawable);
+        });
+
     }
 
 
@@ -315,12 +313,31 @@ public class PlayerActivity extends FragmentActivity {
 
 
     private void playNextSong(boolean next) {
-        if(next){
-            currentSongIndex++;
+        //nếu không lặp lại 1 bài => thay đổi currentSongIndex
+        //ngược lại giữ nguyên currentSongIndex
+        if(!replay)
+        {
+            if(next){
+                currentSongIndex++;
+            }
+            else {
+                currentSongIndex--;
+            }
         }
-        else {
-            currentSongIndex--;
+        //trộn bài
+        if(shuffle)
+        {
+            // Tạo một đối tượng Random
+            Random random = new Random();
+            // Sinh ra một số ngẫu nhiên từ 1 đến songList.size()
+            int randomIndex;
+            do {
+                randomIndex = random.nextInt(songList.size())+1;
+            } while (randomIndex == currentSongIndex);
+
+            currentSongIndex = randomIndex;
         }
+
         mTrackProgressBar.pause();
         mSeekBar.setProgress(0);
         tv_currentTime.setText(milliSecondsToTimer(0));
@@ -365,14 +382,6 @@ public class PlayerActivity extends FragmentActivity {
             drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         }
 
-
-
-//        // Kiểm tra nếu button prev được vô hiệu hóa
-//        if (!btn_prev.isEnabled()) {
-//
-//        } else {
-//
-//        }
 
         // Gán vector drawable đã chỉnh sửa cho ImageView của button prev
         btn_prev.setImageDrawable(drawable);
@@ -440,4 +449,6 @@ public class PlayerActivity extends FragmentActivity {
             }
         };
     }
+
+
 }
