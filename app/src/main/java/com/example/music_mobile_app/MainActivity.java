@@ -1,14 +1,41 @@
 package com.example.music_mobile_app;
 
+
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import android.view.View;
+import android.widget.Toast;
+
+import com.example.music_mobile_app.model.User;
+import com.example.music_mobile_app.model.UserImage;
+import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.receiver.MyCorruptInternetReceiver;
+import com.example.music_mobile_app.receiver.MyDownloadReceiver;
+import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
+import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginService;
 import android.widget.TextView;
 
 import com.example.music_mobile_app.manager.ListManager;
@@ -34,11 +61,19 @@ public class MainActivity extends FragmentActivity {
 
     public static mSpotifyAPI mSpotifyAPI;
     public static SpotifyService spotifyService;
+
+    public LoginService loginService;
+    public static MusicDatabaseHelper musicDatabaseHelper;
     public static String authToken;
     private TextView tv_playerField;
     public static final ListManager listManager = ListManager.getInstance();
     public static final VariableManager varManager = VariableManager.getInstance();
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final int REQUEST_CODE_STORAGE = 100;
+
+    public MyCorruptInternetReceiver myCorruptInternetReceiver;
+    public MyDownloadReceiver myDownloadReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +87,10 @@ public class MainActivity extends FragmentActivity {
         });
 
         FragmentManager manager = getSupportFragmentManager();
+
+        loginService = new LoginServiceImpl();
+        musicDatabaseHelper = new MusicDatabaseHelper(this);
+
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
 
@@ -60,16 +99,60 @@ public class MainActivity extends FragmentActivity {
 
         getUserProfile();
 
+        createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
+        createNotificationChannel("download's notification","Download Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.i("KHOI TAO ADS SDK","THANH CONG");
+            }
+        });
+
+
+        loginService.loginWithMyDatabase("id của account spotify", new LoginCallback() {
+            @Override
+            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
+                com.example.music_mobile_app.ui.mydatabase.MainFragment.userId = user.getId();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.i("MLogin Activity", message);
+            }
+        });
+        myCorruptInternetReceiver = new MyCorruptInternetReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(myCorruptInternetReceiver, intentFilter);
+
+
+        myDownloadReceiver = new MyDownloadReceiver();
+        IntentFilter intentFilter1 = new IntentFilter("com.example.MY_DOWNLOAD_BROADCAST");
+        registerReceiver(myDownloadReceiver, intentFilter1);
+
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
+
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                Log.i(TAG, "Storage permission denied");
+            }
+        }
+    }
+  
+  @Override
+      protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
     }
-
     private void getUserProfile() {
         UserPrivate userPrivate = varManager.getUser();
         if (userPrivate.id == null) {
@@ -127,8 +210,24 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+    @Override
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
     }
+    public void createNotificationChannel(String channelId, String channelName, int importance, String description) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            channel.setDescription(description);
+            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional vibration pattern
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+
 }

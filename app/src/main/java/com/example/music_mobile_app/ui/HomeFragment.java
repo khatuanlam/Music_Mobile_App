@@ -82,6 +82,19 @@ public class HomeFragment extends Fragment {
         followRecycleView = view.findViewById(R.id.follower_recyclerView);
 
 
+
+       LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+       LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+       LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+       recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
+       recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
+       topTracksRecyclerView.setLayoutManager(topTracks_layout);
+
+       setRecommendations();
+       setTopTracks();
+//        setRecentlyTracks();
+
         LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -101,6 +114,7 @@ public class HomeFragment extends Fragment {
         setTopTracks();
         setAlbums();
         setFollower();
+
 
         //Get user's playlists
         MethodsManager.getInstance().getUserPlaylists(false);
