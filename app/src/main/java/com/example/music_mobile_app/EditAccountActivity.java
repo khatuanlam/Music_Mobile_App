@@ -3,11 +3,9 @@ package com.example.music_mobile_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,12 +15,10 @@ import android.widget.ImageButton;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.music_mobile_app.model.User;
 import com.example.music_mobile_app.model.UserImage;
-import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.Picasso;
@@ -31,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditAccountActivity extends FragmentActivity {
+public class EditAccountActivity extends AppCompatActivity {
 
     private static final String TAG = "EditAccountActivity";
     ShapeableImageView imageViewAvt;
@@ -41,7 +37,7 @@ public class EditAccountActivity extends FragmentActivity {
     Uri uri = null;
     String authToken;
 
-    private mSpotifyService spotifyService = MainActivity.mSpotifyService;
+    private mSpotifyAPI spotifyService = MainActivity.mSpotifyAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +47,12 @@ public class EditAccountActivity extends FragmentActivity {
 
 
 //        // Căn giữa tiêu đề
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.background_register));
+
+
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        android.view.View customView = getLayoutInflater().inflate(R.layout.custom_actionbar_title, null);
 //        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
@@ -100,7 +102,7 @@ public class EditAccountActivity extends FragmentActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateProfileOnSpotify(sharedPreferencesUserData, displayName);
+//                updateProfileOnSpotify(sharedPreferencesUserData, displayName);
             }
         });
 
@@ -127,52 +129,52 @@ public class EditAccountActivity extends FragmentActivity {
 
     }
 
-    private void updateProfileOnSpotify(SharedPreferences sharedPreferences, String displayName) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        if (!displayName.equals(editTextName.getText().toString())) {
-            editor.putString("displayName", editTextName.getText().toString());
-        }
-        if (uri != null) {
-            editor.putString("imageUrl", uri.toString());
-        }
-
-        // Kiểm tra xem có URL hình ảnh mới không
-        if (!displayName.equals(editTextName.getText().toString()) || uri != null) {
-
-            // Nếu có thay đổi, cập nhật vào SharedPreferences
-            editor.apply();
-
-            // Tạo một đối tượng User mới với thông tin cập nhật
-            User updatedUser = new User();
-            updatedUser.setDisplayName(editTextName.getText().toString());
-            if (uri != null) {
-                UserImage userImage = new UserImage(uri.toString(), 0, 0); // Không có thông tin kích thước, có thể cập nhật sau
-                updatedUser.getImages().add(0, userImage);
-            }
-
-            // Gọi phương thức updateProfile của SpotifyService
-            spotifyService.updateUserProfile(updatedUser, new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    System.out.println(authToken);
-                    if (response.isSuccessful()) {
-                        Log.d(TAG, "User profile updated successfully on Spotify");
-                        // Cập nhật thành công, có thể thực hiện các thao tác khác nếu cần
-                    } else {
-                        Log.e(TAG, "Failed to update user profile on Spotify: " + response.toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e(TAG, "Failed to update user profile on Spotify", t);
-                }
-            });
-        } else {
-            Log.e(TAG, "Image URL is null. Cannot update profile on Spotify.");
-        }
-    }
-
+//    private void updateProfileOnSpotify(SharedPreferences sharedPreferences, String displayName) {
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        if (!displayName.equals(editTextName.getText().toString())) {
+//            editor.putString("displayName", editTextName.getText().toString());
+//        }
+//        if (uri != null) {
+//            editor.putString("imageUrl", uri.toString());
+//        }
+//
+//        // Kiểm tra xem có URL hình ảnh mới không
+//        if (!displayName.equals(editTextName.getText().toString()) || uri != null) {
+//
+//            // Nếu có thay đổi, cập nhật vào SharedPreferences
+//            editor.apply();
+//
+//            // Tạo một đối tượng User mới với thông tin cập nhật
+//            User updatedUser = new User();
+//            updatedUser.setDisplayName(editTextName.getText().toString());
+//            if (uri != null) {
+//                UserImage userImage = new UserImage(uri.toString(), 0, 0); // Không có thông tin kích thước, có thể cập nhật sau
+//                updatedUser.getImages().add(0, userImage);
+//            }
+//
+//            // Gọi phương thức updateProfile của SpotifyService
+//            spotifyService.updateUserProfile(updatedUser, new Callback<Void>() {
+//                @Override
+//                public void onResponse(Call<Void> call, Response<Void> response) {
+//                    System.out.println(authToken);
+//                    if (response.isSuccessful()) {
+//                        Log.d(TAG, "User profile updated successfully on Spotify");
+//                        // Cập nhật thành công, có thể thực hiện các thao tác khác nếu cần
+//                    } else {
+//                        Log.e(TAG, "Failed to update user profile on Spotify: " + response.toString());
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Void> call, Throwable t) {
+//                    Log.e(TAG, "Failed to update user profile on Spotify", t);
+//                }
+//            });
+//        } else {
+//            Log.e(TAG, "Image URL is null. Cannot update profile on Spotify.");
+//        }
+//    }
+//
 
 }

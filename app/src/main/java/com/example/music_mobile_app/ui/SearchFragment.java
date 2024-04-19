@@ -4,12 +4,16 @@ package com.example.music_mobile_app.ui;
 import androidx.fragment.app.Fragment;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,7 +39,7 @@ import retrofit.client.Response;
 public class SearchFragment extends Fragment {
 
     private SpotifyApi spotifyApi;
-    private EditText editText;
+    private LinearLayout container_search;
     private RecyclerView recyclerView;
     private SearchAlbumAdapter mAdapter;
     private FragmentManager manager;
@@ -53,27 +57,41 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        editText = view.findViewById(R.id.search_searchTextBox);
+        container_search = view.findViewById(R.id.container_search);
 
 
         recyclerView = view.findViewById(R.id.search_recyclerViewGenres);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new SearchAlbumAdapter(getActivity(), this, new ArrayList<AlbumSimple>());
-        recyclerView.setAdapter(mAdapter);
-        getAlbum("k-pop");
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
 
-                    manager.beginTransaction()
-                            .replace(R.id.fragment, new SubSearchFragment())
-                            .commit();
-                }
+        mAdapter = new SearchAlbumAdapter(this, new ArrayList<>());
+        recyclerView.setAdapter(mAdapter);
+        Log.i("vao get 0", "GET THANH CONG");
+        getAlbum("k-pop");
+
+        container_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manager.beginTransaction()
+                        .replace(R.id.fragment, new SubSearchFragment())
+                        .commit();
             }
         });
+
+
         return view;
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager.isAcceptingText()) {
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
     }
 
     public void getAlbum(String q) {

@@ -1,11 +1,15 @@
 package com.example.music_mobile_app.adapter;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
+
 
 import java.util.List;
 
@@ -53,14 +58,18 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
         return mDataList.size();
     }
 
+    public class FoundSongViewHolder extends RecyclerView.ViewHolder {
+        public TextView textViewSingerName;
 
-    protected class FoundSongViewHolder extends RecyclerView.ViewHolder {
+        public Track track;
+        public TextView textViewSongName;
+        public ImageView imageView;
+        public CardView cardView;
 
-        private Track mTrack;
-        private TextView textViewSingerName;
-        private TextView textViewSongName;
-        private ImageView imageView;
-        private CardView cardView;
+        public ImageView optionsImageView;
+
+        public PopupMenu optionsPopupMenu;
+
 
         public FoundSongViewHolder(View itemView) {
             super(itemView);
@@ -71,13 +80,38 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
             itemView.setOnClickListener((View v) -> {
                 Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
-                intent.putExtra("Track", mTrack);
+                intent.putExtra("Track", track);
                 fragment.getActivity().startActivity(intent);
+                optionsImageView = itemView.findViewById(R.id.list_item_search_found_song_options);
+
+                optionsPopupMenu = new PopupMenu(fragment.requireContext(), optionsImageView);
+
+                optionsPopupMenu.getMenuInflater().inflate(R.menu.search_options_view_item_menu, optionsPopupMenu.getMenu());
+                optionsImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionsPopupMenu.show();
+                    }
+                });
+                optionsPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.search_options_view_item_menu_download:
+                                downloadHandler();
+                                return true;
+                            case R.id.search_options_view_item_menu_add_favorite:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
             });
         }
 
         public void bind(Track track) {
-            this.mTrack = track;
+            this.track = track;
             textViewSongName.setText(track.album.name);
             if (track.artists.size() > 0) {
                 textViewSingerName.setText(track.artists.get(0).name);
@@ -88,6 +122,10 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
                         .into(imageView);
             }
 
+        }
+
+        public void downloadHandler() {
+            Toast.makeText(fragment.requireContext(), "Tai xuong: " + track.album.name, Toast.LENGTH_SHORT).show();
         }
 
     }

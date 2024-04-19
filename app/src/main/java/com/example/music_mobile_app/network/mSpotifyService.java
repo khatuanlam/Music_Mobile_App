@@ -1,63 +1,82 @@
 package com.example.music_mobile_app.network;
 
+import com.example.music_mobile_app.model.Album;
+import com.example.music_mobile_app.model.Playlist;
+import com.example.music_mobile_app.model.Song;
 import com.example.music_mobile_app.model.User;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.SpotifyError;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import kaaes.spotify.webapi.android.models.Pager;
-import retrofit.client.Response;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
-public class mSpotifyService {
-    private static final String BASE_URL = "https://api.spotify.com/v1/";
+public interface mSpotifyService {
 
-    private mSpotifyAPI spotifyAPI;
+    @PUT("me")
+    Call<Void> updateUserProfile(
+            @Header("Authorization") String authToken,
+            @Body User user
+    );
 
-    private String authToken;
+    // Các API cho phần extension trong ứng dụng
+    @GET("/Album")
+    Call<List<Album>> getAllAlbums();
 
-    public String getAuthToken() {
-        return authToken;
-    }
+    @GET("/Album/{id}")
+    Call<Album> getAlbumById(@Path("id") long id);
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
+    @GET("/Album/Top")
+    Call<List<Album>> getTopPopularAlbums(@Query("page") int page, @Query("size") int size);
 
-    public mSpotifyService(String authToken) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    @GET("/Playlist")
+    Call<List<Playlist>> getAllPlaylists();
 
-        spotifyAPI = retrofit.create(mSpotifyAPI.class);
-        this.authToken = "Bearer" + authToken;
-    }
+    @DELETE("/Playlist/DeleteSong/{idPlaylist}/{idSong}")
+    Call<Playlist> deleteSongFromPlaylist(@Path("idPlaylist") long idPlaylist, @Path("idSong") long idSong);
 
-    public void getUserProfile(Callback<User> callback) {
-        Call<User> call = spotifyAPI.getUserProfile(this.authToken);
-        call.enqueue(callback);
-    }
+    @POST("/Playlist/AddSong/{idPlaylist}/{idSong}")
+    Call<Playlist> postSongToPlaylist(@Path("idPlaylist") long idPlaylist, @Path("idSong") long idSong);
 
-    public void updateUserProfile(User user, Callback<Void> callback) {
-        Call<Void> call = spotifyAPI.updateUserProfile(this.authToken, user);
-        call.enqueue(callback);
-    }
+//    @POST("/Playlist/{idUser}")
+//    Call<Playlist> addPlaylistToUser(@Path("idUser") long idUser, @Body AddPlaylistBody addPlaylistBody);
+    @GET("/Playlist")
+    Call<List<Playlist>> getAllPlaylistsByIdUser(@Query("idUser") long id);
 
-    public void getRecentlyTracks(Callback<Pager<Track>> callback) {
-        Map<String, Object> options = new HashMap<>();
-        options.put(SpotifyService.LIMIT, 10);
-        Call<Pager<Track>> call = spotifyAPI.getRecentlyTracks("Bearer" + this.authToken, options);
-        call.enqueue(callback);
-    }
+    @GET("/Playlist/{id}")
+    Call<Playlist> getPlaylistById(@Path("id") long id);
+
+    @GET("/Song")
+    Call<List<Song>> getAllSongs();
+
+    @GET("/Song/{id}")
+    Call<Song> getSongById(@Path("id") long id);
+
+    @GET("/Song/Album/{id}")
+    Call<List<Song>> getAllSongsFromAlbum(@Path("id") long id);
+
+    @GET("/Song/Playlist/{id}")
+    Call<List<Song>> getAllSongsFromPlaylist(@Path("id") long id);
+
+    @GET("/Song/Favorite/{id}")
+    Call<List<Song>> getAllFavoriteSongsFromIdUser(@Path("id") long id);
+
+    @POST("/Song/AddFavorite/{idSong}/{idUser}")
+    Call<Song> postFavoriteSongToUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
+
+    @DELETE("/Song/DeleteFavorite/{idSong}/{idUser}")
+    Call<Song> deleteFavoriteSongByIdUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
+
+    @GET("/Song/TopPopularity")
+    Call<List<Song>> getTopPopularSongs(@Query("page") int page, @Query("size") int size);
+
+    @GET("/Song/Filter")
+    Call<List<Song>> getfilteredSongs(@Query("songName") String songName);
+
 }
-
-

@@ -5,69 +5,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.ArtistFragment">
+
     <include layout="@layout/header" />
+
     <LinearLayout
         android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/background">
+        android:background="@drawable/background"
+        android:orientation="vertical">
+
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="250dp">
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
             <ImageView
                 android:id="@+id/artistAvatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/sontungmtp"
-                android:scaleType="centerCrop"
                 android:foreground="@drawable/overlay_dark"
-                android:foregroundGravity="fill"/>
+                android:foregroundGravity="fill"
+                android:scaleType="centerCrop" />
+
             <TextView
                 android:id="@+id/textArtistName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Sơn Tùng M-TP"
                 android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
-                android:textColor="@color/white"
                 android:fontFamily="@font/gotham_bold"
+                android:text="Sơn Tùng M-TP"
+
+                android:textColor="@color/white"
+
                 android:textSize="120px" />
         </FrameLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-           >
-            <TextView
-                android:id="@+id/followerNumber"
-                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:text="1,1 Tr người nghe hàng tháng"
-                android:textColor="@color/colorGrayLight"
-                />
-            <Button
-                android:id="@+id/playAristButton"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginRight="20dp"
-                android:layout_gravity="end"
-                android:background="@drawable/ic_play" />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerMusicView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="20dp"
-                        />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/followerNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="1,1 Tr người nghe hàng tháng"
+                    android:textColor="@color/colorGrayLight" />
+
+                <Button
+                    android:id="@+id/playArtistButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/ic_play" />
+
+
+                <Button
+                    android:id="@+id/btnFollow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/button_transparent"
+                    android:clickable="true"
+                    android:text="Theo dõi"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerArtistMusicView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@color/black" />
 
     </LinearLayout>
 

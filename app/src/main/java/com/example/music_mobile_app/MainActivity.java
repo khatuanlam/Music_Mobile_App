@@ -1,11 +1,13 @@
 package com.example.music_mobile_app;
 
+
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -21,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,6 +36,14 @@ import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
 import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
 import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
 import com.example.music_mobile_app.service.mydatabase.myinterface.LoginService;
+import android.widget.TextView;
+
+import com.example.music_mobile_app.manager.ListManager;
+
+import kaaes.spotify.webapi.android.models.Image;
+
+import com.example.music_mobile_app.manager.VariableManager;
+import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.example.music_mobile_app.ui.MainFragment;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -41,20 +52,22 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public class MainActivity extends FragmentActivity {
 
-    public static mSpotifyService mSpotifyService;
+    public static mSpotifyAPI mSpotifyAPI;
     public static SpotifyService spotifyService;
 
     public LoginService loginService;
     public static MusicDatabaseHelper musicDatabaseHelper;
     public static String authToken;
-
+    private TextView tv_playerField;
+    public static final ListManager listManager = ListManager.getInstance();
+    public static final VariableManager varManager = VariableManager.getInstance();
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE_STORAGE = 100;
@@ -66,18 +79,26 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.i("KHOI TAO ADS SDK", "THANH CONG");
+            }
+        });
 
         FragmentManager manager = getSupportFragmentManager();
+
         loginService = new LoginServiceImpl();
         musicDatabaseHelper = new MusicDatabaseHelper(this);
 
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
-        manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
+
 
         setServiceAPI();
 
         getUserProfile();
+
         createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
         createNotificationChannel("download's notification","Download Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
 
@@ -111,6 +132,8 @@ public class MainActivity extends FragmentActivity {
 
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
 
+        manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
+
     }
 
     @Override
@@ -124,46 +147,57 @@ public class MainActivity extends FragmentActivity {
             }
         }
     }
+  
+  @Override
+      protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
     private void getUserProfile() {
-        mSpotifyService.getUserProfile(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    User userProfile = response.body();
+        UserPrivate userPrivate = varManager.getUser();
+        if (userPrivate.id == null) {
+            spotifyService.getMe(new SpotifyCallback<UserPrivate>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, spotifyError.getMessage());
+                }
+
+                @Override
+                public void success(UserPrivate userPrivate, retrofit.client.Response response) {
+                    UserPrivate userProfile = userPrivate;
+                    varManager.setUser(userProfile);
                     if (userProfile != null) {
-                        String displayName = userProfile.getDisplayName();
+                        String displayName = userProfile.display_name;
                         String imageUrl = null;
-                        List<UserImage> images = userProfile.getImages();
+                        List<Image> images = userProfile.images;
                         if (images != null && !images.isEmpty()) {
                             // Choose the first image as default
-                            UserImage largestImage = images.get(0);
+                            Image largestImage = images.get(0);
 
                             // Iterate through images to find a larger one
-                            for (UserImage image : images) {
-                                if (image.getWidth() > largestImage.getWidth() && image.getHeight() > largestImage.getHeight()) {
+                            for (Image image : images) {
+                                if (image.width > largestImage.height && image.height > largestImage.height) {
                                     largestImage = image;
                                 }
                             }
-                            imageUrl = largestImage.getUrl();
+                            imageUrl = largestImage.url;
                         }
+                        getUserProfile();
 
                         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("displayName", displayName);
                         editor.putString("imageUrl", imageUrl);
+                        editor.putString("userId", userProfile.id);
                         editor.apply();
+
+                        // Save user data
+                        VariableManager.getInstance().setUser(userProfile);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e(TAG, "Failed to get user profile", t);
-
-            }
-        });
+            });
+        }
     }
-
 
     private void setServiceAPI() {
         Log.d(TAG, "Setting Spotify API Service");
@@ -172,9 +206,8 @@ public class MainActivity extends FragmentActivity {
         // Get kaaes spotify service
         spotifyService = api.getService();
         // Get project service
-        mSpotifyService = new mSpotifyService(authToken);
+        mSpotifyAPI = new mSpotifyAPI(authToken);
     }
-
 
     @Override
     protected void onPause() {
