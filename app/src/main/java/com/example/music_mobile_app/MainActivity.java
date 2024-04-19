@@ -71,13 +71,13 @@ public class MainActivity extends FragmentActivity {
         loginService = new LoginServiceImpl();
         musicDatabaseHelper = new MusicDatabaseHelper(this);
 
-//        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
-//        authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
+        SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
+        authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
-//        setServiceAPI();
+        setServiceAPI();
 
-//        getUserProfile();
+        getUserProfile();
         createNotificationChannel("firebase's notification","Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
         createNotificationChannel("download's notification","Download Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
 
@@ -179,10 +179,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-//        if (myCorruptInternetReceiver != null) {
-//            unregisterReceiver(myCorruptInternetReceiver);
-//            myCorruptInternetReceiver = null;
-//        }
     }
     @Override
     protected void onStop() {
