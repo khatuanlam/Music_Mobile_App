@@ -15,13 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.music_mobile_app.adapter.extension.TopAlbumPopularAdapter;
-import com.example.music_mobile_app.model.Album;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopAlbumPopularAdapter;
+import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.MainFragment;
-import com.example.music_mobile_app.viewmodel.album.*;
-import com.example.music_mobile_app.repository.SongRepository;
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.viewmodel.mydatabase.album.TopPopularAlbumViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

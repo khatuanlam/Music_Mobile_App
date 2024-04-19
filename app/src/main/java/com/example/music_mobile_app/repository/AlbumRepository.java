@@ -2,7 +2,7 @@ package com.example.music_mobile_app.repository;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.music_mobile_app.model.Album;
+import com.example.music_mobile_app.model.mydatabase.Album;
 import com.example.music_mobile_app.service.mydatabase.impl.AlbumServiceImpl;
 
 import java.util.List;

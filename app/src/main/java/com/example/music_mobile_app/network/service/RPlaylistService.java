@@ -1,7 +1,7 @@
 package com.example.music_mobile_app.network.service;
 
-import com.example.music_mobile_app.model.extension.AddPlaylistBody;
-import com.example.music_mobile_app.model.extension.Playlist;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.retrofit.mydatabase.model.AddPlaylistBody;
 
 import java.util.List;
 

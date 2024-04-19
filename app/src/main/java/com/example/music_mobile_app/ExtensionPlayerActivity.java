@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.model.extension.Song;
+import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyService;
+
 
 public class ExtensionPlayerActivity extends FragmentActivity {
 

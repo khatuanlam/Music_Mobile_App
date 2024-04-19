@@ -1,8 +1,15 @@
 package com.example.music_mobile_app.repository.sqlite;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.model.sqlite.LiteSong;
+
+import java.util.ArrayList;
 
 public class MusicDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "MyDatabase";
@@ -30,7 +37,7 @@ public class MusicDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_IMAGE + " TEXT, "
                 + COLUMN_URL_SONG + " TEXT, "
                 + COLUMN_URL_LYRIC + " TEXT, "
-                + COLUMN_RELEASE_DATE +" TEXT,"
+                + COLUMN_RELEASE_DATE + " TEXT,"
                 + COLUMN_PATH + " TEXT)";
         db.execSQL(createTableQuery);
     }

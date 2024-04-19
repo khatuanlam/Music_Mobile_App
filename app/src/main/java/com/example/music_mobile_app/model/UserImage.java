@@ -1,7 +1,5 @@
 package com.example.music_mobile_app.model;
 
-import com.google.gson.annotations.SerializedName;
-
 public class UserImage {
     private String url;
     private int width;

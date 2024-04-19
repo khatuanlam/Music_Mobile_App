@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.music_mobile_app.model.extension.Song;
+import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.repository.SongRepository;
 
 import java.util.List;

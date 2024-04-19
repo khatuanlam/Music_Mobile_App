@@ -26,7 +26,6 @@ import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.util.HandleBackground;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +68,8 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         // Show header
         CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
@@ -84,22 +84,23 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-
     private void handleBackground() {
         // Lấy giá trị màu integer từ tài nguyên màu
         int startColorInt = ContextCompat.getColor(getContext(), R.color.purple_100);
         // Chuyển đổi giá trị màu integer thành mã hex
-        String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha channel)
+        String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha
+                                                                                     // channel)
 
         // Xử lý background
         HandleBackground backgroundHandler = new HandleBackground();
-        backgroundHandler.handleBackground(startColorHex, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
-            @Override
-            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
-                // Set the updated Drawable as the background of your view
-                title.setBackground(updatedDrawable);
-            }
-        });
+        backgroundHandler.handleBackground(startColorHex, backgroundDrawable,
+                new HandleBackground.OnPaletteGeneratedListener() {
+                    @Override
+                    public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                        // Set the updated Drawable as the background of your view
+                        title.setBackground(updatedDrawable);
+                    }
+                });
     }
 
     private void prepareData(View view) {
@@ -109,24 +110,28 @@ public class HomeFragment extends Fragment {
         followRecycleView = view.findViewById(R.id.follower_recyclerView);
         homeView = view.findViewById(R.id.scroll_view_home);
 
-        LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager albums_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager follow_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                false);
+        LinearLayoutManager albums_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                false);
+        LinearLayoutManager follow_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                false);
 
         recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
         topTracksRecyclerView.setLayoutManager(topTracks_layout);
         albumsRecycleView.setLayoutManager(albums_layout);
         followRecycleView.setLayoutManager(follow_layout);
 
-        //get background title
+        // get background title
         title = view.findViewById(R.id.title);
         backgroundDrawable = title.getBackground();
 
-
         homeView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX,
+                    int oldScrollY) {
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     // Gọi sự kiện khi kéo trang lên hết cỡ
                     // Đặt mã hoặc phương thức bạn muốn gọi ở đây
@@ -137,18 +142,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUI() {
-        //setRecentlyTracks();
+        // setRecentlyTracks();
         setRecommendations();
         setTopTracks();
         setAlbums();
         setFollowArtist();
 
-        //Get user's playlists
+        // Get user's playlists
         MethodsManager.getInstance().getUserPlaylists(false);
-        //Get user's favorites
+        // Get user's favorites
         MethodsManager.getInstance().getUserFavorite(false);
     }
-
 
     private void setRecommendations() {
         List<Track> listTracks = listManager.getRecommendTracks();
@@ -245,7 +249,8 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void failure(SpotifyError spotifyError) {
                     if (spotifyError.hasErrorDetails()) {
-                        Log.e(TAG, "Error code: " + spotifyError.getErrorDetails().status + ", Message: " + spotifyError.getErrorDetails().message);
+                        Log.e(TAG, "Error code: " + spotifyError.getErrorDetails().status + ", Message: "
+                                + spotifyError.getErrorDetails().message);
                     } else {
                         Log.e(TAG, "An error occurred: " + spotifyError.getMessage());
                     }
@@ -268,8 +273,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void reloadPage() {
-//        ListManager.getInstance().clear();
-//        updateUI();
+        // ListManager.getInstance().clear();
+        // updateUI();
     }
 
 }

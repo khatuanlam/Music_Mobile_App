@@ -5,13 +5,13 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.music_mobile_app.model.extension.AddPlaylistBody;
-import com.example.music_mobile_app.model.extension.Playlist;
-import com.example.music_mobile_app.network.service.DBRetrofit;
-import com.example.music_mobile_app.network.service.RPlaylistService;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.PlaylistService;
-import com.example.music_mobile_app.viewmodel.favorite.DeleteCallback;
-import com.example.music_mobile_app.viewmodel.favorite.PostCallback;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
+import com.example.music_mobile_app.retrofit.mydatabase.RPlaylistService;
+import com.example.music_mobile_app.retrofit.mydatabase.model.AddPlaylistBody;
+import com.example.music_mobile_app.service.mydatabase.myinterface.PlaylistService;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final RPlaylistService RPlaylistService;
 
     public PlaylistServiceImpl() {
-        Retrofit retrofit = DBRetrofit.getRetrofit();
+        Retrofit retrofit = MyDbRetrofit.getRetrofit();
         RPlaylistService = retrofit.create(RPlaylistService.class);
     }
 
@@ -118,7 +118,6 @@ public class PlaylistServiceImpl implements PlaylistService {
                     if (deleteCallback != null) {
                         deleteCallback.onDeleteComplete();
                     }
-
                 } else {
                     Log.i("deleteSongFromPlaylist", "LOI");
                     playlist.setValue(null);
@@ -210,6 +209,4 @@ public class PlaylistServiceImpl implements PlaylistService {
         });
         return playlist;
     }
-
-
 }

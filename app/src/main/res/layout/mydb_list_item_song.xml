@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mydb_list_item_song_cardview"
     android:layout_width="match_parent"
+    android:id="@+id/mydb_list_item_song_cardview"
     android:layout_height="wrap_content"
     android:layout_marginLeft="2dp"
-    android:layout_marginTop="5dp"
     android:layout_marginRight="2dp"
+    android:layout_marginTop="5dp"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp">
 
@@ -21,7 +22,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_option" />
+            android:src="@drawable/mydb_ic_more_vert" />
 
         <ImageView
             android:id="@+id/mydb_list_item_song_imageView"
@@ -32,8 +33,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
             <TextView
                 android:id="@+id/mydb_list_item_song_songNameTextView"

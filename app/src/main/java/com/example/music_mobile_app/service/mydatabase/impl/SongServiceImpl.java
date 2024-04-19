@@ -5,12 +5,12 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.music_mobile_app.model.extension.Song;
-import com.example.music_mobile_app.network.service.DBRetrofit;
-import com.example.music_mobile_app.network.service.RSongService;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.SongService;
-import com.example.music_mobile_app.viewmodel.favorite.DeleteCallback;
-import com.example.music_mobile_app.viewmodel.favorite.PostCallback;
+import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
+import com.example.music_mobile_app.retrofit.mydatabase.RSongService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.SongService;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
 import java.util.List;
 
@@ -21,10 +21,10 @@ import retrofit2.Retrofit;
 
 public class SongServiceImpl implements SongService {
 
-    private final com.example.music_mobile_app.network.service.RSongService RSongService;
+    private final RSongService RSongService;
 
     public SongServiceImpl() {
-        Retrofit retrofit = DBRetrofit.getRetrofit();
+        Retrofit retrofit = MyDbRetrofit.getRetrofit();
         RSongService = retrofit.create(RSongService.class);
     }
 
@@ -56,7 +56,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public LiveData<List<Song>> getAllSongsFromAlbum(long id) {
-        final MutableLiveData<List<Song>> liveData = new MutableLiveData<List<Song>>();
+        final MutableLiveData<List<Song>> liveData = new MutableLiveData<>();
         Call<List<Song>> call = RSongService.getAllSongsFromAlbum(id);
         call.enqueue(new Callback<List<Song>>() {
             @Override
@@ -235,9 +235,9 @@ public class SongServiceImpl implements SongService {
             public void onResponse(Call<Song> call, Response<Song> response) {
                 if (response.isSuccessful()) {
                     song.setValue(response.body());
-//                    Song song1 = song.getValue();
-//                    Log.i("SONGS DELETE","START");
-//                    System.out.println(song1.toString());
+                    // Song song1 = song.getValue();
+                    // Log.i("SONGS DELETE","START");
+                    // System.out.println(song1.toString());
                     if (deleteCallback != null) {
                         deleteCallback.onDeleteComplete();
                     }

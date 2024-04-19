@@ -2,9 +2,18 @@ package com.example.music_mobile_app.service.mydatabase.impl;
 
 import android.util.Log;
 
-import com.example.music_mobile_app.network.service.DBRetrofit;
-import com.example.music_mobile_app.network.service.RMyFirebaseService;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.MyFirebaseService;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
+import com.example.music_mobile_app.retrofit.mydatabase.RAlbumService;
+import com.example.music_mobile_app.retrofit.mydatabase.RMyFirebaseService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.AlbumService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.MyFirebaseService;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,10 +25,9 @@ public class MyFirebaseServiceImpl implements MyFirebaseService {
     private RMyFirebaseService rMyFirebaseService;
 
     public MyFirebaseServiceImpl() {
-        Retrofit retrofit = DBRetrofit.getRetrofit();
+        Retrofit retrofit = MyDbRetrofit.getRetrofit();
         this.rMyFirebaseService = retrofit.create(RMyFirebaseService.class);
     }
-
 
     @Override
     public Boolean postToken(String token) {
@@ -42,4 +50,3 @@ public class MyFirebaseServiceImpl implements MyFirebaseService {
         return true;
     }
 }
-

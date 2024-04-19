@@ -3,9 +3,9 @@ package com.example.music_mobile_app.service.mydatabase.extension_interface;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.music_mobile_app.model.extension.Song;
-import com.example.music_mobile_app.viewmodel.favorite.DeleteCallback;
-import com.example.music_mobile_app.viewmodel.favorite.PostCallback;
+import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
 import java.util.List;
 

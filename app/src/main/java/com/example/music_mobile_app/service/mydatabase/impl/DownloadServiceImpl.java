@@ -13,8 +13,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.DownloadCallback;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.DownloadService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.DownloadService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.DownloadCallback;
+import com.example.music_mobile_app.util.mydatabase.DownloadTool;
+
+import java.io.File;
 
 public class DownloadServiceImpl implements DownloadService {
 
@@ -33,8 +36,8 @@ public class DownloadServiceImpl implements DownloadService {
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-//        String fileName = DownloadTool.getFileName(urlString);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, id+".mp3");
+        // String fileName = DownloadTool.getFileName(urlString);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, id + ".mp3");
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
@@ -46,8 +49,10 @@ public class DownloadServiceImpl implements DownloadService {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         // Check and request permission if needed
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        if (ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[] { Manifest.permission.POST_NOTIFICATIONS }, 1);
             return;
         }
 
@@ -59,4 +64,3 @@ public class DownloadServiceImpl implements DownloadService {
         }
     }
 }
-

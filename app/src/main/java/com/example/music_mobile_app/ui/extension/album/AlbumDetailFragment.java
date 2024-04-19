@@ -19,16 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.extension.ListSongAdapter;
-import com.example.music_mobile_app.model.Album;
-import com.example.music_mobile_app.model.extension.Playlist;
-import com.example.music_mobile_app.model.extension.Song;
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
+import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.MainFragment;
-import com.example.music_mobile_app.viewmodel.album.SongsOfAlbumViewModel;
-import com.example.music_mobile_app.viewmodel.favorite.FavoriteSongsViewModel;
-import com.example.music_mobile_app.viewmodel.playlist.AllPlaylistViewModel;
-import com.example.music_mobile_app.viewmodel.playlist.SongsOfPlaylistViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.album.SongsOfAlbumViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

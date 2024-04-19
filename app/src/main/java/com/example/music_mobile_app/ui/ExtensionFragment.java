@@ -26,24 +26,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.extension.TopAlbumPopularAdapter;
-import com.example.music_mobile_app.adapter.extension.TopSongPopularAdapter;
-import com.example.music_mobile_app.adapter.extension.YourPlaylistsAdapter;
-import com.example.music_mobile_app.adapter.extension.favorite.AllDownloadSongsFragment;
-import com.example.music_mobile_app.adapter.extension.favorite.AllFavoriteSongsFragment;
-import com.example.music_mobile_app.adapter.extension.playlist.AllPlaylistsFragment;
-import com.example.music_mobile_app.model.Album;
-import com.example.music_mobile_app.model.extension.Playlist;
-import com.example.music_mobile_app.model.extension.Song;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopAlbumPopularAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.TopSongPopularAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.mainFragment.YourPlaylistsAdapter;
+import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 
 import com.example.music_mobile_app.ui.extension.SubSearchFragment;
 import com.example.music_mobile_app.ui.extension.album.AllAlbumsFragment;
 import com.example.music_mobile_app.ui.extension.popular.AllPopularSongsFragment;
+import com.example.music_mobile_app.ui.mydatabase.favorite.AllDownloadSongsFragment;
+import com.example.music_mobile_app.ui.mydatabase.favorite.AllFavoriteSongsFragment;
+import com.example.music_mobile_app.ui.mydatabase.playlist.AllPlaylistsFragment;
 import com.example.music_mobile_app.viewmodel.TopPopularSongViewModel;
-import com.example.music_mobile_app.viewmodel.album.TopPopularAlbumViewModel;
-import com.example.music_mobile_app.viewmodel.favorite.FavoriteSongsViewModel;
-import com.example.music_mobile_app.viewmodel.playlist.AllPlaylistViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.album.TopPopularAlbumViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

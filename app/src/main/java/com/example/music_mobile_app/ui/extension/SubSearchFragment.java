@@ -19,12 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_mobile_app.R;
-import com.example.music_mobile_app.adapter.extension.ListSongAdapter;
+import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
 import com.example.music_mobile_app.repository.sqlite.LiteSongRepository;
 import com.example.music_mobile_app.ui.MainFragment;
-import com.example.music_mobile_app.viewmodel.favorite.FavoriteSongsViewModel;
-import com.example.music_mobile_app.viewmodel.playlist.SongsOfPlaylistViewModel;
-import com.example.music_mobile_app.viewmodel.song.FilteredSongsViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.song.FilteredSongsViewModel;
 
 import java.util.ArrayList;
 

@@ -2,11 +2,11 @@ package com.example.music_mobile_app.service.mydatabase.impl;
 
 import android.util.Log;
 
-import com.example.music_mobile_app.model.extension.User;
-import com.example.music_mobile_app.network.service.DBRetrofit;
-import com.example.music_mobile_app.network.service.RloginService;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.LoginCallback;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.LoginService;
+import com.example.music_mobile_app.model.mydatabase.User;
+import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
+import com.example.music_mobile_app.retrofit.mydatabase.RloginService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,7 +18,7 @@ public class LoginServiceImpl implements LoginService {
     private final RloginService rloginService;
 
     public LoginServiceImpl() {
-        Retrofit retrofit = DBRetrofit.getRetrofit();
+        Retrofit retrofit = MyDbRetrofit.getRetrofit();
         this.rloginService = retrofit.create(RloginService.class);
     }
 

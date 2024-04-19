@@ -2,10 +2,10 @@ package com.example.music_mobile_app.repository;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.music_mobile_app.model.extension.Playlist;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.service.mydatabase.impl.PlaylistServiceImpl;
-import com.example.music_mobile_app.viewmodel.favorite.DeleteCallback;
-import com.example.music_mobile_app.viewmodel.favorite.PostCallback;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.DeleteCallback;
+import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.PostCallback;
 
 import java.util.List;
 

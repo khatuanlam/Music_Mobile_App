@@ -1,9 +1,9 @@
 package com.example.music_mobile_app.network;
 
-import com.example.music_mobile_app.model.Album;
-import com.example.music_mobile_app.model.extension.Playlist;
-import com.example.music_mobile_app.model.extension.Song;
-import com.example.music_mobile_app.model.extension.User;
+import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.model.mydatabase.Playlist;
+import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.model.mydatabase.User;
 
 import java.util.List;
 

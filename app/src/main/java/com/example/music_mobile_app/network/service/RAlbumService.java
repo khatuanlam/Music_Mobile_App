@@ -1,6 +1,6 @@
 package com.example.music_mobile_app.network.service;
 
-import com.example.music_mobile_app.model.Album;
+import com.example.music_mobile_app.model.mydatabase.Album;
 
 import java.util.List;
 

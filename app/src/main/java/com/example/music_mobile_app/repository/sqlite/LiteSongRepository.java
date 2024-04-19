@@ -5,15 +5,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.music_mobile_app.model.extension.LiteSong;
-import com.example.music_mobile_app.model.extension.Song;
+import com.example.music_mobile_app.model.mydatabase.Song;
+import com.example.music_mobile_app.model.sqlite.LiteSong;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class LiteSongRepository {
     private static final String TABLE_NAME = "song";
     private static final String COLUMN_ID = "id";
-    private static final String COLUMN_ID_MYDB = "id_Db";
+    private static final String COLUMN_ID_MYDB = "id_mydb";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_URL_SONG = "urlSong";
     private static final String COLUMN_URL_LYRIC = "urlLyric";
@@ -78,7 +79,7 @@ public class LiteSongRepository {
         SQLiteDatabase db = musicDatabaseHelper.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PATH + " = ?";
-        String[] selectionArgs = {path};
+        String[] selectionArgs = { path };
 
         Cursor cursor = db.rawQuery(selectQuery, selectionArgs);
 

@@ -5,10 +5,10 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.music_mobile_app.model.Album;
-import com.example.music_mobile_app.network.service.DBRetrofit;
-import com.example.music_mobile_app.network.service.RAlbumService;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.AlbumService;
+import com.example.music_mobile_app.model.mydatabase.Album;
+import com.example.music_mobile_app.retrofit.mydatabase.MyDbRetrofit;
+import com.example.music_mobile_app.retrofit.mydatabase.RAlbumService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.AlbumService;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class AlbumServiceImpl implements AlbumService {
     private final RAlbumService albumService;
 
     public AlbumServiceImpl() {
-        Retrofit retrofit = DBRetrofit.getRetrofit();
+        Retrofit retrofit = MyDbRetrofit.getRetrofit();
         this.albumService = retrofit.create(RAlbumService.class);
     }
 

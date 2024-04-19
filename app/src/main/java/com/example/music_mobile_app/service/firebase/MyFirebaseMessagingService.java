@@ -11,7 +11,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.service.mydatabase.impl.MyFirebaseServiceImpl;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.MyFirebaseService;
+import com.example.music_mobile_app.service.mydatabase.myinterface.MyFirebaseService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -32,11 +32,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         myFirebaseService.postToken(token);
     }
 
-
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-//        Log.d("FCM", "Message AAAAAA");
-//        System.out.println(remoteMessage.getData());
+        // Log.d("FCM", "Message AAAAAA");
+        // System.out.println(remoteMessage.getData());
         super.onMessageReceived(remoteMessage);
 
         String title = "default";
@@ -55,7 +54,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.ic_add_circle_white);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         notificationManager.notify(0, builder.build());

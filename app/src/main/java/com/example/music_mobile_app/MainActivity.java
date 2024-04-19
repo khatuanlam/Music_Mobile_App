@@ -2,6 +2,10 @@ package com.example.music_mobile_app;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -11,13 +15,29 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import android.view.View;
+import android.widget.Toast;
+
+import com.example.music_mobile_app.model.UserImage;
+import com.example.music_mobile_app.network.mSpotifyService;
+import com.example.music_mobile_app.receiver.MyCorruptInternetReceiver;
+import com.example.music_mobile_app.receiver.MyDownloadReceiver;
+import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
+import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginCallback;
+import com.example.music_mobile_app.service.mydatabase.myinterface.LoginService;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +46,8 @@ import com.example.music_mobile_app.manager.ListManager;
 import kaaes.spotify.webapi.android.models.Image;
 
 import com.example.music_mobile_app.manager.VariableManager;
-import com.example.music_mobile_app.model.extension.User;
 import com.example.music_mobile_app.network.mSpotifyAPI;
 import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.LoginCallback;
-import com.example.music_mobile_app.service.mydatabase.extension_interface.LoginService;
 import com.example.music_mobile_app.service.mydatabase.impl.LoginServiceImpl;
 import com.example.music_mobile_app.ui.MainFragment;
 import com.google.android.gms.ads.MobileAds;
@@ -60,6 +77,9 @@ public class MainActivity extends FragmentActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_STORAGE = 100;
 
+    public MyCorruptInternetReceiver myCorruptInternetReceiver;
+    public MyDownloadReceiver myDownloadReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +95,10 @@ public class MainActivity extends FragmentActivity {
         musicDatabaseHelper = new MusicDatabaseHelper(this);
 
         FragmentManager manager = getSupportFragmentManager();
+
+        loginService = new LoginServiceImpl();
+        musicDatabaseHelper = new MusicDatabaseHelper(this);
+
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
 
@@ -82,10 +106,31 @@ public class MainActivity extends FragmentActivity {
 
         getUserProfile();
 
+        createNotificationChannel("firebase's notification", "Firsebase Notification",
+                NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
+        createNotificationChannel("download's notification", "Download Notification",
+                NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.i("KHOI TAO ADS SDK", "THANH CONG");
+            }
+        });
+
+        myCorruptInternetReceiver = new MyCorruptInternetReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(myCorruptInternetReceiver, intentFilter);
+
+        myDownloadReceiver = new MyDownloadReceiver();
+        IntentFilter intentFilter1 = new IntentFilter("com.example.MY_DOWNLOAD_BROADCAST");
+        registerReceiver(myDownloadReceiver, intentFilter1);
+
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
+
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
-        createNotificationChannel("firebase's notification", "Firsebase Notification",
-                NotificationManager.IMPORTANCE_DEFAULT);
+        createNotificationChannel("firebase's notification", "Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT, "FireBase Notification");
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -93,9 +138,8 @@ public class MainActivity extends FragmentActivity {
             }
         });
         loginService.loginWithMyDatabase("id của account spotify", new LoginCallback() {
-
             @Override
-            public void onSuccess(User user) {
+            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
                 com.example.music_mobile_app.ui.ExtensionFragment.userId = user.id;
             }
 
@@ -106,6 +150,19 @@ public class MainActivity extends FragmentActivity {
         });
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                Log.i(TAG, "Storage permission denied");
+            }
+        }
     }
 
     @Override
@@ -159,6 +216,24 @@ public class MainActivity extends FragmentActivity {
 
                         // Save user data
                         VariableManager.getInstance().setUser(userProfile);
+                        Log.i("ID USER", userProfile.id);
+                        loginService.loginWithMyDatabase(userProfile.id, new LoginCallback() {
+                            @Override
+                            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
+                                // com.example.music_mobile_app.ui.mydatabase.MainFragment.userId =
+                                // user.getId();
+                                SharedPreferences sharedPreferences = getSharedPreferences("UserIdInMyDatabase",
+                                        Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putLong("userIdMyDb", user.getId());
+                                editor.apply();
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                Log.i("MLogin Activity", message);
+                            }
+                        });
                     }
                 }
             });
@@ -176,17 +251,20 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
     }
 
-    public void createNotificationChannel(String channelId, String channelName, int importance) {
+    public void createNotificationChannel(String channelId, String channelName, int importance, String description) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-            // Configure the channel (optional)
-            channel.setDescription("Kenh thong bao cua Firebase");
-            // channel.setLightColor(Color.GREEN); // Optional LED light color
+            channel.setDescription(description);
             channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional
             // vibration
             // pattern
