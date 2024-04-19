@@ -26,6 +26,8 @@ import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.model.IconNavbar;
 import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainFragment extends Fragment {

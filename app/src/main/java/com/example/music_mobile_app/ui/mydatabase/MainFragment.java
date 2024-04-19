@@ -2,6 +2,8 @@ package com.example.music_mobile_app.ui.mydatabase;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -79,12 +81,14 @@ public class MainFragment extends Fragment {
 
     private LiteSongRepository liteSongRepository;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
         liteSongRepository = new LiteSongRepository(MainActivity.musicDatabaseHelper);
+
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserIdInMyDatabase", Context.MODE_PRIVATE);
+        MainFragment.userId = sharedPreferences.getLong("userIdMyDb", 1);
     }
 
     @Override

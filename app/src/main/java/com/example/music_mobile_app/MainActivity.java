@@ -110,17 +110,7 @@ public class MainActivity extends FragmentActivity {
         });
 
 
-        loginService.loginWithMyDatabase("id của account spotify", new LoginCallback() {
-            @Override
-            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
-                com.example.music_mobile_app.ui.mydatabase.MainFragment.userId = user.getId();
-            }
 
-            @Override
-            public void onFailure(String message) {
-                Log.i("MLogin Activity", message);
-            }
-        });
         myCorruptInternetReceiver = new MyCorruptInternetReceiver();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(myCorruptInternetReceiver, intentFilter);
@@ -193,6 +183,22 @@ public class MainActivity extends FragmentActivity {
 
                         // Save user data
                         VariableManager.getInstance().setUser(userProfile);
+                        Log.i("ID USER", userProfile.id);
+                        loginService.loginWithMyDatabase(userProfile.id, new LoginCallback() {
+                            @Override
+                            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
+//                                com.example.music_mobile_app.ui.mydatabase.MainFragment.userId = user.getId();
+                                SharedPreferences sharedPreferences = getSharedPreferences("UserIdInMyDatabase", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putLong("userIdMyDb", user.getId());
+                                editor.apply();
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                Log.i("MLogin Activity", message);
+                            }
+                        });
                     }
                 }
             });

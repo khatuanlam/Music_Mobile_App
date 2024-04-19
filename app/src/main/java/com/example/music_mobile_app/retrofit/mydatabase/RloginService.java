@@ -7,11 +7,12 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface RloginService {
-    @GET("/SpotifyLogin/{idSpotify}")
+    @POST("/SpotifyLogin/{idSpotify}")
     Call<User> loginWithMyDatabase(@Path("idSpotify") String idSpotify);
 
 }
