@@ -117,7 +117,6 @@ public class MainFragment extends Fragment {
                     Log.d(TAG, "EXTENSION");
                     if (view.isActivated()) break;
                     manager.beginTransaction().replace(R.id.fragment, new com.example.music_mobile_app.ui.mydatabase.MainFragment()).commit();
-                    transaction.replace(R.id.fragment, new ExtensionFragment()).commit();
                     current_view = new IconNavbar(extensionLayout, view, extentionText, download);
                     setFocusMode(current_view);
                     break;

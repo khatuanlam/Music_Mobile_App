@@ -66,6 +66,7 @@ public class AuthLoginActivity extends FragmentActivity {
                 // Response was successful and contains auth token
                 case TOKEN:
                     String accessToken = response.getAccessToken();
+                    Log.i("ACCESS TOKEN", accessToken);
                     // set auth_token, connectionParams
                     newIntent(accessToken);
                     break;

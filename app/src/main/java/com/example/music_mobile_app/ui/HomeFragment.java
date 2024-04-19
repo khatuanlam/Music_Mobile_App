@@ -95,15 +95,13 @@ public class HomeFragment extends Fragment {
        setTopTracks();
 //        setRecentlyTracks();
 
-        LinearLayoutManager recentlyTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
         LinearLayoutManager albums_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager follow_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
 //        recentlyTracksRecyclerView.setLayoutManager(recentlyTracks_layout);
-        recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
-        topTracksRecyclerView.setLayoutManager(topTracks_layout);
+//        recommendationsRecyclerView.setLayoutManager(recommendTracks_layout);
+//        topTracksRecyclerView.setLayoutManager(topTracks_layout);
         albumsRecycleView.setLayoutManager(albums_layout);
         followRecycleView.setLayoutManager(follow_layout);
     }
