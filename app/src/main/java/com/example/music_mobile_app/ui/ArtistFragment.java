@@ -1,5 +1,6 @@
 package com.example.music_mobile_app.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -16,14 +17,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.PlayTrackActivity;
@@ -32,10 +36,12 @@ import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.VariableManager;
+import com.example.music_mobile_app.util.HandleBackground;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -59,7 +65,11 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     private Artist mArtist;
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private String baseImage = VariableManager.getVariableManager().baseImage;
+    private ImageButton backButton;
+    private FrameLayout fragment_container;
+    private View headerView;
     private boolean isFollowing = false;
+    private FragmentManager manager;
 
     public ArtistFragment() {
     }
@@ -67,6 +77,7 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        manager = getParentFragmentManager();
 
     }
 
@@ -75,13 +86,46 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
 
-        //Hide header
-        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        // Hide header
+        CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
         header.setVisibility(View.GONE);
 
         prepareData(view);
 
         initView();
+
+        // Onclick back
+        backButton.setOnClickListener(v -> {
+            getParentFragmentManager().popBackStack();
+        });
+
+        if (btnFollow != null) {
+            initializeFollowButtonState(mArtist.id);
+            btnFollow.setOnClickListener(v -> {
+                if (isFollowing == false) {
+                    // Nếu chưa theo dõi, thực hiện hành động theo dõi
+                    followArtist(mArtist.id);
+                    setFollowButtonState(btnFollow, true);
+                } else {
+                    // Nếu đang theo dõi, thực hiện hành động bỏ theo dõi
+                    unfollowArtists(mArtist.id);
+                    // Cập nhật trạng thái và văn bản của nút
+                    setFollowButtonState(btnFollow, false);
+                }
+            });
+            // Reload follow artist
+            ListManager.getInstance().setFollowArtists(null);
+        } else {
+            // Nếu btnFollow là null, hiển thị thông báo lỗi
+            Log.e(TAG, "Button btnFollow is null");
+        }
+
+        playMusic.setOnClickListener(v -> {
+            Intent intent = new Intent(this.getActivity(), PlayTrackActivity.class);
+            intent.putExtra("Artist", mArtist);
+            intent.setAction("Play Artist");
+            this.startActivity(intent);
+        });
 
         return view;
     }
@@ -90,12 +134,20 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
         artistName = view.findViewById(R.id.textArtistName);
         artistImage = view.findViewById(R.id.artistAvatar);
         listeners = view.findViewById(R.id.followerNumber);
-//        overflowMenu = view.findViewById(R.id.overflowArtistButton);
+        // overflowMenu = view.findViewById(R.id.overflowArtistButton);
         playMusic = view.findViewById(R.id.playArtistButton);
         recyclerView = view.findViewById(R.id.recyclerArtistMusicView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         listeners = view.findViewById(R.id.followerNumber);
         btnFollow = view.findViewById(R.id.btnFollow);
+        backButton = view.findViewById(R.id.backButton);
+
+        fragment_container = view.findViewById(R.id.fragment_container);
+
+        // Update: Bổ sung xử lý background thay đổi theo hình của artist
+        // get background framelayout
+        content_container = view.findViewById(R.id.content_container);
+        backgroundDrawable = content_container.getBackground();
 
     }
 
@@ -113,7 +165,8 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
                 }
             }
 
-            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), getParentFragment());
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(),
+                    this);
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
 
@@ -121,8 +174,29 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
             listeners.setText(mArtist.followers.total + " người nghe hàng tháng");
             Glide.with(this).load((mArtist.images == null) ? baseImage : mArtist.images.get(0).url)
                     .override(Target.SIZE_ORIGINAL)
-                    .into(artistImage);
+                    .into(new ImageViewTarget<Drawable>(artistImage) {
+                        @Override
+                        protected void setResource(@Nullable Drawable resource) {
+                            // Khi quá trình tải ảnh hoàn thành, resource sẽ chứa Drawable
+                            if (resource != null) {
+                                // setImageDrawable cho artistImage
+                                artistImage.setImageDrawable(resource);
 
+                                // Xử lý background => Đổi màu theo ảnh của artist
+                                HandleBackground backgroundHandler = new HandleBackground();
+                                backgroundHandler.handleBackground(artistImage, backgroundDrawable,
+                                        new HandleBackground.OnPaletteGeneratedListener() {
+                                            @Override
+                                            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                                                // Set the updated Drawable as the background of your view
+                                                content_container.setBackground(updatedDrawable);
+                                            }
+                                        });
+                            } else {
+                                // Xử lý khi không thể tải được Drawable
+                            }
+                        }
+                    });
 
         } else {
             Log.e(TAG, "Cannot get album detail");

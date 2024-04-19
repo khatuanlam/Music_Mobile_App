@@ -78,7 +78,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/ic_like_black_24dp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_play_album"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

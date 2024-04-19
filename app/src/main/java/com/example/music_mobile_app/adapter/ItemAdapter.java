@@ -105,6 +105,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
                 itemView.setOnClickListener(v -> {
                     Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
                     intent.putExtra("Track", mTrack);
+                    intent.setAction("Play Track");
                     fragment.getActivity().startActivity(intent);
                 });
             } else {

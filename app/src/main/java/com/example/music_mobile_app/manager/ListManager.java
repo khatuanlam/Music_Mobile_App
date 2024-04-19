@@ -72,11 +72,10 @@ public class ListManager {
         this.playlistList = playlistList;
     }
 
-    public static void setListManager(ListManager listManager) {
-        ListManager.listManager = listManager;
-    }
-
     public List<Track> getTopTracks() {
+        if (topTracks == null) {
+            topTracks = new ArrayList<>();
+        }
         return topTracks;
     }
 
@@ -121,5 +120,6 @@ public class ListManager {
         setFavoriteTracks(null);
         setAlbumTracks(null);
         setFollowArtists(null);
+        setPlaylistList(null);
     }
 }

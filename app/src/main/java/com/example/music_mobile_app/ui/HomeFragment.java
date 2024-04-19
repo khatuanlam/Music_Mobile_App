@@ -1,14 +1,18 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,8 +22,9 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.FollowingAdapter;
 import com.example.music_mobile_app.adapter.ItemAdapter;
 import com.example.music_mobile_app.manager.ListManager;
+import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
-import com.example.music_mobile_app.network.mSpotifyAPI;
+import com.example.music_mobile_app.util.HandleBackground;
 
 
 import java.util.ArrayList;
@@ -28,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -36,6 +42,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsCursorPager;
 import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Recommendations;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.client.Response;
@@ -43,13 +50,15 @@ import retrofit.client.Response;
 public class HomeFragment extends Fragment {
     public final String TAG = this.getClass().getSimpleName();
     private SpotifyService spotifyService = MainActivity.spotifyService;
-    private mSpotifyAPI mSpotifyAPI = MainActivity.mSpotifyAPI;
-    private RecyclerView recentlyTracksRecyclerView;
     private RecyclerView recommendationsRecyclerView;
     private RecyclerView topTracksRecyclerView;
     private RecyclerView albumsRecycleView;
 
     private RecyclerView followRecycleView;
+
+    private NestedScrollView homeView;
+    private TextView title;
+    private Drawable backgroundDrawable;
 
     public final ListManager listManager = MainActivity.listManager;
 
@@ -63,10 +72,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         // Show header
-        RelativeLayout header = getParentFragment().getView().findViewById(R.id.header);
+        CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
         header.setVisibility(View.VISIBLE);
 
         prepareData(view);
+
+        handleBackground();
 
         updateUI();
 
@@ -74,12 +85,29 @@ public class HomeFragment extends Fragment {
     }
 
 
+    private void handleBackground() {
+        // Lấy giá trị màu integer từ tài nguyên màu
+        int startColorInt = ContextCompat.getColor(getContext(), R.color.purple_100);
+        // Chuyển đổi giá trị màu integer thành mã hex
+        String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha channel)
+
+        // Xử lý background
+        HandleBackground backgroundHandler = new HandleBackground();
+        backgroundHandler.handleBackground(startColorHex, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
+            @Override
+            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                // Set the updated Drawable as the background of your view
+                title.setBackground(updatedDrawable);
+            }
+        });
+    }
+
     private void prepareData(View view) {
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
         topTracksRecyclerView = view.findViewById(R.id.top_tracks);
         albumsRecycleView = view.findViewById(R.id.top_albums);
         followRecycleView = view.findViewById(R.id.follower_recyclerView);
-
+        homeView = view.findViewById(R.id.scroll_view_home);
 
         LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager topTracks_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -90,6 +118,22 @@ public class HomeFragment extends Fragment {
         topTracksRecyclerView.setLayoutManager(topTracks_layout);
         albumsRecycleView.setLayoutManager(albums_layout);
         followRecycleView.setLayoutManager(follow_layout);
+
+        //get background title
+        title = view.findViewById(R.id.title);
+        backgroundDrawable = title.getBackground();
+
+
+        homeView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    // Gọi sự kiện khi kéo trang lên hết cỡ
+                    // Đặt mã hoặc phương thức bạn muốn gọi ở đây
+                    reloadPage();
+                }
+            }
+        });
     }
 
     private void updateUI() {
@@ -137,7 +181,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setTopTracks() {
-        List<Track> listTracks = listManager.getTopTracks();
+        List<Track> listTracks = ListManager.getInstance().getTopTracks();
         if (listTracks.isEmpty()) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 20);
@@ -221,6 +265,11 @@ public class HomeFragment extends Fragment {
             adapter.notifyDataSetChanged();
             followRecycleView.setAdapter(adapter);
         }
+    }
+
+    private void reloadPage() {
+//        ListManager.getInstance().clear();
+//        updateUI();
     }
 
 }

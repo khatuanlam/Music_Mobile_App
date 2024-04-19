@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorTransparent"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center"
     android:paddingVertical="10dp"
     app:cardCornerRadius="4dp"
@@ -27,6 +28,7 @@
             android:id="@+id/horizontal_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham_bold"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -35,15 +37,16 @@
             android:id="@+id/horizontal_item_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham_medium"
             android:textColor="@color/white"
             android:textSize="10sp" />
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinner"
+    <ImageButton
+        android:id="@+id/options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_option" />
-
+        android:background="@drawable/ic_option"
+        android:focusable="true" />
 </LinearLayout>

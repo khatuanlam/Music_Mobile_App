@@ -9,13 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        >
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="90dp"
             android:fontFamily="@font/gotham_bold"
             android:text="Tìm kiếm"
             android:textColor="@color/white"

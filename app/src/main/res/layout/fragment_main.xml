@@ -6,12 +6,10 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/header"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorTransparent"
-        android:elevation="1dp">
+        android:layout_weight="1">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avt"
@@ -21,15 +19,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/sontungmtp" />
-    </RelativeLayout>
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
+            android:elevation="1dp" />
 
         <FrameLayout
             android:id="@+id/fragment"
@@ -148,7 +138,7 @@
                     android:id="@+id/nav_extension"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/music_note_song" />
+                    android:background="@drawable/music_solid" />
 
                 <TextView
                     android:id="@+id/nav_extension_text"

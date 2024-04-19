@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="10dp"
+    android:layout_marginBottom="10dp"
     android:layout_marginTop="10dp"
     android:orientation="vertical">
 
@@ -16,17 +17,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:foregroundGravity="fill"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/roundedTopCorners"
+            />
+
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/background_radius_black"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        >
 
         <!-- TextView artist_item_name -->
         <TextView
@@ -34,30 +39,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:padding="2dp"
+            android:paddingVertical="10dp"
             android:text="No title"
             android:textColor="@color/colorWhite"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/gotham_bold"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:lineHeight="30dp"/>
 
         <!-- Button buttonFollow -->
         <Button
             android:id="@+id/buttonFollow"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_gravity="end|center_vertical"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/button_transparent"
             android:clickable="true"
             android:onClick="onFollowButtonClick"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="20dp"
             android:text="Theo dõi"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
     </LinearLayout>

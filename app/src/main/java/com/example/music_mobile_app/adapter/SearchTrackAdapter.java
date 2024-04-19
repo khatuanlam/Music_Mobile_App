@@ -43,8 +43,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
     @NonNull
     @Override
     public FoundSongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_search_found_song, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_search_found_song, parent, false);
         return new FoundSongViewHolder(view);
     }
 
@@ -81,6 +80,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
             itemView.setOnClickListener((View v) -> {
                 Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
                 intent.putExtra("Track", track);
+                intent.setAction("Play Track");
                 fragment.getActivity().startActivity(intent);
                 optionsImageView = itemView.findViewById(R.id.list_item_search_found_song_options);
 
@@ -117,9 +117,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
                 textViewSingerName.setText(track.artists.get(0).name);
             }
             if (track.album.images.size() > 0) {
-                Glide.with(fragment)
-                        .load(track.album.images.get(0).url)
-                        .into(imageView);
+                Glide.with(fragment).load(track.album.images.get(0).url).into(imageView);
             }
 
         }

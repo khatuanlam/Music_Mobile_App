@@ -33,6 +33,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     private List<Artist> mArtists;
     private static Fragment fragment;
 
+
     public FollowingAdapter(List<Artist> artists, Fragment fragment) {
         this.mArtists = artists;
         this.fragment = fragment;
@@ -46,9 +47,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         holder.bind(mArtists.get(position));
-
     }
 
     @Override

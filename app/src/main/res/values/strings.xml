@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Music_Mobile_App</string>
+    <string name="app_name">BandLab</string>
     <string name="welcome">Welcome</string>
 
     <string name="create_account">CREATE ACCOUNT</string>

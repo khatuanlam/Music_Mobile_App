@@ -5,10 +5,13 @@ import android.widget.Button;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import java.util.List;
+import java.util.Objects;
 
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListenerManager {
@@ -18,14 +21,14 @@ public class ListenerManager {
         void onError(Throwable error);
     }
 
-    public interface ArtistCompleteListener {
-        void onComplete(Artist artist);
+    public interface OnGetCompleteListener {
+        void onComplete(boolean type);
 
         void onError(Throwable error);
     }
 
-    public interface OnClickCompleteListener {
-        void onItemClicked(String itemId);
+    public interface OnCreatePlaylistCompleteListener {
+        void onComplete(Playlist playlist);
 
         void onError(Throwable error);
     }
@@ -44,5 +47,11 @@ public class ListenerManager {
         void followArtist(String artistId);
 
         void unfollowArtists(String artistId);
+    }
+
+    public interface OnGetPlaylistCompleteListener {
+        void onComplete(List<PlaylistSimple> playlistSimpleList);
+
+        void onError(Throwable error);
     }
 }

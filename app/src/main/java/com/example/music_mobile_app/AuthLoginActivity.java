@@ -47,7 +47,7 @@ public class AuthLoginActivity extends FragmentActivity {
                 "user-read-private", "user-top-read", "user-read-recently-played",
                 "playlist-modify-public", "playlist-read-private", " playlist-modify-private",
                 "user-library-read", "user-read-playback-state", "user-modify-playback-state", "user-follow-modify",
-                "user-read-currently-playing", "user-follow-read"});
+                "user-read-currently-playing", "user-follow-read", "user-library-modify"});
 
         AuthorizationRequest request = builder.build();
 

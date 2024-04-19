@@ -3,13 +3,15 @@ package com.example.music_mobile_app;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
+
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -36,6 +38,7 @@ import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,11 +47,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
+import com.example.music_mobile_app.manager.ListenerManager;
+import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.PlaybackManager;
-import com.example.music_mobile_app.network.mSpotifyAPI;
+import com.example.music_mobile_app.manager.VariableManager;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Repeat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -63,22 +69,24 @@ import java.util.Map;
 public class PlayTrackActivity extends FragmentActivity {
 
     private static final String TAG = PlayTrackActivity.class.getSimpleName();
-
-    private ImageView btn_back, btn_prev, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist;
+    private ImageView btn_back, btn_prev, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist, btn_add_to_favorite;
     private TextView tv_track_name, tv_track_arist, tv_track_album, tv_currentTime, tv_endTime, tv_playerField;
-    private RecyclerView recyclerView;
-    private Button buttonAddPlaylist, buttonAddSong, btnFollow;
+    private Button btnFollow;
     private ConstraintLayout play_back_layout;
     private ShapeableImageView track_img;
     private AppCompatSeekBar mSeekBar;
     private TrackProgressBar mTrackProgressBar;
-    private Track detailTrack;
+    private static Track detailTrack;
     private Album detailAlbum;
+    private Artist detailArtist;
     private PlaybackManager playbackManager;
+    private static String playing_URI;
     private SpotifyService spotifyService = MainActivity.spotifyService;
-    private mSpotifyAPI mSpotifyAPI = MainActivity.mSpotifyAPI;
-    private String selectedPlaylistId;
     private static boolean isFollowing = false;
+    private static MediaPlayer mediaPlayer = new MediaPlayer();
+
+    private SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,18 +95,31 @@ public class PlayTrackActivity extends FragmentActivity {
         // Prepared resources
         prepareData();
 
+        String action = getIntent().getAction();
         // Get track detail
-        detailTrack = getIntent().getParcelableExtra("Track");
-        detailAlbum = getIntent().getParcelableExtra("Track's Album");
+        switch (action) {
+            case "Play Track":
+                detailTrack = getIntent().getParcelableExtra("Track");
+                playing_URI = detailTrack.uri;
+                break;
+            case "Play Album":
+                detailAlbum.tracks.items.set(0, detailTrack);
+                break;
+            case "Play Artist":
+                detailArtist = getIntent().getParcelableExtra("Artist");
+                playing_URI = detailArtist.uri;
+                break;
+            case "Play Favorite":
+                break;
+            default:
+                Log.e(TAG, "No action found!!!");
+                break;
+        }
+
+        detailAlbum = getIntent().getParcelableExtra("Album");
         setData(detailTrack);
 
-//        SharedPreferences sharedPreferences = getSharedPreferences("FollowState", MODE_PRIVATE);
-//        // Đặt trạng thái ban đầu cho nút theo dõi từ SharedPreferences
-//        isFollowing = sharedPreferences.getBoolean(FOLLOW_PREF_KEY, false);
-
-
-        // Setting player UI
-        playbackManager = PlaybackManager.getInstance(this, mPlayerStateCallback);
+        initPlayer(true);
 
         // Onclick Back
         btn_back.setOnClickListener(v -> {
@@ -110,9 +131,58 @@ public class PlayTrackActivity extends FragmentActivity {
 
         btn_add_to_playlist.setOnClickListener(v -> {
             Log.d(TAG, "Track ID: " + detailTrack.id);
-            showAddToPlaylist();
+            MethodsManager.getInstance().showAddToPlaylist(this, detailTrack);
         });
 
+        MethodsManager.getInstance().checkContains(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
+            @Override
+            public void onComplete(boolean type) {
+                // Not contain
+                if (type == true) {
+                    btn_add_to_favorite.setOnClickListener(v -> {
+                        btn_add_to_favorite.setImageResource(R.drawable.ic_like_green);
+                        MethodsManager.getInstance().addToFavorite(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
+                            @Override
+                            public void onComplete(boolean type) {
+                                // Reload favorite fragment
+                                MethodsManager.getInstance().getUserFavorite(true);
+                                btn_add_to_favorite.setTag("Add");
+                            }
+
+                            @Override
+                            public void onError(Throwable error) {
+                                Log.e(TAG, "Adding false" + error);
+                            }
+                        });
+
+                    });
+                } else {
+                    btn_add_to_favorite.setImageResource(R.drawable.ic_like_green);
+                    btn_add_to_favorite.setOnClickListener(v -> {
+                        btn_add_to_favorite.setImageResource(R.drawable.ic_like_black_24dp);
+                        MethodsManager.getInstance().removeFromFavorite(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
+                            @Override
+                            public void onComplete(boolean type) {
+                                Log.d(TAG, "Remove complete ");
+                            }
+
+                            @Override
+                            public void onError(Throwable error) {
+                                Log.e(TAG, "onError: " + error);
+                            }
+                        });
+                        // Reload favorite fragment
+                        MethodsManager.getInstance().getUserFavorite(true);
+                        btn_add_to_favorite.setTag("Remove");
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Throwable error) {
+
+            }
+        });
 
         if (btnFollow != null) {
             // Initial primal follow status
@@ -139,156 +209,16 @@ public class PlayTrackActivity extends FragmentActivity {
 
     }
 
-    // Xử lý dữ liệu được truyền từ Adapter
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDataEvent(PlaylistSimple playlistSimple) {
-        selectedPlaylistId = playlistSimple.id;
-        String name = playlistSimple.name;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
         playbackManager.Disconnect();
     }
-
-
-    // Playlist
-    private void showAddToPlaylist() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View addView = inflater.inflate(R.layout.dialog_playlist, null);
-
-        builder.setView(addView);
-
-        // Tạo adapter và gán cho RecyclerView
-        recyclerView = addView.findViewById(R.id.playlist_recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//
-        buttonAddPlaylist = addView.findViewById(R.id.buttonAddPlaylist);
-        buttonAddSong = addView.findViewById(R.id.buttonAddSong);
-
-        AlertDialog alertDialog = builder.create();
-        setPlaylist(ListManager.getInstance().getPlaylistList());
-
-
-        // Create playlist
-        buttonAddPlaylist.setOnClickListener(v -> {
-            Log.e("add playlist", "click");
-            showAddToPlaylistDialog();
-        });
-
-        alertDialog.show();
-
-        buttonAddSong.setOnClickListener(v -> {
-            if (selectedPlaylistId != null) { // Kiểm tra xem đã chọn playlist chưa
-                Log.d(TAG, "Success!!!!");
-                addToPlaylist(selectedPlaylistId, detailTrack);
-                Toast.makeText(this, "Add song playlist successful!!", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d(TAG, "fail");
-                // Thông báo cho người dùng rằng họ cần chọn một playlist trước khi thêm bài hát
-                Toast.makeText(PlayTrackActivity.this, "Please select a playlist first", Toast.LENGTH_SHORT).show();
-            }
-            alertDialog.dismiss();
-        });
-    }
-
-    private void setPlaylist(List<PlaylistSimple> playlistList) {
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistList, this, null);
-        adapter.setSend(true);
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void showAddToPlaylistDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View addView = inflater.inflate(R.layout.dialog_new_playlist, null);
-
-        builder.setView(addView);
-
-        EditText editText = addView.findViewById(R.id.name_playlist);
-        Button btnCreate = addView.findViewById(R.id.btnCreate);
-        Button btnExit = addView.findViewById(R.id.btnExit);
-
-        AlertDialog alertDialog = builder.create();
-
-        // Set click listener
-        btnCreate.setOnClickListener(v -> {
-            // Lấy văn bản từ EditText
-            String playlistName = editText.getText().toString();
-            createPlaylistOnSpotify(playlistName);
-            alertDialog.dismiss();
-        });
-
-        btnExit.setOnClickListener(v -> {
-            alertDialog.dismiss();
-        });
-        alertDialog.show();
-    }
-
-    private void createPlaylistOnSpotify(String playlistName) {
-        // Tạo yêu cầu tạo playlist mới
-        Map<String, Object> options = new HashMap<>();
-        options.put("name", playlistName);
-        options.put("public", true);
-
-        // Get user information
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
-        spotifyService.createPlaylist(USER_ID, options, new Callback<Playlist>() {
-            @Override
-            public void success(Playlist playlist, Response response) {
-                // Lấy ID của playlist mới được tạo
-                String playlistID = playlist.id;
-                Log.d(TAG, "Create playlist success");
-                // Reload playlist
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "Error creating playlist on Spotify: " + error.getMessage());
-
-            }
-        });
-    }
-
-    private void addToPlaylist(String selectedPlaylistId, Track mTrack) {
-
-        Map<String, Object> options = new HashMap<>();
-        Map<String, Object> bodyParams = new HashMap<>();
-        List<String> uris = new ArrayList<>();
-        uris.add(mTrack.uri); // Thêm URI của bài hát vào danh sách
-        bodyParams.put("uris", uris);
-//        bodyParams.put("position", ListManager.getInstance().getPlaylistList().size() + 1);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
-        // Gọi API để thêm bài hát vào playlist
-        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, options, bodyParams, new SpotifyCallback<Pager<PlaylistTrack>>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "Error creating song playlist on Spotify: " + spotifyError.getMessage());
-            }
-
-            @Override
-            public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-                Log.d(TAG, "Create song playlist success");
-
-            }
-        });
-    }
-
-    //
-
 
     //     Follow artist
     private void initializeFollowButtonState(String artistId) {
@@ -369,6 +299,7 @@ public class PlayTrackActivity extends FragmentActivity {
         btn_replay = findViewById(R.id.btn_replay);
         btn_track_options = findViewById(R.id.track_options);
         btn_add_to_playlist = findViewById(R.id.btn_add_to_playlist);
+        btn_add_to_favorite = findViewById(R.id.btn_add_to_fav);
         btnFollow = findViewById(R.id.buttonFollow);
 
         tv_track_name = findViewById(R.id.track_name);
@@ -382,9 +313,7 @@ public class PlayTrackActivity extends FragmentActivity {
         play_back_layout = findViewById(R.id.play_back_layout);
         track_img = findViewById(R.id.track_img);
         // tv_endTime.setText();
-
         mTrackProgressBar = new TrackProgressBar(mSeekBar);
-        // mSeekBar.setMax((int) playerState.track.duration)
 
     }
 
@@ -433,42 +362,80 @@ public class PlayTrackActivity extends FragmentActivity {
     private Subscription.EventCallback<PlayerState> mPlayerStateCallback = new Subscription.EventCallback<PlayerState>() {
         @Override
         public void onEvent(PlayerState playerState) {
+            if (!playerState.track.name.equalsIgnoreCase(detailTrack.name) || playerState == null) {
+                playbackManager.play(playing_URI, new ListenerManager.OnGetCompleteListener() {
+                    @Override
+                    public void onComplete(boolean type) {
+                        playbackManager.addToQueue(playing_URI);
+                    }
 
-            if (playerState.track.name != detailTrack.name || playerState.track == null) {
-                playbackManager.play(detailTrack.uri);
+                    @Override
+                    public void onError(Throwable error) {
+
+                    }
+                });
+
             }
 
             btn_play.setOnClickListener(v -> {
                 playbackManager.onPlayPauseButtonClicked();
             });
 
-            SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-            tv_endTime.setText(formatter.format(playerState.track.duration));
-            tv_currentTime.setText(formatter.format(playerState.playbackPosition));
+            btn_next.setOnClickListener(v -> {
+                playbackManager.onSkipNextButtonClicked();
+                initPlayer(true);
+            });
+            btn_prev.setOnClickListener(v -> {
+                playbackManager.onSkipPreviousButtonClicked();
+                initPlayer(true);
 
-            // Invalidate seekbar length and position
+            });
+
+            btn_replay.setOnClickListener(v -> {
+                btn_replay.setColorFilter(ContextCompat.getColor(getBaseContext(), R.color.colorGreen), PorterDuff.Mode.SRC_IN);
+                playbackManager.onRepeatMode();
+            });
+
+            btn_shuffle.setOnClickListener(v -> {
+                btn_shuffle.setColorFilter(ContextCompat.getColor(getBaseContext(), R.color.colorGreen), PorterDuff.Mode.SRC_IN);
+                playbackManager.onToggleShuffleButtonClicked();
+            });
+
             mSeekBar.setMax((int) playerState.track.duration);
-            mTrackProgressBar.setDuration(playerState.track.duration);
-            mTrackProgressBar.update(playerState.playbackPosition);
+            tv_endTime.setText(formatter.format(playerState.track.duration));
 
+
+            // Player
             if (playerState.isPaused) {
                 btn_play.setImageResource(R.drawable.ic_play_white_48dp);
+                mTrackProgressBar.pause();
+                mediaPlayer.pause();
             } else {
                 btn_play.setImageResource(R.drawable.ic_pause_white_24dp);
+                mediaPlayer.start();
+                mTrackProgressBar.unpause();
             }
-
+            if (playerState.playbackOptions.repeatMode == Repeat.ALL) {
+                DrawableCompat.setTint(btn_replay.getDrawable(), getResources().getColor(R.color.colorGreen, getTheme()));
+            } else if (playerState.playbackOptions.repeatMode == Repeat.ONE) {
+//                btn_replay.setImageResource(R.drawable.mediaservice_repeat_one);
+                DrawableCompat.setTint(btn_replay.getDrawable(), getResources().getColor(R.color.colorGreen, getTheme()));
+            } else {
+                DrawableCompat.setTint(btn_replay.getDrawable(), Color.WHITE);
+            }
         }
+
     };
 
     // TrackProcessBar Class
     private class TrackProgressBar {
-        private static final int LOOP_DURATION = 500;
+        private static final int LOOP_DURATION = 100;
         private final AppCompatSeekBar mSeekBar;
 
         // Lớp Handler để thực hiện tương tác hoặc cập nhật UI từ các luồng khác nhau
         private final Handler mHandler;
 
-        private final Runnable mSeekRunnable = new Runnable() {
+        private Runnable mSeekRunnable = new Runnable() {
             @Override
             public void run() {
                 int progress = mSeekBar.getProgress();
@@ -491,9 +458,11 @@ public class PlayTrackActivity extends FragmentActivity {
             mSeekBar.setProgress((int) progress);
         }
 
+
         private void pause() {
             mHandler.removeCallbacks(mSeekRunnable);
         }
+
 
         private void unpause() {
             mHandler.removeCallbacks(mSeekRunnable);
@@ -503,12 +472,14 @@ public class PlayTrackActivity extends FragmentActivity {
         private final SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                mTrackProgressBar.update(progress);
+                tv_currentTime.setText(formatter.format(progress));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                mediaPlayer.pause();
+                mTrackProgressBar.pause();
             }
 
             @Override
@@ -519,8 +490,19 @@ public class PlayTrackActivity extends FragmentActivity {
                     // // Ví dụ: log lỗi
                     Log.e("SeekBarChangeListener", "Error while seeking", throwable);
                 });
+                mediaPlayer.seekTo(seekBar.getProgress());
+                mediaPlayer.start();
+                mTrackProgressBar.unpause();
             }
         };
+    }
+
+    public void initPlayer(boolean reload) {
+        // Setting player UI
+        playbackManager = PlaybackManager.getInstance(this, mPlayerStateCallback, reload);
+        mediaPlayer.start();
+        mTrackProgressBar.unpause();
+
     }
 
 

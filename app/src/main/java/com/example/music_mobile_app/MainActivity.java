@@ -12,9 +12,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -78,14 +78,14 @@ public class MainActivity extends FragmentActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         authToken = sharedPreferences.getString("AUTH_TOKEN", "Not found authtoken");
 
-
         setServiceAPI();
 
         getUserProfile();
 
         manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
-        createNotificationChannel("firebase's notification", "Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT);
+        createNotificationChannel("firebase's notification", "Firsebase Notification",
+                NotificationManager.IMPORTANCE_DEFAULT);
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -143,6 +143,11 @@ public class MainActivity extends FragmentActivity {
                             }
                             imageUrl = largestImage.url;
                         }
+                        // Update sửa lỗi không hiển thị avatar khi user chưa set avatar
+                        else {
+                            imageUrl = "android.resource://" + getPackageName() + "/drawable/default_avt";
+                        }
+
                         getUserProfile();
 
                         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
@@ -181,10 +186,13 @@ public class MainActivity extends FragmentActivity {
             NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
             // Configure the channel (optional)
             channel.setDescription("Kenh thong bao cua Firebase");
-//            channel.setLightColor(Color.GREEN); // Optional LED light color
-            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional vibration pattern
+            // channel.setLightColor(Color.GREEN); // Optional LED light color
+            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 100}); // Optional
+            // vibration
+            // pattern
 
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -197,5 +205,14 @@ public class MainActivity extends FragmentActivity {
             return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -56,6 +56,8 @@ public class MainFragment extends Fragment {
 
 
 
+        // Home
+        manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
         return view;
     }
 
@@ -136,7 +138,7 @@ public class MainFragment extends Fragment {
         home = getResources().getDrawable(R.drawable.ic_home_black_24dp, null);
         favorite = getResources().getDrawable(R.drawable.ic_like_black_24dp, null);
         search = getResources().getDrawable(R.drawable.ic_search_white_24dp, null);
-        download = getResources().getDrawable(R.drawable.music_note_song, null);
+        download = getResources().getDrawable(R.drawable.music_solid, null);
 
         focusMode = getResources().getColor(R.color.colorWhite, null);
         defocusMode = getResources().getColor(R.color.colorNavIcon, null);

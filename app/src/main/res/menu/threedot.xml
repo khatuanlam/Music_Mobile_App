@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/downloadItem"
-        android:title="tải xuống" />
+        android:id="@+id/add_to_fav"
+        android:title="Thêm vào yêu thích" />
     <item
         android:id="@+id/add_list"
-        android:title="Thêm nhạc vào danh sách" />
+        android:title="Thêm nhạc vào danh sách " />
     <item
         android:id="@+id/deletedItem"
-        android:title="xoá bài hát" />
+        android:title="Xoá" />
 </menu>

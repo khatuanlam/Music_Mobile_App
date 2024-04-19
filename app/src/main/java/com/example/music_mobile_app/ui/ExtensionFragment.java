@@ -1,12 +1,20 @@
 package com.example.music_mobile_app.ui;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -40,13 +48,20 @@ import com.example.music_mobile_app.viewmodel.playlist.AllPlaylistViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.music_mobile_app.util.HandleBackground;
+
 public class ExtensionFragment extends Fragment {
-    public static long userId = 1; //SET BIẾN NÀY THÀNH ID CỦA USER ĐƯỢC TRẢ VỀ KHI GỌI /SpotifyLogin/{idSpotify}
+    public static long userId = 1; // SET BIẾN NÀY THÀNH ID CỦA USER ĐƯỢC TRẢ VỀ KHI GỌI /SpotifyLogin/{idSpotify}
 
     public final String TAG = this.getClass().getSimpleName();
     private EditText editText;
-    private Button btnViewAllFavoriteSongs, btnViewAllAlbums, btnViewAllPlaylists, btnViewAllPopularSongs, btnViewAllDownload;
+    private Button btnViewAllFavoriteSongs, btnViewAllAlbums, btnViewAllPlaylists, btnViewAllPopularSongs,
+            btnViewAllDownload;
     private FragmentManager manager;
+    private Spinner spinner;
+    private Button button;
+    private FrameLayout content_container;
+    private Drawable backgroundDrawable;
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
     private TopPopularSongViewModel topPopularSongViewModel;
@@ -101,7 +116,8 @@ public class ExtensionFragment extends Fragment {
         btnViewAllPopularSongs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllPopularSongsFragment allPopularSongsFragment = new AllPopularSongsFragment(userId, liteSongRepository);
+                AllPopularSongsFragment allPopularSongsFragment = new AllPopularSongsFragment(userId,
+                        liteSongRepository);
                 manager.beginTransaction().replace(R.id.fragment, allPopularSongsFragment).commit();
             }
         });
@@ -115,7 +131,8 @@ public class ExtensionFragment extends Fragment {
         btnViewAllDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllDownloadSongsFragment allDownloadSongsFragment = new AllDownloadSongsFragment(userId, liteSongRepository);
+                AllDownloadSongsFragment allDownloadSongsFragment = new AllDownloadSongsFragment(userId,
+                        liteSongRepository);
                 manager.beginTransaction().replace(R.id.fragment, allDownloadSongsFragment).commit();
             }
         });
@@ -154,18 +171,37 @@ public class ExtensionFragment extends Fragment {
         topPopularAlbumViewModel.loadAlbum();
         topPopularSongViewModel.loadSong();
 
-
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
 
-                    manager.beginTransaction().replace(R.id.fragment, new SubSearchFragment(userId, liteSongRepository)).commit();
+                    manager.beginTransaction().replace(R.id.fragment, new SubSearchFragment(userId, liteSongRepository))
+                            .commit();
                 }
             }
         });
 
         return view;
+    }
+
+    private void handleBackground() {
+        // Lấy giá trị màu integer từ tài nguyên màu
+        int startColorInt = ContextCompat.getColor(getContext(), R.color.teal_700);
+        // Chuyển đổi giá trị màu integer thành mã hex
+        String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha
+        // channel)
+
+        // Xử lý background
+        HandleBackground backgroundHandler = new HandleBackground();
+        backgroundHandler.handleBackground(startColorHex, backgroundDrawable,
+                new HandleBackground.OnPaletteGeneratedListener() {
+                    @Override
+                    public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                        // Set the updated Drawable as the background of your view
+                        content_container.setBackground(updatedDrawable);
+                    }
+                });
     }
 
     @Override
@@ -185,29 +221,34 @@ public class ExtensionFragment extends Fragment {
         btnViewAllPlaylists = view.findViewById(R.id.mydb_search_viewAllPlaylists_btn);
         btnViewAllDownload = view.findViewById(R.id.mydb_search_viewAllDownload_btn);
 
-
         topPopularSongsRecyclerView = view.findViewById(R.id.mydb_main_top_popular_songs_recyclerView);
         topPopularAlbumsRecyclerView = view.findViewById(R.id.mydb_main_top_popular_albums_recyclerView);
         favoriteSongsRecyclerView = view.findViewById(R.id.mydb_main_favorite_songs_recyclerView);
         yourPlaylistsRecyclerView = view.findViewById(R.id.mydb_main_playlists_recyclerView);
 
-        LinearLayoutManager topsong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager topsong_layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         topPopularSongsRecyclerView.setLayoutManager(topsong_layoutManager);
-        LinearLayoutManager favoritesong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager favoritesong_layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         favoriteSongsRecyclerView.setLayoutManager(favoritesong_layoutManager);
-        LinearLayoutManager topalbum_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager topalbum_layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         topPopularAlbumsRecyclerView.setLayoutManager(topalbum_layoutManager);
-        LinearLayoutManager yourplaylist_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager yourplaylist_layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         yourPlaylistsRecyclerView.setLayoutManager(yourplaylist_layoutManager);
 
         // Setting adapter
         mSongAdapter = new TopSongPopularAdapter(getActivity(), this, new ArrayList<Song>());
         topPopularSongsRecyclerView.setAdapter(mSongAdapter);
-        mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<>(), userId, liteSongRepository);
+        mAlbumAdapter = new TopAlbumPopularAdapter(getActivity(), this, manager, new ArrayList<>(), userId,
+                liteSongRepository);
         topPopularAlbumsRecyclerView.setAdapter(mAlbumAdapter);
         mFavoriteSongAdapter = new TopSongPopularAdapter(getActivity(), this, new ArrayList<Song>());
         favoriteSongsRecyclerView.setAdapter(mFavoriteSongAdapter);
-        mYourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<Playlist>(), userId, liteSongRepository);
+        mYourPlaylistsAdapter = new YourPlaylistsAdapter(getActivity(), this, manager, new ArrayList<Playlist>(),
+                userId, liteSongRepository);
         yourPlaylistsRecyclerView.setAdapter(mYourPlaylistsAdapter);
 
         // View models
@@ -219,4 +260,3 @@ public class ExtensionFragment extends Fragment {
     }
 
 }
-

@@ -6,11 +6,23 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
-
-    <androidx.core.widget.NestedScrollView
+    <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="Explore"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/gotham_bold"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:background="@drawable/background"/>
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -71,9 +83,9 @@
                         android:layout_marginLeft="5sp"
                         android:padding="1dp"
                         android:text="Make For You"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -105,9 +117,9 @@
                         android:layout_marginLeft="5sp"
                         android:padding="1dp"
                         android:text="Your Top Collection"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -137,9 +149,9 @@
                         android:layout_marginLeft="5sp"
                         android:padding="1dp"
                         android:text="News Release"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView

@@ -11,6 +11,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Song {
 
+    public Song(String name, String artist, String imageTrack, String imageArtist, String urlSong) {
+        this.name = name;
+        this.artist = artist;
+        this.image = imageTrack;
+        this.imageArtist = imageArtist;
+        this.urlSong = urlSong;
+    }
+
     public Long id;
 
     public String name;
@@ -26,6 +34,12 @@ public class Song {
     public String releaseDate;
 
     public Boolean isActive;
+
+    public String artist;
+
+    public String imageArtist;
+
+
 
 
 }

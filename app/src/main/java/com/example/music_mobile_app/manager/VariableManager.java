@@ -3,6 +3,8 @@ package com.example.music_mobile_app.manager;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public class VariableManager {
@@ -11,6 +13,8 @@ public class VariableManager {
     private Playlist playlist;
     private Artist artist;
     private UserPrivate user;
+
+    private Track track;
 
     public String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
@@ -68,4 +72,24 @@ public class VariableManager {
         return variableManager;
     }
 
+    public Track getTrack() {
+        return track;
+    }
+
+    public void setTrack(Track track) {
+        this.track = track;
+    }
+
+    public String getBaseImage() {
+        return baseImage;
+    }
+
+    public void setBaseImage(String baseImage) {
+        this.baseImage = baseImage;
+    }
+
+    public Track changSimpleToTrack(TrackSimple trackSimple) {
+        Track result = new Track();
+        return result;
+    }
 }

@@ -1,20 +1,22 @@
 package com.example.music_mobile_app.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -27,8 +29,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
+import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
+import com.example.music_mobile_app.ui.FavoriteFragment;
 import com.example.music_mobile_app.ui.PlaylistFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,46 +44,35 @@ import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> implements AdapterView.OnItemLongClickListener {
-
+public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAdapter.ItemHorizontalHolder> {
     private final String TAG = this.getClass().getSimpleName();
     private List<Track> trackList;
     private List<PlaylistSimple> playlistList;
     private Context context;
     private Fragment fragment;
     private Album mAlbum;
-    private List<Album> albumList;
-    private int selectedItem = RecyclerView.NO_POSITION; // Khởi tạo biến để lưu vị trí item được chọn
+    private int selectedItem = RecyclerView.NO_POSITION;
     private int type = 0;
     private boolean isSend = false;
-
+    private PlaylistSimple mPlaylistTrack;
     private static String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
-
 
     public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context, Fragment fragment) {
         this.trackList = trackList;
         this.playlistList = playlistList;
         this.context = context;
         this.fragment = fragment;
-        if (album == null) {
-            this.mAlbum = new Album();
-        } else {
-            this.mAlbum = album;
-        }
-
+        this.mAlbum = album != null ? album : new Album();
     }
 
     @NonNull
     @Override
     public ItemHorizontalHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         View view = inflater.inflate(R.layout.item_horizontal, parent, false);
-
         return new ItemHorizontalHolder(view);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ItemHorizontalHolder holder, int position) {
         if (!playlistList.isEmpty() && position < playlistList.size()) {
@@ -87,9 +80,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         } else if (!trackList.isEmpty() && position < trackList.size()) {
             holder.bindTrack(trackList.get(position));
         }
-        // Thiết lập màu nền cho item dựa trên selectedItem
         holder.itemView.setBackgroundColor(position == selectedItem ? ContextCompat.getColor(context, R.color.purple_50) : Color.TRANSPARENT);
-
     }
 
     @Override
@@ -106,9 +97,12 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         isSend = send;
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+    public void setPlaylistTrack(PlaylistSimple playlistTrack) {
+        if (playlistTrack != null) {
+            this.mPlaylistTrack = playlistTrack;
+        } else {
+            Log.e(TAG, "Plalist's Track is null");
+        }
     }
 
     protected class ItemHorizontalHolder extends RecyclerView.ViewHolder {
@@ -117,54 +111,124 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         private ImageView item_image;
         private TextView item_name;
         private TextView item_artist;
-        private Spinner options;
+        private ImageButton options;
+        private PopupMenu optionMenu;
 
         public ItemHorizontalHolder(@NonNull View itemView) {
             super(itemView);
-
             item_image = itemView.findViewById(R.id.horizontal_item_image);
             item_name = itemView.findViewById(R.id.horizontal_item_name);
             item_artist = itemView.findViewById(R.id.horizontal_item_artist);
-            options = itemView.findViewById(R.id.spinner);
-
-            if (type == 0) {
-                itemView.setOnClickListener(v -> {
-                    if (isSend) {
-
-                    } else {
-                        Intent intent = new Intent(context, PlayTrackActivity.class);
-                        intent.putExtra("Track", mTrack);
-                        intent.putExtra("Track's Album", mAlbum);
-                        context.startActivity(intent);
-                    }
-                });
+            options = itemView.findViewById(R.id.options);
+            // Sự kiện cho Spinner
+            if (type == 1) {
+                options.setVisibility(View.GONE);
             } else {
-                itemView.setOnClickListener(v -> {
-                    if (isSend) {
-                        // Cập nhật selectedItem khi item được click
-                        selectedItem = getAbsoluteAdapterPosition();
-                        EventBus.getDefault().post(mPlaylist);
-                        notifyDataSetChanged();
-                    } else {
-                        MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, context, new ListenerManager.ListTrackOnCompleteListener() {
-                            @Override
-                            public void onComplete(List<Track> trackList) {
-                                // Send detail playlist
-                                sendDetailPlaylist(trackList, mPlaylist);
-                            }
+                options.setOnClickListener(v -> {
+                    // Khởi tạo PopupMenu trong constructor
+                    optionMenu = new PopupMenu(fragment.getContext(), options);
+                    optionMenu.getMenuInflater().inflate(R.menu.threedot, optionMenu.getMenu());
+                    optionMenu.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
+                            case R.id.deletedItem:
+                                // Call from favorite
+                                if (fragment instanceof FavoriteFragment) {
+                                    MethodsManager.getInstance().removeFromFavorite(mTrack.id, new ListenerManager.OnGetCompleteListener() {
+                                        @Override
+                                        public void onComplete(boolean type) {
+                                            Log.d(TAG, "Delete complete");
+                                            // Reload favorite
+                                            int position = getAbsoluteAdapterPosition();
+                                            if (position != RecyclerView.NO_POSITION) {
+                                                removeItem(position);
+                                                MethodsManager.getInstance().getUserFavorite(true);
+                                            }
+                                        }
 
-                            @Override
-                            public void onError(Throwable error) {
-                                Log.e(TAG, "Cannot not get " + mPlaylist.name);
-                            }
-                        });
-                    }
-                });
-                //
-                itemView.setOnLongClickListener(v -> {
-                    return true;
+                                        @Override
+                                        public void onError(Throwable error) {
+
+                                        }
+                                    });
+                                } else if (fragment instanceof PlaylistFragment) {
+                                    // Call from playlist
+                                    MethodsManager.getInstance().showRemoveDialog(mPlaylistTrack.id, mTrack.uri, fragment, new ListenerManager.OnGetCompleteListener() {
+                                        @Override
+                                        public void onComplete(boolean type) {
+                                            // Reload favorite
+                                            int position = getAbsoluteAdapterPosition();
+                                            if (position != RecyclerView.NO_POSITION) {
+                                                removeItem(position);
+                                                MethodsManager.getInstance().getUserFavorite(true);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable error) {
+
+                                        }
+                                    });
+                                } else {
+
+                                }
+
+                                return true;
+                            case R.id.add_list:
+                                // Xử lý khi mục add_list được chọn
+                                MethodsManager.getInstance().showAddToPlaylist(fragment.getActivity(), mTrack);
+                                return true;
+
+                            case R.id.add_to_fav:
+                                MethodsManager.getInstance().addToFavorite(mTrack.id, new ListenerManager.OnGetCompleteListener() {
+                                    @Override
+                                    public void onComplete(boolean type) {
+                                        Log.d(TAG, "Adding complete");
+                                        int position = getAbsoluteAdapterPosition();
+                                        if (position != RecyclerView.NO_POSITION) {
+                                            // Reload favorite
+                                            MethodsManager.getInstance().getUserFavorite(true);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable error) {
+
+                                    }
+                                });
+                                return true;
+                            default:
+                                return false;
+                        }
+                    });
+                    optionMenu.show();
                 });
             }
+
+            itemView.setOnClickListener(v -> {
+                if (type == 0 && !isSend) {
+                    Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
+                    intent.putExtra("Track", mTrack);
+                    intent.putExtra("Track's Album", mAlbum);
+                    intent.setAction("Play Track");
+                    fragment.getContext().startActivity(intent);
+                } else if (isSend) {
+                    selectedItem = getAbsoluteAdapterPosition();
+                    EventBus.getDefault().post(mPlaylist);
+                    notifyDataSetChanged();
+                } else {
+                    MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, context, new ListenerManager.ListTrackOnCompleteListener() {
+                        @Override
+                        public void onComplete(List<Track> trackList) {
+                            sendDetailPlaylist(trackList, mPlaylist);
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            Log.e(TAG, "Cannot not get " + mPlaylist.name);
+                        }
+                    });
+                }
+            });
         }
 
         public void bindPlaylist(final PlaylistSimple playlist) {
@@ -175,6 +239,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                 baseImage = playlist.images.get(0).url;
             }
             Glide.with(context).load(baseImage).override(Target.SIZE_ORIGINAL).into(item_image);
+
         }
 
         public void bindTrack(final Track track) {
@@ -187,22 +252,40 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                 baseImage = mAlbum.images.get(0).url;
             }
             Glide.with(context).load(baseImage).override(Target.SIZE_ORIGINAL).into(item_image);
-        }
-
-        public void bindAlbum(final Album album) {
 
         }
 
         private void sendDetailPlaylist(List<Track> trackList, PlaylistSimple playlist) {
             FragmentManager manager = fragment.getChildFragmentManager();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("PlaylistDetail", (Parcelable) playlist);
-            bundle.putParcelableArrayList("ListTrack", new ArrayList<Parcelable>(trackList));
+            bundle.putParcelable("PlaylistDetail", playlist);
+            bundle.putParcelableArrayList("ListTrack", new ArrayList<>(trackList));
             PlaylistFragment playlistFragment = new PlaylistFragment();
             playlistFragment.setArguments(bundle);
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.addToBackStack(null);
             manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
+        }
+
+        // Phương thức để xóa một phần tử từ danh sách
+        public void removeItem(int position) {
+            if (position >= 0 && position < trackList.size()) {
+                trackList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
+            }
+        }
+
+        public void addItem(int position, Object item) {
+            if (position >= 0) {
+                if (item instanceof Track) {
+                    trackList.add(position, (Track) item);
+                } else if (item instanceof PlaylistSimple) {
+                    playlistList.add(position, (PlaylistSimple) item);
+                }
+                notifyItemInserted(position);
+                notifyItemRangeChanged(position, getItemCount());
+            }
         }
 
 
