@@ -46,7 +46,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
     private List<AlbumSimple> albumList;
     private List<Artist> artistList;
     private Fragment fragment;
-    private SpotifyService spotifyService = MainActivity.spotifyService;
     private int flag = 0;
     private String baseImage = VariableManager.getInstance().baseImage;
 

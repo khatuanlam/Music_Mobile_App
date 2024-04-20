@@ -1,6 +1,5 @@
 package com.example.music_mobile_app;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -9,18 +8,16 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -33,38 +30,26 @@ import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Playlist;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TrackSimple;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.PlaybackManager;
-import com.example.music_mobile_app.manager.VariableManager;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Repeat;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Queue;
 
 public class PlayTrackActivity extends FragmentActivity {
 
@@ -84,9 +69,9 @@ public class PlayTrackActivity extends FragmentActivity {
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private static boolean isFollowing = false;
     private static MediaPlayer mediaPlayer = new MediaPlayer();
-
     private SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
 
+    private List<Track> queuePlayTrack = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,19 +80,25 @@ public class PlayTrackActivity extends FragmentActivity {
         // Prepared resources
         prepareData();
 
-        String action = getIntent().getAction();
+        Intent intent = getIntent();
+        String action = intent.getAction();
         // Get track detail
         switch (action) {
             case "Play Track":
-                detailTrack = getIntent().getParcelableExtra("Track");
+                detailTrack = intent.getParcelableExtra("Track");
                 playing_URI = detailTrack.uri;
+                Toast.makeText(this, "Playing Track", Toast.LENGTH_SHORT).show();
                 break;
             case "Play Album":
-                detailAlbum.tracks.items.set(0, detailTrack);
+                queuePlayTrack = intent.getParcelableArrayListExtra("ListTrack");
+                detailTrack = queuePlayTrack.get(0);
+                Toast.makeText(this, "Playing Album", Toast.LENGTH_SHORT).show();
                 break;
             case "Play Artist":
-                detailArtist = getIntent().getParcelableExtra("Artist");
-                playing_URI = detailArtist.uri;
+                detailArtist = intent.getParcelableExtra("Artist");
+                queuePlayTrack = intent.getParcelableArrayListExtra("ListTrack");
+                detailTrack = queuePlayTrack.get(0);
+                Toast.makeText(this, "Playing Artist", Toast.LENGTH_SHORT).show();
                 break;
             case "Play Favorite":
                 break;
@@ -362,7 +353,7 @@ public class PlayTrackActivity extends FragmentActivity {
     private Subscription.EventCallback<PlayerState> mPlayerStateCallback = new Subscription.EventCallback<PlayerState>() {
         @Override
         public void onEvent(PlayerState playerState) {
-            if (!playerState.track.name.equalsIgnoreCase(detailTrack.name) || playerState == null) {
+            if (!playerState.track.name.equalsIgnoreCase(detailTrack.name) || playerState.track == null) {
                 playbackManager.play(playing_URI, new ListenerManager.OnGetCompleteListener() {
                     @Override
                     public void onComplete(boolean type) {
@@ -376,13 +367,16 @@ public class PlayTrackActivity extends FragmentActivity {
                 });
 
             }
+            mSeekBar.setMax((int) playerState.track.duration);
+            tv_endTime.setText(formatter.format(playerState.track.duration));
 
+            
             btn_play.setOnClickListener(v -> {
                 playbackManager.onPlayPauseButtonClicked();
             });
 
             btn_next.setOnClickListener(v -> {
-                playbackManager.onSkipNextButtonClicked();
+                detailTrack = queuePlayTrack.get(0);
                 initPlayer(true);
             });
             btn_prev.setOnClickListener(v -> {
@@ -400,9 +394,6 @@ public class PlayTrackActivity extends FragmentActivity {
                 btn_shuffle.setColorFilter(ContextCompat.getColor(getBaseContext(), R.color.colorGreen), PorterDuff.Mode.SRC_IN);
                 playbackManager.onToggleShuffleButtonClicked();
             });
-
-            mSeekBar.setMax((int) playerState.track.duration);
-            tv_endTime.setText(formatter.format(playerState.track.duration));
 
 
             // Player
@@ -423,6 +414,11 @@ public class PlayTrackActivity extends FragmentActivity {
             } else {
                 DrawableCompat.setTint(btn_replay.getDrawable(), Color.WHITE);
             }
+
+            // Invalidate seekbar length and position
+            mSeekBar.setMax((int) playerState.track.duration);
+            mTrackProgressBar.setDuration(playerState.track.duration);
+            mTrackProgressBar.update(playerState.playbackPosition);
         }
 
     };

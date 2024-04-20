@@ -60,7 +60,7 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     private TextView artistName;
     private TextView listeners;
     private ImageView artistImage;
-    private Button playMusic, btnFollow;
+    private Button btn_play, btnFollow;
     private RecyclerView recyclerView;
     private Artist mArtist;
     private SpotifyService spotifyService = MainActivity.spotifyService;
@@ -70,6 +70,8 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     private View headerView;
     private boolean isFollowing = false;
     private FragmentManager manager;
+
+    private List<Track> trackList = new ArrayList<>();
 
     public ArtistFragment() {
     }
@@ -120,9 +122,10 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
             Log.e(TAG, "Button btnFollow is null");
         }
 
-        playMusic.setOnClickListener(v -> {
+        btn_play.setOnClickListener(v -> {
             Intent intent = new Intent(this.getActivity(), PlayTrackActivity.class);
             intent.putExtra("Artist", mArtist);
+            intent.putParcelableArrayListExtra("ListTrack", (ArrayList<Track>) trackList);
             intent.setAction("Play Artist");
             this.startActivity(intent);
         });
@@ -135,7 +138,7 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
         artistImage = view.findViewById(R.id.artistAvatar);
         listeners = view.findViewById(R.id.followerNumber);
         // overflowMenu = view.findViewById(R.id.overflowArtistButton);
-        playMusic = view.findViewById(R.id.playArtistButton);
+        btn_play = view.findViewById(R.id.playArtistButton);
         recyclerView = view.findViewById(R.id.recyclerArtistMusicView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         listeners = view.findViewById(R.id.followerNumber);
@@ -157,7 +160,7 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
         if (bundle != null) {
             mArtist = (Artist) bundle.getParcelable("ArtistDetail");
             ArrayList<Parcelable> parcelableList = bundle.getParcelableArrayList("ListTrack");
-            List<Track> trackList = new ArrayList<>();
+            trackList = new ArrayList<>();
             // Chuyển đổi từ parcelableList sang List<Track>
             for (Parcelable parcelable : parcelableList) {
                 if (parcelable instanceof Track) {

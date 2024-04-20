@@ -52,13 +52,10 @@ public class HomeFragment extends Fragment {
     private RecyclerView recommendationsRecyclerView;
     private RecyclerView topTracksRecyclerView;
     private RecyclerView albumsRecycleView;
-
     private RecyclerView followRecycleView;
-
     private NestedScrollView homeView;
     private TextView title;
     private Drawable backgroundDrawable;
-
     public final ListManager listManager = MainActivity.listManager;
 
     @Override
@@ -69,7 +66,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         // Show header
         CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
@@ -89,7 +86,7 @@ public class HomeFragment extends Fragment {
         int startColorInt = ContextCompat.getColor(getContext(), R.color.purple_100);
         // Chuyển đổi giá trị màu integer thành mã hex
         String startColorHex = String.format("#%06X", (0xFFFFFFFF & startColorInt)); // Bỏ đi hai ký tự đầu tiên (alpha
-                                                                                     // channel)
+        // channel)
 
         // Xử lý background
         HandleBackground backgroundHandler = new HandleBackground();
@@ -131,7 +128,7 @@ public class HomeFragment extends Fragment {
         homeView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX,
-                    int oldScrollY) {
+                                       int oldScrollY) {
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     // Gọi sự kiện khi kéo trang lên hết cỡ
                     // Đặt mã hoặc phương thức bạn muốn gọi ở đây

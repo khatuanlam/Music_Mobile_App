@@ -55,7 +55,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
     private int type = 0;
     private boolean isSend = false;
     private PlaylistSimple mPlaylistTrack;
-    private static String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
+    private String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
     public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context, Fragment fragment) {
         this.trackList = trackList;
@@ -206,7 +206,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
 
             itemView.setOnClickListener(v -> {
                 if (type == 0 && !isSend) {
-                    Intent intent = new Intent(fragment.getContext(), PlayTrackActivity.class);
+                    Intent intent = new Intent(fragment.getActivity(), PlayTrackActivity.class);
                     intent.putExtra("Track", mTrack);
                     intent.putExtra("Track's Album", mAlbum);
                     intent.setAction("Play Track");
@@ -256,7 +256,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         }
 
         private void sendDetailPlaylist(List<Track> trackList, PlaylistSimple playlist) {
-            FragmentManager manager = fragment.getChildFragmentManager();
+            FragmentManager manager = fragment.getParentFragmentManager();
             Bundle bundle = new Bundle();
             bundle.putParcelable("PlaylistDetail", playlist);
             bundle.putParcelableArrayList("ListTrack", new ArrayList<>(trackList));

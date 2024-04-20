@@ -1,5 +1,7 @@
 package com.example.music_mobile_app.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -89,6 +91,10 @@ public class ExtensionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
         liteSongRepository = new LiteSongRepository(MainActivity.musicDatabaseHelper);
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserIdInMyDatabase",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        userId = Long.parseLong(sharedPreferences.getString("userIdMyDb", "1"));
     }
 
     @Override

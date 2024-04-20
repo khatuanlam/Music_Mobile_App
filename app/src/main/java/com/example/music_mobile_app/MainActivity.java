@@ -220,8 +220,6 @@ public class MainActivity extends FragmentActivity {
                         loginService.loginWithMyDatabase(userProfile.id, new LoginCallback() {
                             @Override
                             public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
-                                // com.example.music_mobile_app.ui.mydatabase.MainFragment.userId =
-                                // user.getId();
                                 SharedPreferences sharedPreferences = getSharedPreferences("UserIdInMyDatabase",
                                         Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();

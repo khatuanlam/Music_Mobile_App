@@ -47,9 +47,10 @@ public class AlbumFragment extends Fragment {
     private Drawable backgroundDrawable;
     private RecyclerView recyclerView;
     private TextView albumArtist, albumName, albumYear;
-    private static AlbumSimple albumDetail;
-    private static Album mAlbum;
+    private AlbumSimple albumDetail;
+    private Album mAlbum;
     private FragmentManager manager;
+    private static List<Track> trackList = new ArrayList<>();
     String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
     @Override
@@ -152,7 +153,6 @@ public class AlbumFragment extends Fragment {
             albumDetail = (AlbumSimple) bundle.getParcelable("AlbumDetail");
             mAlbum = (Album) bundle.getParcelable("Album");
             ArrayList<Parcelable> parcelableList = bundle.getParcelableArrayList("ListTrack");
-            List<Track> trackList = new ArrayList<>();
             // Chuyển đổi từ parcelableList sang List<Track>
             for (Parcelable parcelable : parcelableList) {
                 if (parcelable instanceof Track) {
@@ -184,6 +184,7 @@ public class AlbumFragment extends Fragment {
             Intent intent = new Intent(getActivity(), PlayTrackActivity.class);
             intent.putExtra("Album", mAlbum);
             intent.putExtra("Track's Album", albumDetail);
+            intent.putParcelableArrayListExtra("ListTrack", (ArrayList<Track>) trackList);
             intent.setAction("Play Album");
             this.startActivity(intent);
         });
