@@ -46,7 +46,6 @@ public class ExtensionPlayerActivity extends FragmentActivity {
     private ConstraintLayout play_back_layout;
     private ShapeableImageView track_img;
     private AppCompatSeekBar mSeekBar;
-    private SpotifyService spotifyService = MainActivity.spotifyService;
     private mSpotifyAPI mSpotifyAPI = MainActivity.mSpotifyAPI;
     private String selectedPlaylistId;
     private MediaPlayer mediaPlayer;
@@ -131,7 +130,7 @@ public class ExtensionPlayerActivity extends FragmentActivity {
         btn_play = findViewById(R.id.btn_play);
         btn_shuffle = findViewById(R.id.btn_shuffle);
         btn_replay = findViewById(R.id.btn_replay);
-        btn_track_options = findViewById(R.id.track_options);
+        btn_track_options = findViewById(R.id.track_queue);
         btn_add_to_playlist = findViewById(R.id.btn_add_to_playlist);
         btnFollow = findViewById(R.id.buttonFollow);
 

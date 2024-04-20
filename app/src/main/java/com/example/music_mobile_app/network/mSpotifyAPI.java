@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class mSpotifyAPI {
-    private static final String BASE_URL = "https://localhost:8080";
+    private static final String BASE_URL = "https://192.168.1.7:8080";
 
     private mSpotifyService spotifyAPI;
 

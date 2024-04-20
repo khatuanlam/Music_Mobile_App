@@ -52,12 +52,12 @@
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:id="@+id/track_options"
+                        android:id="@+id/track_queue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_marginEnd="10sp"
-                        android:src="@drawable/ic_option" />
+                        android:src="@drawable/ic_list_music" />
                 </com.google.android.material.appbar.MaterialToolbar>
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -181,8 +181,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginRight="15dp"
-                        android:src="@drawable/ic_prev_white_36dp"
-                        android:background="@color/colorTransparent"/>
+                        android:background="@color/colorTransparent"
+                        android:src="@drawable/ic_prev_white_36dp" />
 
                     <androidx.constraintlayout.utils.widget.ImageFilterView
                         android:id="@+id/btn_play"

@@ -135,7 +135,6 @@ public class SongServiceImpl implements SongService {
     @Override
     public LiveData<List<Song>> getTopPopularitySongs() {
         final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
-
         Call<List<Song>> call = RSongService.getTopPopularSongs(0, 10);
         call.enqueue(new Callback<List<Song>>() {
             @Override
@@ -146,7 +145,7 @@ public class SongServiceImpl implements SongService {
                     Log.i("getTopPopularitySongs", "LOI");
                     songs.setValue(null);
                 }
-
+                Log.d("TopPopularity", songs.toString());
             }
 
             @Override
