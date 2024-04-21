@@ -90,7 +90,7 @@ public class YourPlaylistsAdapter extends RecyclerView.Adapter<YourPlaylistsAdap
         public void bind(Playlist t) {
             textView.setText(t.getName());
                 Glide.with(fragment)
-                        .load("https://cafefcdn.com/203337114487263232/2023/8/22/meme-dog-dead-meme-dog-838897705-16926815196131046585734-1692691053462-1692691053693351825934.jpg")
+                        .load("https://c8.alamy.com/comp/2BP6RWB/playlist-icon-from-music-collection-simple-line-playlist-icon-for-templates-web-design-and-infographics-2BP6RWB.jpg")
                         .into(imageView);
             }
 

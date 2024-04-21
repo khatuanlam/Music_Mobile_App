@@ -28,20 +28,26 @@ import com.example.music_mobile_app.ui.mydatabase.MainFragment;
 import com.example.music_mobile_app.viewmodel.mydatabase.favorite.FavoriteSongsViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.AllPlaylistViewModel;
 import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylistViewModel;
+import com.example.music_mobile_app.viewmodel.mydatabase.sqlite.DownloadSongListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AllDownloadSongsFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
+
+    private DownloadSongListViewModel downloadSongListViewModel;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
     private AllPlaylistViewModel allPlaylistViewModel;
     private TextView textView;
+    private CircleImageView avt;
     private ImageView imageViewBack;
     private FragmentManager manager;
 
-    private ListDownloadSongAdapter mFavoriteSongsAdapter;
+    private ListDownloadSongAdapter mDownloadSongsAdapter;
 
     private RecyclerView downloadSongsRecyclerView;
 
@@ -71,6 +77,8 @@ public class AllDownloadSongsFragment extends Fragment {
                 manager.beginTransaction()
                         .replace(R.id.fragment, mainFragment)
                         .commit();
+                if(avt != null)
+                    avt.setVisibility(View.VISIBLE);
 
             }
         });
@@ -78,21 +86,26 @@ public class AllDownloadSongsFragment extends Fragment {
         LinearLayoutManager topsong_layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         downloadSongsRecyclerView.setLayoutManager(topsong_layoutManager);
 
+        downloadSongListViewModel = new ViewModelProvider(this).get(DownloadSongListViewModel.class);
         favoriteSongsViewModel = new ViewModelProvider(this).get(FavoriteSongsViewModel.class);
         songsOfPlaylistViewModel = new ViewModelProvider(this).get(SongsOfPlaylistViewModel.class);
         allPlaylistViewModel = new ViewModelProvider(this).get(AllPlaylistViewModel.class);
 
-        mFavoriteSongsAdapter = new ListDownloadSongAdapter(getContext(),
+        mDownloadSongsAdapter = new ListDownloadSongAdapter(getContext(),
                 this,
                 manager,
                 new ArrayList<LiteSong>(),
                 favoriteSongsViewModel,
                 id,
                 songsOfPlaylistViewModel);
-        downloadSongsRecyclerView.setAdapter(mFavoriteSongsAdapter);
+        downloadSongsRecyclerView.setAdapter(mDownloadSongsAdapter);
 
-        List<LiteSong> songs = liteSongRepository.getAllSongs();
-        mFavoriteSongsAdapter.setmDataList(songs);
+        downloadSongListViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<LiteSong>>() {
+            @Override
+            public void onChanged(List<LiteSong> liteSongs) {
+                mDownloadSongsAdapter.setmDataList(liteSongs);
+            }
+        });
 
         favoriteSongsViewModel.getIsPostSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -124,15 +137,23 @@ public class AllDownloadSongsFragment extends Fragment {
         allPlaylistViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
             @Override
             public void onChanged(List<Playlist> playlists) {
-                mFavoriteSongsAdapter.setOpenPlaylists(playlists);
+                mDownloadSongsAdapter.setOpenPlaylists(playlists);
             }
         });
+        downloadSongListViewModel.loadSong();
 
+        com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
+
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
         return view;
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        downloadSongListViewModel.getSongs().removeObservers(this);
         favoriteSongsViewModel.getIsPostSuccess().removeObservers(this);
         songsOfPlaylistViewModel.getIsPostSuccess().removeObservers(this);
         allPlaylistViewModel.getPlaylists().removeObservers(this);

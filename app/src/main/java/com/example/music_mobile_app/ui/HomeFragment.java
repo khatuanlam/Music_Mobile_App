@@ -193,7 +193,7 @@ public class HomeFragment extends Fragment {
                     Log.d(TAG, "Get top tracks");
                     List<Track> mList = trackPager.items;
                     listManager.setTopTracks(mList);
-                    setTopTracks();
+//                    setTopTracks();
                 }
 
                 @Override

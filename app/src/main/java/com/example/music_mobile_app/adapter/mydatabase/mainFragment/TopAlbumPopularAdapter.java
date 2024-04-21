@@ -70,6 +70,7 @@ public class TopAlbumPopularAdapter extends RecyclerView.Adapter<TopAlbumPopular
         public TopSongViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.list_item_top_popular_textview);
+            textView.setSelected(true);
             imageView = itemView.findViewById(R.id.mydb_list_item_top_popular_imageview);
 
             imageView.setOnClickListener(new View.OnClickListener() {

@@ -137,17 +137,7 @@ public class MainActivity extends FragmentActivity {
                 Log.i("KHOI TAO ADS SDK", "THANH CONG");
             }
         });
-        loginService.loginWithMyDatabase("id của account spotify", new LoginCallback() {
-            @Override
-            public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
-                com.example.music_mobile_app.ui.ExtensionFragment.userId = user.id;
-            }
 
-            @Override
-            public void onFailure(String message) {
-                Log.i("MLogin Activity", message);
-            }
-        });
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE);
 
     }

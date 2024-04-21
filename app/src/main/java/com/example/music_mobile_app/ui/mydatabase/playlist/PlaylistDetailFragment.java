@@ -31,11 +31,14 @@ import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylis
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PlaylistDetailFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
     private TextView textView;
+    private CircleImageView avt;
     private ImageView imageView, imageViewBack;
     private Playlist playlist;
     private FragmentManager manager;
@@ -58,7 +61,15 @@ public class PlaylistDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
     }
-
+    public void setThumbnailForPlaylist(String url)
+    {
+        String defaultUrl = "https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png";
+        if(url.isEmpty())
+            url = defaultUrl;
+        Glide.with(this)
+                .load(url)
+                .into(imageView);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,13 +84,13 @@ public class PlaylistDetailFragment extends Fragment {
                 manager.beginTransaction()
                         .replace(R.id.fragment, mainFragment)
                         .commit();
+                if(avt != null)
+                    avt.setVisibility(View.VISIBLE);
 
             }
         });
         textView.setText(playlist.getName());
-        Glide.with(this)
-                .load("https://cafefcdn.com/203337114487263232/2023/8/22/meme-dog-dead-meme-dog-838897705-16926815196131046585734-1692691053462-1692691053693351825934.jpg")
-                .into(imageView);
+
 
         songOfPlaylistRecyclerView = view.findViewById(R.id.mydb_playlist_detail_fragment_songs_recyclerView);
         songOfPlaylistRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -104,6 +115,16 @@ public class PlaylistDetailFragment extends Fragment {
             @Override
             public void onChanged(List<Song> songs) {
                 mSongOfPlaylistAdapter.setmDataList(songs);
+
+                if(!songs.isEmpty())
+                {
+                    setThumbnailForPlaylist(songs.get(0).getImage());
+                    Log.i("ANH PL","CAP NHAT");
+                }
+                else {
+                    setThumbnailForPlaylist("");
+                    Log.i("ANH PL","CAP NHAT RONG");
+                }
                 Log.i("PLAYLIST D","CAP NHAT");
                 Log.i("PLAYLIST D",String.valueOf(songs.size()));
             }
@@ -137,6 +158,12 @@ public class PlaylistDetailFragment extends Fragment {
         });
         songsOfPlaylistViewModel.getAllSongsByPlaylistID(playlist.getId());
 
+        com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
+
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
         return view;
     }
     @Override

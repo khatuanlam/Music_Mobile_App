@@ -31,12 +31,16 @@ import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylis
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AllFavoriteSongsFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
     private AllPlaylistViewModel allPlaylistViewModel;
     private TextView textView;
+
+    private CircleImageView avt;
     private ImageView imageViewBack;
     private FragmentManager manager;
 
@@ -70,6 +74,8 @@ public LiteSongRepository liteSongRepository;
                 manager.beginTransaction()
                         .replace(R.id.fragment, mainFragment)
                         .commit();
+                if(avt != null)
+                    avt.setVisibility(View.VISIBLE);
 
             }
         });
@@ -137,7 +143,12 @@ public LiteSongRepository liteSongRepository;
 
         favoriteSongsViewModel.getAllFavoriteSongsByUserId(id);
 
+        com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
 
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
         return view;
     }
     @Override

@@ -5,10 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.music_mobile_app.model.mydatabase.Song;
 import com.example.music_mobile_app.model.sqlite.LiteSong;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class LiteSongRepository {
@@ -46,7 +50,8 @@ public class LiteSongRepository {
         db.close();
     }
 
-    public ArrayList<LiteSong> getAllSongs() {
+    public LiveData<List<LiteSong>> getAllSongs() {
+        MutableLiveData<List<LiteSong>> songsLiveData = new MutableLiveData<>();
         ArrayList<LiteSong> songs = new ArrayList<>();
         SQLiteDatabase db = musicDatabaseHelper.getReadableDatabase();
 
@@ -72,7 +77,8 @@ public class LiteSongRepository {
 
         cursor.close();
         db.close();
-        return songs;
+        songsLiveData.setValue(songs);
+        return songsLiveData;
     }
 
     public LiteSong getSongByPath(String path) {
