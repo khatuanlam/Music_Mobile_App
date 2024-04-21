@@ -17,7 +17,7 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
 public class AuthLoginActivity extends FragmentActivity {
 
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String CLIENT_ID = "95fe47fe6b524ab2ba54354da461321a";
+    public static final String CLIENT_ID = "7c60ff86c42246c1b928e8d87a743554";
 
     @SuppressWarnings("SpellCheckingInspection")
     public static final String REDIRECT_URI = "http://localhost:8888/callback";

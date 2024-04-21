@@ -33,7 +33,19 @@
                 android:textColor="@color/white"
                 android:textSize="27dp" />
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/mydb_download_songs_btn_play"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_play"
+                android:textAlignment="center" />
+        </LinearLayout>
 
 
             <LinearLayout

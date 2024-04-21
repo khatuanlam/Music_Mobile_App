@@ -31,6 +31,9 @@ public interface RSongService {
 
     @DELETE("/Song/DeleteFavorite/{idSong}/{idUser}")
     Call<Song> deleteFavoriteSongByIdUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
+
+    @GET("/Song/CheckFavorite/{idSong}/{idUser}")
+    Call<Boolean> checkFavoriteSongToUser(@Path("idSong") long idSong, @Path("idUser") long idUser);
     @GET("/Song/TopPopularity")
     Call<List<Song>> getTopPopularSongs(@Query("page") int page, @Query("size") int size);
 

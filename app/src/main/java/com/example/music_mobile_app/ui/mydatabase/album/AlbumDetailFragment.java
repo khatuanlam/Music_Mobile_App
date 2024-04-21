@@ -1,11 +1,13 @@
 package com.example.music_mobile_app.ui.mydatabase.album;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.music_mobile_app.ExtensionPlayerActivity;
 import com.example.music_mobile_app.R;
 
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
@@ -42,6 +45,7 @@ public class AlbumDetailFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
     private TextView textView;
+    private ImageButton btn_play;
     private CircleImageView avt;
     private ImageView imageView, imageViewBack;
     private Album album;
@@ -77,6 +81,18 @@ public class AlbumDetailFragment extends Fragment {
         textView = view.findViewById(R.id.mydb_album_detail_fragment_textView);
         imageView = view.findViewById(R.id.mydb_album_detail_fragment_imageView);
         imageViewBack = view.findViewById(R.id.mydb_album_detail_fragment_back);
+        btn_play = view.findViewById(R.id.mydb_album_detail_btn_play);
+
+        btn_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ExtensionPlayerActivity.class);
+                intent.setAction("Play Album");
+                intent.putExtra("albumId", album.getId());
+                intent.putExtra("userIdMyDb", userId);
+                getContext().startActivity(intent);
+            }
+        });
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

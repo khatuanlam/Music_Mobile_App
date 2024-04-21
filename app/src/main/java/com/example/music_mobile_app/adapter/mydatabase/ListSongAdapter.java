@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.music_mobile_app.ExtensionPlayerActivity;
+import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.mydatabase.Song;
@@ -155,6 +157,16 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
                 @Override
                 public void onClick(View view) {
                     showPopupMenu(view);
+                }
+            });
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(fragment.getActivity(), ExtensionPlayerActivity.class);
+                    intent.setAction("Play Song");
+                    intent.putExtra("songId", song.getId());
+                    intent.putExtra("userIdMyDb", userId);
+                    fragment.getContext().startActivity(intent);
                 }
             });
 

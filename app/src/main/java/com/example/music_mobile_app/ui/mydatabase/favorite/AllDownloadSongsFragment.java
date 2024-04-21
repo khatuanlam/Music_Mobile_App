@@ -1,11 +1,13 @@
 package com.example.music_mobile_app.ui.mydatabase.favorite;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_mobile_app.ExtensionPlayerActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.mydatabase.ListDownloadSongAdapter;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
@@ -45,6 +48,7 @@ public class AllDownloadSongsFragment extends Fragment {
     private TextView textView;
     private CircleImageView avt;
     private ImageView imageViewBack;
+    private ImageButton btn_play;
     private FragmentManager manager;
 
     private ListDownloadSongAdapter mDownloadSongsAdapter;
@@ -70,6 +74,18 @@ public class AllDownloadSongsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mydb_fragment_downloaded_songs, container, false);
         imageViewBack = view.findViewById(R.id.mydb_download_songs_fragment_back);
+        btn_play = view.findViewById(R.id.mydb_download_songs_btn_play);
+
+        btn_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ExtensionPlayerActivity.class);
+                intent.setAction("Play Download");
+                intent.putExtra("userIdMyDb", id );
+                getContext().startActivity(intent);
+            }
+        });
+
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,6 +120,8 @@ public class AllDownloadSongsFragment extends Fragment {
             @Override
             public void onChanged(List<LiteSong> liteSongs) {
                 mDownloadSongsAdapter.setmDataList(liteSongs);
+                if (liteSongs.isEmpty())
+                    btn_play.setVisibility(View.INVISIBLE);
             }
         });
 

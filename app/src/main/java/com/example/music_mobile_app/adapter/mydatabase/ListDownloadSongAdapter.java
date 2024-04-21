@@ -36,7 +36,7 @@ import java.util.List;
 
 public class ListDownloadSongAdapter extends RecyclerView.Adapter<ListDownloadSongAdapter.LiteSongViewHolder> implements OnPlaylistClickListener {
     private Fragment fragment;
-    private List<LiteSong> mDataList;
+    public List<LiteSong> mDataList;
     private Context context;
 
     private Playlist selectedPlaylist;

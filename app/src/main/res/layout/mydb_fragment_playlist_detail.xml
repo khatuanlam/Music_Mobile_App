@@ -45,6 +45,12 @@
                 android:textColor="@color/white"
                 android:textAlignment="center"
                 android:textSize="27dp" />
+            <ImageButton
+                android:id="@+id/mydb_playlist_detail_btn_play"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_play"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
