@@ -43,8 +43,6 @@ import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
-import com.example.music_mobile_app.manager.ListenerManager;
-import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.util.HandleBackground;
 import com.example.music_mobile_app.network.mSpotifyService;
@@ -60,10 +58,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Result;
-import kaaes.spotify.webapi.android.models.SnapshotId;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TrackToRemove;
-import kaaes.spotify.webapi.android.models.TracksToRemove;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit.Callback;
@@ -158,7 +153,7 @@ public class PlaylistFragment extends Fragment {
         playlistOwner.setText(playlistDetail.owner.display_name);
 
         // get background framelayout
-        fragment_container = view.findViewById(R.id.content_container);
+        fragment_container = view.findViewById(R.id.playlist_frame_container);
         backgroundDrawable = fragment_container.getBackground();
 
         Glide.with(this).load((playlistDetail.images == null) ? baseImage : playlistDetail.images.get(0).url)

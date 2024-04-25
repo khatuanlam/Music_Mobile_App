@@ -74,9 +74,9 @@ public class MethodsManager {
         return methodsManager;
     }
 
-
     // Playlist
-    public void createPlaylistOnSpotify(Activity activity, String playlistName, ListenerManager.OnCreatePlaylistCompleteListener listener) {
+    public void createPlaylistOnSpotify(Activity activity, String playlistName,
+                                        ListenerManager.OnCreatePlaylistCompleteListener listener) {
 
         // Tạo yêu cầu tạo playlist mới
         Map<String, Object> options = new HashMap<>();
@@ -112,12 +112,12 @@ public class MethodsManager {
             spotifyService.getMyPlaylists(options, new SpotifyCallback<Pager<PlaylistSimple>>() {
                 @Override
                 public void failure(SpotifyError spotifyError) {
-//                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+                    // Log.e(TAG, "failure: " + spotifyError.getMessage());
                 }
 
                 @Override
                 public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-//                    Log.d(TAG, "Get playlist success: ");
+                    // Log.d(TAG, "Get playlist success: ");
                     List<PlaylistSimple> mList = playlistSimplePager.items;
                     // Lưu giá trị về bộ nhớ
                     ListManager.getInstance().setPlaylistList(mList);
@@ -126,7 +126,8 @@ public class MethodsManager {
         }
     }
 
-    public void getPlayListTrack(String playlistId, Context context, ListenerManager.ListTrackOnCompleteListener listener) {
+    public void getPlayListTrack(String playlistId, Context context,
+                                 ListenerManager.ListTrackOnCompleteListener listener) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
         if (userId == "") {
@@ -174,11 +175,14 @@ public class MethodsManager {
 
         // Load user's playlists
         List<PlaylistSimple> playlistList = ListManager.getInstance().getPlaylistList();
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistList, activity, null);
+        if(playlistList == null) {
+            playlistList = new ArrayList<>();
+        }
+        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistList, activity,
+                null);
         adapter.setSend(true);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
-
 
         // Create playlist
         btn_add_to_playlist.setOnClickListener(v -> {
@@ -203,8 +207,8 @@ public class MethodsManager {
         });
     }
 
-
-    public void showRemoveDialog(String playlistId, String trackUri, Fragment fragment, ListenerManager.OnGetCompleteListener listener) {
+    public void showRemoveDialog(String playlistId, String trackUri, Fragment fragment,
+                                 ListenerManager.OnGetCompleteListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
         builder.setTitle("Xác nhận xóa");
         builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này?");
@@ -219,16 +223,46 @@ public class MethodsManager {
         builder.show();
     }
 
-    // Favorite
-    public void getUserFavorite(boolean permission) {
+    // public void getUserFavorite(boolean type) {
+    // List<Track> favorite = ListManager.getInstance().getFavoriteTracks();
+    // if (favorite.isEmpty() || type == true) {
+    // Map<String, Object> options = new HashMap<>();
+    // options.put(SpotifyService.LIMIT, 20);
+    // spotifyService.getMySavedTracks(options, new
+    // SpotifyCallback<Pager<SavedTrack>>() {
+    // @Override
+    // public void failure(SpotifyError spotifyError) {
+    //// Log.e(TAG, "failure: " + spotifyError.getMessage());
+    // }
+    //
+    // @Override
+    // public void success(Pager<SavedTrack> savedTrackPager, Response response) {
+    // List<Track> trackList = new ArrayList<>();
+    // for (SavedTrack savedTrack : savedTrackPager.items) {
+    // trackList.add(savedTrack.track);
+    // }
+    // Log.e("xxx", "success: " + trackList.size() + "");
+    // // Lưu giá trị về bộ nhớ
+    // ListManager.getInstance().setFavoriteTracks(trackList);
+    // }
+    // });
+    // }
+    // }
+
+    // MaiThy - Update getUserFavorite xử lý gọi callback khi hoàn thành
+    public interface OnFavoriteTracksLoadedListener {
+        void onFavoriteTracksLoaded(List<Track> trackList);
+    }
+
+    public void getUserFavorite(boolean type, final OnFavoriteTracksLoadedListener callback) {
         List<Track> favorite = ListManager.getInstance().getFavoriteTracks();
-        if (favorite.isEmpty() || permission == true) {
+        if (favorite.isEmpty() || type == true) {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.LIMIT, 20);
             spotifyService.getMySavedTracks(options, new SpotifyCallback<Pager<SavedTrack>>() {
                 @Override
                 public void failure(SpotifyError spotifyError) {
-//                    Log.e(TAG, "failure: " + spotifyError.getMessage());
+                    // Xử lý lỗi
                 }
 
                 @Override
@@ -237,11 +271,18 @@ public class MethodsManager {
                     for (SavedTrack savedTrack : savedTrackPager.items) {
                         trackList.add(savedTrack.track);
                     }
-                    Log.e("xxx", "success: " + trackList.size() + "");
-                    // Lưu giá trị về bộ nhớ
                     ListManager.getInstance().setFavoriteTracks(trackList);
+                    // Gọi callback khi hoàn thành
+                    if (callback != null) {
+                        callback.onFavoriteTracksLoaded(trackList);
+                    }
                 }
             });
+        } else {
+            // Sử dụng danh sách yêu thích đã lưu nếu có
+            if (callback != null) {
+                callback.onFavoriteTracksLoaded(favorite);
+            }
         }
     }
 
@@ -304,7 +345,8 @@ public class MethodsManager {
         trackToRemove.uri = trackUri;
         tracksToRemove.tracks.add(trackToRemove);
 
-        SharedPreferences sharedPreferences = fragment.getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = fragment.getActivity().getSharedPreferences("UserData",
+                Context.MODE_PRIVATE);
         String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
 
         // Gọi service để xóa bài hát khỏi playlist
@@ -318,7 +360,8 @@ public class MethodsManager {
             @Override
             public void failure(RetrofitError error) {
                 Log.e(fragment.getTag(), "Remove track from playlist failed: " + error.getMessage());
-                Toast.makeText(fragment.getContext(), "Xóa track thất bại: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getContext(), "Xóa track thất bại: " + error.getMessage(), Toast.LENGTH_SHORT)
+                        .show();
             }
         });
     }
@@ -330,23 +373,25 @@ public class MethodsManager {
         List<String> uris = new ArrayList<>();
         uris.add(mTrack.uri); // Thêm URI của bài hát vào danh sách
         bodyParams.put("uris", uris);
-//        bodyParams.put("position", ListManager.getInstance().getPlaylistList().size() + 1);
+        // bodyParams.put("position", ListManager.getInstance().getPlaylistList().size()
+        // + 1);
 
         SharedPreferences sharedPreferences = activity.getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
         // Gọi API để thêm bài hát vào playlist
-        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, options, bodyParams, new SpotifyCallback<Pager<PlaylistTrack>>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(activity + "", "Error creating song playlist on Spotify: " + spotifyError.getMessage());
-            }
+        spotifyService.addTracksToPlaylist(USER_ID, selectedPlaylistId, options, bodyParams,
+                new SpotifyCallback<Pager<PlaylistTrack>>() {
+                    @Override
+                    public void failure(SpotifyError spotifyError) {
+                        Log.e(activity + "", "Error creating song playlist on Spotify: " + spotifyError.getMessage());
+                    }
 
-            @Override
-            public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-                Log.d(activity + "", "Create song playlist success");
+                    @Override
+                    public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                        Log.d(activity + "", "Create song playlist success");
 
-            }
-        });
+                    }
+                });
     }
 
     // Album
@@ -392,7 +437,8 @@ public class MethodsManager {
         });
     }
 
-    public void getArtistTopTrack(String artistId, String countryCode, ListenerManager.ListTrackOnCompleteListener listener) {
+    public void getArtistTopTrack(String artistId, String countryCode,
+                                  ListenerManager.ListTrackOnCompleteListener listener) {
         spotifyService.getArtistTopTrack(artistId, countryCode, new SpotifyCallback<Tracks>() {
             @Override
             public void failure(SpotifyError spotifyError) {
@@ -408,4 +454,3 @@ public class MethodsManager {
     }
 
 }
-

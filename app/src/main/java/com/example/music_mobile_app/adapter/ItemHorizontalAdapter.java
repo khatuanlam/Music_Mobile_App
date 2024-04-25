@@ -57,7 +57,8 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
     private PlaylistSimple mPlaylistTrack;
     private String baseImage = "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228";
 
-    public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context, Fragment fragment) {
+    public ItemHorizontalAdapter(List<Track> trackList, Album album, List<PlaylistSimple> playlistList, Context context,
+                                 Fragment fragment) {
         this.trackList = trackList;
         this.playlistList = playlistList;
         this.context = context;
@@ -80,7 +81,8 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         } else if (!trackList.isEmpty() && position < trackList.size()) {
             holder.bindTrack(trackList.get(position));
         }
-        holder.itemView.setBackgroundColor(position == selectedItem ? ContextCompat.getColor(context, R.color.purple_50) : Color.TRANSPARENT);
+        holder.itemView.setBackgroundColor(
+                position == selectedItem ? ContextCompat.getColor(context, R.color.purple_50) : Color.TRANSPARENT);
     }
 
     @Override
@@ -133,41 +135,53 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                             case R.id.deletedItem:
                                 // Call from favorite
                                 if (fragment instanceof FavoriteFragment) {
-                                    MethodsManager.getInstance().removeFromFavorite(mTrack.id, new ListenerManager.OnGetCompleteListener() {
-                                        @Override
-                                        public void onComplete(boolean type) {
-                                            Log.d(TAG, "Delete complete");
-                                            // Reload favorite
-                                            int position = getAbsoluteAdapterPosition();
-                                            if (position != RecyclerView.NO_POSITION) {
-                                                removeItem(position);
-                                                MethodsManager.getInstance().getUserFavorite(true);
-                                            }
-                                        }
+                                    MethodsManager.getInstance().removeFromFavorite(mTrack.id,
+                                            new ListenerManager.OnGetCompleteListener() {
+                                                @Override
+                                                public void onComplete(boolean type) {
+                                                    Log.d(TAG, "Delete complete");
+                                                    // Reload favorite
+                                                    int position = getAbsoluteAdapterPosition();
+                                                    if (position != RecyclerView.NO_POSITION) {
+                                                        removeItem(position);
+                                                        MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+                                                            @Override
+                                                            public void onFavoriteTracksLoaded(List<Track> trackList) {
 
-                                        @Override
-                                        public void onError(Throwable error) {
+                                                            }
+                                                        });
+                                                    }
+                                                }
 
-                                        }
-                                    });
+                                                @Override
+                                                public void onError(Throwable error) {
+
+                                                }
+                                            });
                                 } else if (fragment instanceof PlaylistFragment) {
                                     // Call from playlist
-                                    MethodsManager.getInstance().showRemoveDialog(mPlaylistTrack.id, mTrack.uri, fragment, new ListenerManager.OnGetCompleteListener() {
-                                        @Override
-                                        public void onComplete(boolean type) {
-                                            // Reload favorite
-                                            int position = getAbsoluteAdapterPosition();
-                                            if (position != RecyclerView.NO_POSITION) {
-                                                removeItem(position);
-                                                MethodsManager.getInstance().getUserFavorite(true);
-                                            }
-                                        }
+                                    MethodsManager.getInstance().showRemoveDialog(mPlaylistTrack.id, mTrack.uri,
+                                            fragment, new ListenerManager.OnGetCompleteListener() {
+                                                @Override
+                                                public void onComplete(boolean type) {
+                                                    // Reload favorite
+                                                    int position = getAbsoluteAdapterPosition();
+                                                    if (position != RecyclerView.NO_POSITION) {
+                                                        removeItem(position);
+                                                        MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+                                                            @Override
+                                                            public void onFavoriteTracksLoaded(List<Track> trackList) {
 
-                                        @Override
-                                        public void onError(Throwable error) {
+                                                            }
+                                                        });
+                                                    }
+                                                }
 
-                                        }
-                                    });
+                                                @Override
+                                                public void onError(Throwable error) {
+
+                                                }
+                                            });
                                 } else {
 
                                 }
@@ -179,22 +193,27 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                                 return true;
 
                             case R.id.add_to_fav:
-                                MethodsManager.getInstance().addToFavorite(mTrack.id, new ListenerManager.OnGetCompleteListener() {
-                                    @Override
-                                    public void onComplete(boolean type) {
-                                        Log.d(TAG, "Adding complete");
-                                        int position = getAbsoluteAdapterPosition();
-                                        if (position != RecyclerView.NO_POSITION) {
-                                            // Reload favorite
-                                            MethodsManager.getInstance().getUserFavorite(true);
-                                        }
-                                    }
+                                MethodsManager.getInstance().addToFavorite(mTrack.id,
+                                        new ListenerManager.OnGetCompleteListener() {
+                                            @Override
+                                            public void onComplete(boolean type) {
+                                                Log.d(TAG, "Adding complete");
+                                                int position = getAbsoluteAdapterPosition();
+                                                if (position != RecyclerView.NO_POSITION) {
+                                                    // Reload favorite
+                                                    MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+                                                        @Override
+                                                        public void onFavoriteTracksLoaded(List<Track> trackList) {
+                                                        }
+                                                    });
+                                                }
+                                            }
 
-                                    @Override
-                                    public void onError(Throwable error) {
+                                            @Override
+                                            public void onError(Throwable error) {
 
-                                    }
-                                });
+                                            }
+                                        });
                                 return true;
                             default:
                                 return false;
@@ -216,17 +235,18 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                     EventBus.getDefault().post(mPlaylist);
                     notifyDataSetChanged();
                 } else {
-                    MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, context, new ListenerManager.ListTrackOnCompleteListener() {
-                        @Override
-                        public void onComplete(List<Track> trackList) {
-                            sendDetailPlaylist(trackList, mPlaylist);
-                        }
+                    MethodsManager.getInstance().getPlayListTrack(mPlaylist.id, context,
+                            new ListenerManager.ListTrackOnCompleteListener() {
+                                @Override
+                                public void onComplete(List<Track> trackList) {
+                                    sendDetailPlaylist(trackList, mPlaylist);
+                                }
 
-                        @Override
-                        public void onError(Throwable error) {
-                            Log.e(TAG, "Cannot not get " + mPlaylist.name);
-                        }
-                    });
+                                @Override
+                                public void onError(Throwable error) {
+                                    Log.e(TAG, "Cannot not get " + mPlaylist.name);
+                                }
+                            });
                 }
             });
         }
@@ -264,7 +284,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             playlistFragment.setArguments(bundle);
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.addToBackStack(null);
-            manager.beginTransaction().replace(R.id.fragment, playlistFragment).commit();
+            transaction.replace(R.id.fragment, playlistFragment).commit();
         }
 
         // Phương thức để xóa một phần tử từ danh sách
@@ -287,7 +307,6 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                 notifyItemRangeChanged(position, getItemCount());
             }
         }
-
 
     }
 }

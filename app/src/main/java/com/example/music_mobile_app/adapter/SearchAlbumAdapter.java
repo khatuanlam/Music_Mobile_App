@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.ui.AlbumFragment;
+import com.example.music_mobile_app.ui.SearchFragment;
 
 import java.util.List;
 import java.util.Random;
@@ -29,7 +30,7 @@ import kaaes.spotify.webapi.android.models.AlbumSimple;
 
 public class SearchAlbumAdapter extends RecyclerView.Adapter<SearchAlbumAdapter.GenreViewHolder> {
     private Fragment fragment;
-    private List<AlbumSimple> mDataList;
+    public List<AlbumSimple> mDataList;
     private String[] randomBackgroundColors = {
             "#CC3333",
             "#CC6633",
@@ -62,6 +63,9 @@ public class SearchAlbumAdapter extends RecyclerView.Adapter<SearchAlbumAdapter.
     public void setmDataList(List<AlbumSimple> mDataList) {
         this.mDataList = mDataList;
         this.notifyDataSetChanged();
+        // Gọi lại handleLoading() sau khi mDataList thay đổi
+        ((SearchFragment) fragment).loading = false;
+        ((SearchFragment) fragment).handleLoading();
     }
 
     @NonNull

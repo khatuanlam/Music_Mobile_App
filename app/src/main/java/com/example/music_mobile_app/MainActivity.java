@@ -11,9 +11,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -22,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +32,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.music_mobile_app.manager.PlaybackManager;
 import com.example.music_mobile_app.model.UserImage;
 import com.example.music_mobile_app.network.mSpotifyService;
 import com.example.music_mobile_app.receiver.MyCorruptInternetReceiver;
@@ -256,7 +260,38 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        // Aaand we will finish off here.
+        // And we will finish off here.
+        // Clear cache
+        ListManager.getInstance().clear();
+//        // Disconnect Spotify
+//        PlaybackManager.Disconnect();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (!PlaybackManager.checkSpotify(this)) {
+            builder.setTitle("Spotify Install")
+                    .setMessage("You should install Spotify to get full access!!!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Xử lý khi nhấn nút OK
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music"));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Xử lý khi nhấn nút Cancel
+                        }
+                    })
+                    .show();
+        }
+
     }
 
     public void createNotificationChannel(String channelId, String channelName, int importance, String description) {
@@ -285,10 +320,17 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Hủy đăng ký BroadcastReceiver ở đây
+        unregisterReceiver(myDownloadReceiver);
     }
 }

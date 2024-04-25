@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -46,8 +47,10 @@ public class SearchFragment extends Fragment {
     private RecyclerView recyclerView;
     private SearchAlbumAdapter mAdapter;
     private FragmentManager manager;
+    private ProgressBar loadingProgressBar;
 
     private SpotifyService spotify = MainActivity.spotifyService;
+    public boolean loading = true;
 
 
     @Override
@@ -61,6 +64,8 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         container_search = view.findViewById(R.id.container_search);
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
+        recyclerView = view.findViewById(R.id.search_recyclerViewGenres);
 
         //Kiểm tra nếu avatar header bị ẩn => set hiện
         CircleImageView header = getParentFragment().getView().findViewById(R.id.avt);
@@ -68,12 +73,18 @@ public class SearchFragment extends Fragment {
             header.setVisibility(View.VISIBLE);
         }
 
-        recyclerView = view.findViewById(R.id.search_recyclerViewGenres);
+        //Gọi loading trước khi set mAdapter
+        handleLoading();
+
+
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new SearchAlbumAdapter(this, new ArrayList<>());
+
         recyclerView.setAdapter(mAdapter);
+
+
         Log.i("vao get 0", "GET THANH CONG");
         getAlbum("k-pop");
 
@@ -90,17 +101,6 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        if (inputMethodManager.isAcceptingText()) {
-            inputMethodManager.hideSoftInputFromWindow(
-                    activity.getCurrentFocus().getWindowToken(),
-                    0
-            );
-        }
-    }
 
     public void getAlbum(String q) {
         spotify.searchAlbums(q, new Callback<AlbumsPager>() {
@@ -119,6 +119,19 @@ public class SearchFragment extends Fragment {
             }
         });
 
+    }
+
+    public void handleLoading(){
+        if(loading){
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+        else {
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
 }

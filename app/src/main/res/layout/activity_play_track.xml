@@ -175,7 +175,7 @@
                         android:layout_gravity="start"
                         android:src="@drawable/ic_random_white_36dp" />
 
-                    <androidx.constraintlayout.utils.widget.ImageFilterButton
+                    <androidx.constraintlayout.utils.widget.ImageFilterView
                         android:id="@+id/btn_prev"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -22,21 +22,10 @@ public class ListManager {
 
     private List<Track> topTracks;
     private List<AlbumSimple> albums;
-    private List<Track> albumTracks;
 
     private List<Artist> followArtists;
 
-    public List<AlbumSimple> getAlbums() {
-        return albums;
-    }
 
-    public List<Track> getAlbumTracks() {
-        return albumTracks;
-    }
-
-    public void setAlbumTracks(List<Track> albumTracks) {
-        this.albumTracks = albumTracks;
-    }
 
     public static ListManager getInstance() {
         if (listManager == null) {
@@ -51,7 +40,6 @@ public class ListManager {
         recommendTracks = new ArrayList<>();
         topTracks = new ArrayList<>();
         albums = new ArrayList<>();
-        albumTracks = new ArrayList<>();
         followArtists = new ArrayList<>();
     }
 
@@ -115,10 +103,8 @@ public class ListManager {
     }
 
     public void clear() {
-        setAlbumTracks(null);
         setTopTracks(null);
         setFavoriteTracks(null);
-        setAlbumTracks(null);
         setFollowArtists(null);
         setPlaylistList(null);
     }

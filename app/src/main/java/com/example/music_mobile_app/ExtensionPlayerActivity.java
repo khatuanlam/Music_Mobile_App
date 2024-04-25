@@ -30,16 +30,16 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import kaaes.spotify.webapi.android.SpotifyService;
-
 
 public class ExtensionPlayerActivity extends FragmentActivity {
 
     private static final String TAG = ExtensionPlayerActivity.class.getSimpleName();
 
-    private ImageButton btn_prev;
-    private ImageView btn_back, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options, btn_add_to_playlist;
+    private ImageView btn_prev, btn_back, btn_next, btn_play, btn_replay, btn_shuffle, btn_track_options,
+            btn_add_to_playlist;
     private TextView tv_track_name, tv_track_arist, tv_currentTime, tv_durationTime;
     private RecyclerView recyclerView;
     private Button buttonAddPlaylist, buttonAddSong, btnFollow;
@@ -50,20 +50,22 @@ public class ExtensionPlayerActivity extends FragmentActivity {
     private String selectedPlaylistId;
     private MediaPlayer mediaPlayer;
     private TrackProgressBar mTrackProgressBar;
+
     private boolean isPlaying = false;
-    // Khởi tạo một biến boolean để theo dõi trạng thái của nguồn dữ liệu của MediaPlayer
+    // Khởi tạo một biến boolean để theo dõi trạng thái của nguồn dữ liệu của
+    // MediaPlayer
     private boolean isMediaPlayerInitialized = false;
 
     List<Song> songList;
 
-    private int currentSongIndex = -1; // Biến này để theo dõi vị trí của bài hát hiện tại đang được phát
-
+    private int currentSongIndex = -1; // Theo dõi vị trí của bài hát hiện tại đang được phát
+    private boolean replay = false;
+    private boolean shuffle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_track);
-
 
         // Prepared resources
         prepareData();
@@ -98,10 +100,9 @@ public class ExtensionPlayerActivity extends FragmentActivity {
             currentSongIndex = 0;
             Song firstSong = songList.get(currentSongIndex);
             setData(firstSong);
-//            generalMediaPlayer();
+            // generalMediaPlayer();
             playAudio(firstSong.urlSong);
         }
-
 
         // Bắt sự kiện click cho nút phát bài kế tiếp
         btn_next.setOnClickListener(v -> {
@@ -111,18 +112,56 @@ public class ExtensionPlayerActivity extends FragmentActivity {
         btn_prev.setOnClickListener(v -> {
             playNextSong(false);
         });
-    }
 
+        // Bắt sự kiện click cho nút replay
+        btn_replay.setOnClickListener(v -> {
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_restart_white_36dp);
+            if (replay == false) {
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.teal_200),
+                        PorterDuff.Mode.SRC_IN);
+                replay = true;
+            } else {
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white),
+                        PorterDuff.Mode.SRC_IN);
+                replay = false;
+            }
+            btn_replay.setImageDrawable(drawable);
+        });
+
+        // Bắt sự kiện click cho nút replay
+        btn_shuffle.setOnClickListener(v -> {
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_random_white_36dp);
+            if (shuffle == false) {
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.teal_200),
+                        PorterDuff.Mode.SRC_IN);
+                shuffle = true;
+            } else {
+                drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white),
+                        PorterDuff.Mode.SRC_IN);
+                shuffle = false;
+            }
+            btn_shuffle.setImageDrawable(drawable);
+        });
+
+    }
 
     @SuppressLint("ResourceType") // Ignore all illegal resources
     private void prepareData() {
         songList = new ArrayList<>();
 
         // Thêm các đối tượng Song vào danh sách
-        songList.add(new Song("Từng là", "Vũ Cát Tường", "https://i.scdn.co/image/ab67616d0000b27373fd9df745f312dbbe04bf49", "https://i.scdn.co/image/ab6761610000e5ebc9b5ba5524e01567b9f4f481", "https://archive.org/download/song_20240413/TungLa-VuCatTuong-13962415.mp3"));
-        songList.add(new Song("Chúng ta của hiện tại", "Sơn Tùng MTP", "https://i.scdn.co/image/ab67616d0000b2735888c34015bebbf123957f6d", "https://i.scdn.co/image/ab6761610000e5eb7afc6ecdb9102abd1e10d338", "https://archive.org/download/song_20240413/ChungTaCuaHienTai-SonTungMTP-6892340.mp3"));
-        songList.add(new Song("Người bình thường", "Vũ Cát Tường", "https://i.scdn.co/image/ab67616d0000b2734b261902f2f94e876adf9181", "https://i.scdn.co/image/ab6761610000e5ebc9b5ba5524e01567b9f4f481", "https://archive.org/download/song_20240413/NguoiBinhThuong-VuCatTuong-12694464.mp3"));
-
+        songList.add(
+                new Song("Từng là", "Vũ Cát Tường", "https://i.scdn.co/image/ab67616d0000b27373fd9df745f312dbbe04bf49",
+                        "https://i.scdn.co/image/ab6761610000e5ebc9b5ba5524e01567b9f4f481",
+                        "https://archive.org/download/song_20240413/TungLa-VuCatTuong-13962415.mp3"));
+        songList.add(new Song("Chúng ta của hiện tại", "Sơn Tùng MTP",
+                "https://i.scdn.co/image/ab67616d0000b2735888c34015bebbf123957f6d",
+                "https://i.scdn.co/image/ab6761610000e5eb7afc6ecdb9102abd1e10d338",
+                "https://archive.org/download/song_20240413/ChungTaCuaHienTai-SonTungMTP-6892340.mp3"));
+        songList.add(new Song("Người bình thường", "Vũ Cát Tường",
+                "https://i.scdn.co/image/ab67616d0000b2734b261902f2f94e876adf9181",
+                "https://i.scdn.co/image/ab6761610000e5ebc9b5ba5524e01567b9f4f481",
+                "https://archive.org/download/song_20240413/NguoiBinhThuong-VuCatTuong-12694464.mp3"));
 
         btn_back = findViewById(R.id.btn_back);
         btn_prev = findViewById(R.id.btn_prev);
@@ -160,7 +199,6 @@ public class ExtensionPlayerActivity extends FragmentActivity {
         ImageView artistImageView = findViewById(R.id.artist_item_image);
         Glide.with(ExtensionPlayerActivity.this).load(song.imageArtist).into(artistImageView);
 
-
     }
 
     private void playAudio(String url) {
@@ -181,8 +219,8 @@ public class ExtensionPlayerActivity extends FragmentActivity {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     // Update UI and start playback
-//                    mSeekBar.setProgress(0);
-//                    tv_currentTime.setText(milliSecondsToTimer(0));
+                    // mSeekBar.setProgress(0);
+                    // tv_currentTime.setText(milliSecondsToTimer(0));
                     mp.start();
                     isPlaying = true;
                     btn_play.setImageResource(R.drawable.ic_pause_white_24dp);
@@ -195,8 +233,8 @@ public class ExtensionPlayerActivity extends FragmentActivity {
                         @Override
                         public void onCompletion(MediaPlayer mp1) {
                             System.out.println("FINISH");
-//                            isPlaying = false;
-//                            btn_play.setImageResource(R.drawable.ic_play_white_48dp);
+                            // isPlaying = false;
+                            // btn_play.setImageResource(R.drawable.ic_play_white_48dp);
                             mTrackProgressBar.pause();
                             mSeekBar.setProgress(0);
                             tv_currentTime.setText(milliSecondsToTimer(0));
@@ -273,17 +311,32 @@ public class ExtensionPlayerActivity extends FragmentActivity {
         mTrackProgressBar.pause();
     }
 
-
     private void playNextSong(boolean next) {
-        if (next) {
-            currentSongIndex++;
-        } else {
-            currentSongIndex--;
+        // nếu không lặp lại 1 bài => thay đổi currentSongIndex
+        // ngược lại giữ nguyên currentSongIndex
+        if (!replay) {
+            if (next) {
+                currentSongIndex++;
+            } else {
+                currentSongIndex--;
+            }
         }
+        // trộn bài
+        if (shuffle) {
+            // Tạo một đối tượng Random
+            Random random = new Random();
+            // Sinh ra một số ngẫu nhiên từ 1 đến songList.size()
+            int randomIndex;
+            do {
+                randomIndex = random.nextInt(songList.size()) + 1;
+            } while (randomIndex == currentSongIndex);
+
+            currentSongIndex = randomIndex;
+        }
+
         mTrackProgressBar.pause();
         mSeekBar.setProgress(0);
         tv_currentTime.setText(milliSecondsToTimer(0));
-
 
         if (currentSongIndex < songList.size()) {
 
@@ -292,7 +345,8 @@ public class ExtensionPlayerActivity extends FragmentActivity {
             playAudio(nextSong.urlSong); // Phát bài hát tiếp theo trong danh sách
         } else {
             // Nếu không còn bài hát nào để phát trong danh sách
-            // Bạn có thể thực hiện một hành động nào đó, ví dụ: dừng hoặc quay lại bài hát đầu tiên
+            // Bạn có thể thực hiện một hành động nào đó, ví dụ: dừng hoặc quay lại bài hát
+            // đầu tiên
             currentSongIndex = 0; // Quay lại bài hát đầu tiên
 
             // trở về bài đầu tiên
@@ -312,21 +366,14 @@ public class ExtensionPlayerActivity extends FragmentActivity {
         if (currentSongIndex == 0 || currentSongIndex == -1) {
             btn_prev.setEnabled(false);// vô hiệu hóa button prev
             // Đặt màu cho vector drawable thành colorNavIcon
-            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.colorGrayLight), PorterDuff.Mode.SRC_IN);
+            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.colorGrayLight),
+                    PorterDuff.Mode.SRC_IN);
         } else {
             // bỏ vô hiệu hóa button prev
             btn_prev.setEnabled(true); // bỏ vô hiệu hóa button prev
             // Đặt màu cho vector drawable thành #FFFFFF
             drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         }
-
-
-//        // Kiểm tra nếu button prev được vô hiệu hóa
-//        if (!btn_prev.isEnabled()) {
-//
-//        } else {
-//
-//        }
 
         // Gán vector drawable đã chỉnh sửa cho ImageView của button prev
         btn_prev.setImageDrawable(drawable);
@@ -395,4 +442,5 @@ public class ExtensionPlayerActivity extends FragmentActivity {
             }
         };
     }
+
 }

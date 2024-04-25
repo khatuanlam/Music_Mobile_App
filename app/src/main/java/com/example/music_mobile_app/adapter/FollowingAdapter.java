@@ -93,7 +93,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.addToBackStack(null);
-            manager.beginTransaction().replace(R.id.fragment, artistFragment).commit();
+            transaction.replace(R.id.fragment, artistFragment).commit();
         }
 
         public void bind(final Artist artist) {

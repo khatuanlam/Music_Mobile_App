@@ -17,6 +17,7 @@ import com.spotify.protocol.client.ErrorCallback;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.Empty;
 import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Repeat;
 
 import java.util.List;
 import java.util.Map;
@@ -121,15 +122,33 @@ public class PlaybackManager {
     }
 
     public void onToggleShuffleButtonClicked() {
-        mSpotifyAppRemote.getPlayerApi().toggleShuffle().setResultCallback(empty -> logMessage("toggle shuffle", 10)).setErrorCallback(mErrorCallback);
+        mSpotifyAppRemote.getPlayerApi().getPlayerState().setResultCallback(playerState -> {
+            if (playerState.playbackOptions.isShuffling == true) {
+                mSpotifyAppRemote.getPlayerApi().setShuffle(false).setResultCallback(empty -> logMessage("toggle shuffle off", 10)).setErrorCallback(mErrorCallback);
+            } else {
+                mSpotifyAppRemote.getPlayerApi().setShuffle(true).setResultCallback(empty -> logMessage("toggle shuffle", 10)).setErrorCallback(mErrorCallback);
+                mSpotifyAppRemote.getPlayerApi().setRepeat(Repeat.OFF).setResultCallback(empty -> logMessage("Repeat", 10)).setErrorCallback(mErrorCallback);
+            }
+        });
     }
 
-    public void Disconnect() {
+    public static void Disconnect() {
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
-    public void onRepeatMode() {
+    public static boolean checkSpotify(Context context) {
+        return SpotifyAppRemote.isSpotifyInstalled(context);
+    }
 
+    public void onRepeatModeButtonClicked() {
+        mSpotifyAppRemote.getPlayerApi().getPlayerState().setResultCallback(playerState -> {
+            if (playerState.playbackOptions.repeatMode == Repeat.ONE) {
+                mSpotifyAppRemote.getPlayerApi().setRepeat(Repeat.OFF).setResultCallback(empty -> logMessage("Repeat", 10)).setErrorCallback(mErrorCallback);
+            } else {
+                mSpotifyAppRemote.getPlayerApi().setRepeat(Repeat.ONE).setResultCallback(empty -> logMessage("toggle shuffle", 10)).setErrorCallback(mErrorCallback);
+                mSpotifyAppRemote.getPlayerApi().setShuffle(false).setResultCallback(empty -> logMessage("toggle shuffle off", 10)).setErrorCallback(mErrorCallback);
+            }
+        });
     }
 
     public PlayerApi getPlayerApi() {

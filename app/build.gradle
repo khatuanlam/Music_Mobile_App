@@ -44,6 +44,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
     namespace 'com.example.music_mobile_app'
 
@@ -63,6 +64,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'

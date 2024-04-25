@@ -4,18 +4,20 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -45,7 +47,7 @@ import com.example.music_mobile_app.manager.ListManager;
 import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.PlaybackManager;
-import com.example.music_mobile_app.ui.PlaylistFragment;
+import com.example.music_mobile_app.ui.ListTrackFragment;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
@@ -53,11 +55,13 @@ import com.spotify.protocol.types.Repeat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Stack;
 
-public class PlayTrackActivity extends FragmentActivity {
+public class PlayTrackActivity extends FragmentActivity implements ListTrackFragment.OnDataChangeListener {
 
     private static final String TAG = PlayTrackActivity.class.getSimpleName();
     private ImageView btn_back, btn_prev, btn_next, btn_play, btn_replay, btn_shuffle, btn_add_to_playlist, btn_add_to_favorite, btn_queue;
@@ -77,16 +81,41 @@ public class PlayTrackActivity extends FragmentActivity {
     private static MediaPlayer mediaPlayer = new MediaPlayer();
     private SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
 
-    private List<Track> queuePlayTrack = new ArrayList<>();
+    private static Stack<Track> queuePlayTrack = new Stack<>();
 
     private int currentSongIndex = 0;
 
     private FragmentManager manager;
 
+    private boolean isReplay = false;
+
     @Override
     protected void onStart() {
         manager = getSupportFragmentManager();
         super.onStart();
+
+        // Install Spotify request
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (!PlaybackManager.checkSpotify(this)) {
+            builder.setTitle("Spotify Install")
+                    .setMessage("You should install Spotify to listen !!!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Xử lý khi nhấn nút OK
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music"));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Xử lý khi nhấn nút Cancel
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override
@@ -100,7 +129,10 @@ public class PlayTrackActivity extends FragmentActivity {
         // Get track detail
         switch (action) {
             case "Play Track":
-                detailTrack = intent.getParcelableExtra("Track");
+                Track track = intent.getParcelableExtra("Track");
+                queuePlayTrack.push(track);
+                detailTrack = queuePlayTrack.peek();
+                currentSongIndex = queuePlayTrack.search(queuePlayTrack.peek());
                 Toast.makeText(this, "Playing Track", Toast.LENGTH_SHORT).show();
                 break;
             case "Play Album":
@@ -119,6 +151,12 @@ public class PlayTrackActivity extends FragmentActivity {
                 Toast.makeText(this, "Playing Artist", Toast.LENGTH_SHORT).show();
                 break;
             case "Play Favorite":
+                queuePlayTrack.clear();
+                List<Track> favoriteTracks = intent.getParcelableArrayListExtra("ListTrack");
+                queuePlayTrack.addAll(favoriteTracks);
+                detailTrack = queuePlayTrack.get(currentSongIndex);
+                break;
+            case "Play Playlist":
                 break;
             default:
                 Log.e(TAG, "No action found!!!");
@@ -126,10 +164,11 @@ public class PlayTrackActivity extends FragmentActivity {
         }
 
         detailAlbum = getIntent().getParcelableExtra("Album");
+        playing_URI = detailTrack.uri;
+        Toast.makeText(this, queuePlayTrack.size() + "", Toast.LENGTH_SHORT).show();
         setData(detailTrack);
 
         initPlayer(true);
-
 
         // Player
         btn_next.setOnClickListener(v -> {
@@ -140,16 +179,18 @@ public class PlayTrackActivity extends FragmentActivity {
         });
 
         if (!queuePlayTrack.isEmpty()) {
-//            btn_queue.setOnClickListener(v -> {
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelableArrayList("ListTrack", new ArrayList<>(queuePlayTrack));
-//                QueueFragment queueFragment = new QueueFragment();
-//                queueFragment.setArguments(bundle);
-//                FragmentTransaction transaction = manager.beginTransaction();
-//                transaction.addToBackStack(null);
-//                transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left, R.anim.slide_out_left, R.anim.slide_in);
-//                manager.beginTransaction().replace(R.id.play_back_layout, new QueueFragment()).commit();
-//            });
+            btn_queue.setOnClickListener(v -> {
+                FragmentManager manager = getSupportFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("ListTrack", new ArrayList<>(queuePlayTrack));
+                ListTrackFragment queueFragment = new ListTrackFragment();
+                queueFragment.setArguments(bundle);
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left, R.anim.slide_in, R.anim.slide_out_left);
+                transaction.replace(R.id.play_back_layout, queueFragment);
+                transaction.commit();
+            });
         } else {
             btn_queue.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         }
@@ -172,48 +213,54 @@ public class PlayTrackActivity extends FragmentActivity {
             public void onComplete(boolean type) {
                 // Not contain
                 if (type == true) {
-                    btn_add_to_favorite.setOnClickListener(v -> {
-                        btn_add_to_favorite.setImageResource(R.drawable.ic_like_green);
-                        MethodsManager.getInstance().addToFavorite(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
-                            @Override
-                            public void onComplete(boolean type) {
-                                // Reload favorite fragment
-                                MethodsManager.getInstance().getUserFavorite(true);
-                                btn_add_to_favorite.setTag("Add");
-                            }
-
-                            @Override
-                            public void onError(Throwable error) {
-                                Log.e(TAG, "Adding false" + error);
-                            }
-                        });
-
-                    });
+                    btn_add_to_favorite.setTag("Not add");
                 } else {
                     btn_add_to_favorite.setImageResource(R.drawable.ic_like_green);
-                    btn_add_to_favorite.setOnClickListener(v -> {
-                        btn_add_to_favorite.setImageResource(R.drawable.ic_like_black_24dp);
-                        MethodsManager.getInstance().removeFromFavorite(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
-                            @Override
-                            public void onComplete(boolean type) {
-                                Log.d(TAG, "Remove complete ");
-                            }
-
-                            @Override
-                            public void onError(Throwable error) {
-                                Log.e(TAG, "onError: " + error);
-                            }
-                        });
-                        // Reload favorite fragment
-                        MethodsManager.getInstance().getUserFavorite(true);
-                        btn_add_to_favorite.setTag("Remove");
-                    });
+                    btn_add_to_favorite.setTag("Added");
                 }
             }
 
             @Override
             public void onError(Throwable error) {
 
+            }
+        });
+
+        btn_add_to_favorite.setOnClickListener(v -> {
+            if (v.getTag() == "Not add") {
+                btn_add_to_favorite.setImageResource(R.drawable.ic_like_green);
+                MethodsManager.getInstance().addToFavorite(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
+                    @Override
+                    public void onComplete(boolean type) {
+                        // Reload favorite fragment
+                        MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+                            @Override
+                            public void onFavoriteTracksLoaded(List<Track> trackList) {
+                            }
+                        });
+                        btn_add_to_favorite.setTag("Added");
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        Log.e(TAG, "Adding false" + error);
+                    }
+                });
+            } else {
+                btn_add_to_favorite.setImageResource(R.drawable.ic_like_black_24dp);
+                MethodsManager.getInstance().removeFromFavorite(detailTrack.id, new ListenerManager.OnGetCompleteListener() {
+                    @Override
+                    public void onComplete(boolean type) {
+                        Log.d(TAG, "Remove complete ");
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        Log.e(TAG, "onError: " + error);
+                    }
+                });
+
+                btn_add_to_favorite.setTag("Not add");
             }
         });
 
@@ -247,7 +294,7 @@ public class PlayTrackActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        playbackManager.Disconnect();
+//        playbackManager.Disconnect();
     }
 
     //     Follow artist
@@ -299,6 +346,7 @@ public class PlayTrackActivity extends FragmentActivity {
             }
         });
     }
+
 
     private void followArtist(String artistId) {
         spotifyService.followArtists(artistId, new Callback<Object>() {
@@ -392,7 +440,7 @@ public class PlayTrackActivity extends FragmentActivity {
     private Subscription.EventCallback<PlayerState> mPlayerStateCallback = new Subscription.EventCallback<PlayerState>() {
         @Override
         public void onEvent(PlayerState playerState) {
-            if (!playerState.track.name.equalsIgnoreCase(detailTrack.name) || playerState.track == null) {
+            if (!playerState.track.name.equalsIgnoreCase(detailTrack.name) || playerState.track == null || isReplay == true) {
                 playbackManager.play(playing_URI, new ListenerManager.OnGetCompleteListener() {
                     @Override
                     public void onComplete(boolean type) {
@@ -416,15 +464,13 @@ public class PlayTrackActivity extends FragmentActivity {
 
 
             btn_replay.setOnClickListener(v -> {
-                btn_replay.setColorFilter(ContextCompat.getColor(getBaseContext(), R.color.colorGreen), PorterDuff.Mode.SRC_IN);
-                playbackManager.onRepeatMode();
+                playbackManager.onRepeatModeButtonClicked();
+
             });
 
             btn_shuffle.setOnClickListener(v -> {
-                btn_shuffle.setColorFilter(ContextCompat.getColor(getBaseContext(), R.color.colorGreen), PorterDuff.Mode.SRC_IN);
                 playbackManager.onToggleShuffleButtonClicked();
             });
-
 
             // Player
             if (playerState.isPaused) {
@@ -436,22 +482,22 @@ public class PlayTrackActivity extends FragmentActivity {
                 mediaPlayer.start();
                 mTrackProgressBar.unpause();
             }
-
             // Repeat mode
-            if (playerState.playbackOptions.repeatMode == Repeat.ALL) {
-                DrawableCompat.setTint(btn_replay.getDrawable(), getResources().getColor(R.color.colorGreen, getTheme()));
-
-            } else if (playerState.playbackOptions.repeatMode == Repeat.ONE) {
-//                btn_replay.setImageResource(R.drawable.mediaservice_repeat_one);
-                DrawableCompat.setTint(btn_replay.getDrawable(), getResources().getColor(R.color.colorGreen, getTheme()));
+            if (playerState.playbackOptions.repeatMode == Repeat.ONE) {
+                DrawableCompat.setTint(btn_replay.getDrawable(), getResources().getColor(R.color.colorAccentPressed, getTheme()));
+                isReplay = true;
             } else {
                 DrawableCompat.setTint(btn_replay.getDrawable(), Color.WHITE);
+                isReplay = false;
             }
 
             // Shuffle mode
-            if (playerState.playbackOptions.isShuffling) {
+            if (playerState.playbackOptions.isShuffling == true) {
                 // Get random index
                 currentSongIndex = new Random().nextInt(queuePlayTrack.size() - 1);
+                DrawableCompat.setTint(btn_shuffle.getDrawable(), getResources().getColor(R.color.colorAccentPressed, getTheme()));
+            } else {
+                DrawableCompat.setTint(btn_shuffle.getDrawable(), Color.WHITE);
             }
 
             // Invalidate seekbar length and position
@@ -461,6 +507,11 @@ public class PlayTrackActivity extends FragmentActivity {
         }
 
     };
+
+    @Override
+    public void onDataChanged(List<Track> newArrayList) {
+        queuePlayTrack = (Stack<Track>) newArrayList;
+    }
 
     // TrackProcessBar Class
     private class TrackProgressBar {
@@ -558,18 +609,15 @@ public class PlayTrackActivity extends FragmentActivity {
     }
 
     private void playNextSong(boolean next) {
-        if (next) {
-            currentSongIndex++;
-        } else {
-            currentSongIndex--;
+        if (!isReplay) {
+            if (next) {
+                currentSongIndex++;
+            } else {
+                currentSongIndex--;
+            }
         }
-        if (currentSongIndex > queuePlayTrack.size() || currentSongIndex < 0) {
-            // Phát bài hát tiếp theo trong danh sách
-            // Nếu không còn bài hát nào để phát trong danh sách
-            // Bạn có thể thực hiện một hành động nào đó, ví dụ: dừng hoặc quay lại bài hát đầu tiên
-            currentSongIndex = 0; // Quay lại bài hát đầu tiên
-            // trở về bài đầu tiên
-            // Phát lại bài hát đầu tiên
+        if (currentSongIndex > queuePlayTrack.size() - 1 || currentSongIndex < 0) {
+            currentSongIndex = 0;
         }
         detailTrack = queuePlayTrack.get(currentSongIndex);
         setData(detailTrack);

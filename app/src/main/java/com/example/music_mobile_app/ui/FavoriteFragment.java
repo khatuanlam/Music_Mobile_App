@@ -2,6 +2,7 @@ package com.example.music_mobile_app.ui;
 
 import static android.view.View.GONE;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -14,10 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
@@ -28,16 +33,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class FavoriteFragment extends Fragment {
-
     private RecyclerView recyclerview;
-    private FrameLayout content_container;
+    private FrameLayout frame_container;
     private Drawable backgroundDrawable;
+    private ProgressBar loadingProgressBar;
+
+    private boolean loading = true;
 
     private TextView quantity;
+
+    private Button btn_play;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,10 +64,33 @@ public class FavoriteFragment extends Fragment {
         }
 
         prepareData(view);
-
         initView();
 
+        handleBackground();
+        // Loading đợi xử lý data
+        handleLoading();
+
+
+        btn_play.setOnClickListener(v -> {
+            Intent intent = new Intent(this.getActivity(), PlayTrackActivity.class);
+            intent.putParcelableArrayListExtra("ListTrack", (ArrayList<Track>) ListManager.getInstance().getFavoriteTracks());
+            intent.setAction("Play Favorite");
+            this.startActivity(intent);
+        });
+
         return view;
+    }
+
+    private void handleLoading() {
+        if (loading) {
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            recyclerview.setVisibility(View.GONE);
+        } else {
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.GONE);
+            recyclerview.setVisibility(View.VISIBLE);
+        }
     }
 
     private void handleBackground() {
@@ -71,44 +102,74 @@ public class FavoriteFragment extends Fragment {
 
         // Xử lý background
         HandleBackground backgroundHandler = new HandleBackground();
-        backgroundHandler.handleBackground(startColorHex, backgroundDrawable, new HandleBackground.OnPaletteGeneratedListener() {
-            @Override
-            public void onPaletteGenerated(GradientDrawable updatedDrawable) {
-                // Set the updated Drawable as the background of your view
-                content_container.setBackground(updatedDrawable);
-            }
-        });
+        backgroundHandler.handleBackground(startColorHex, backgroundDrawable,
+                new HandleBackground.OnPaletteGeneratedListener() {
+                    @Override
+                    public void onPaletteGenerated(GradientDrawable updatedDrawable) {
+                        // Set the updated Drawable as the background of your view
+                        frame_container.setBackground(updatedDrawable);
+                    }
+                });
     }
 
     private void prepareData(View view) {
+        btn_play = view.findViewById(R.id.btn_play_favorite);
         quantity = view.findViewById(R.id.quantity);
         recyclerview = view.findViewById(R.id.favorite_recyclerview);
-        content_container = view.findViewById(R.id.content_container);
-        LinearLayoutManager favorite_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        frame_container = view.findViewById(R.id.frame_container);
+        LinearLayoutManager favorite_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,
+                false);
         recyclerview.setLayoutManager(favorite_layout);
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
 
         // get background framelayout
-        content_container = view.findViewById(R.id.content_container);
-        backgroundDrawable = content_container.getBackground();
+        backgroundDrawable = frame_container.getBackground();
     }
 
     private void initView() {
-        setFavoriteTracks(false);
+        setFavoriteTracks();
         handleBackground();
     }
 
-    private void setFavoriteTracks(boolean permission) {
+    // MaiThy - Update setFavoriteTracks xử lý set lại recyclerview khi
+    // trackList.isEmpty
+    // và loading khi đợi set recyclerview
+    private void setFavoriteTracks() {
         List<Track> trackList = ListManager.getInstance().getFavoriteTracks();
         if (trackList.isEmpty()) {
-            // Nếu danh sách favorite chưa được lấy thì load lại để lấy
-            MethodsManager.getInstance().getUserFavorite(true);
-            Toast.makeText(getActivity(), "List is empty", Toast.LENGTH_SHORT).show();
-        }
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(), this);
-        if (trackList != null) {
+            MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+                @Override
+                public void onFavoriteTracksLoaded(List<Track> mTrackList) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTrackList.isEmpty()) {
+                                Toast.makeText(getActivity(), "List is empty", Toast.LENGTH_SHORT).show();
+                            } else {
+                                ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(mTrackList, null,
+                                        new ArrayList<>(), getContext(), FavoriteFragment.this);
+                                adapter.notifyDataSetChanged();
+                                quantity.setText(mTrackList.size() + " bài hát");
+                                recyclerview.setAdapter(adapter);
+                                loading = false;
+                                handleLoading();
+                                ListManager.getInstance().setFavoriteTracks(mTrackList);
+
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(trackList, null, new ArrayList<>(), getContext(),
+                    this);
             quantity.setText(adapter.getItemCount() + " bài hát");
+            adapter.notifyDataSetChanged();
+            recyclerview.setAdapter(adapter);
+            loading = false;
+            handleLoading();
         }
-        recyclerview.setAdapter(adapter);
+
     }
 
 }

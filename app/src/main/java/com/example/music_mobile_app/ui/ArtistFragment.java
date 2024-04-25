@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,8 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -46,7 +43,6 @@ import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -69,7 +65,6 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     private FrameLayout fragment_container;
     private View headerView;
     private boolean isFollowing = false;
-    private FragmentManager manager;
 
     private List<Track> trackList = new ArrayList<>();
 
@@ -79,7 +74,6 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager = getParentFragmentManager();
 
     }
 
@@ -98,7 +92,7 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
 
         // Onclick back
         backButton.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
+            this.getParentFragmentManager().popBackStack();
         });
 
         if (btnFollow != null) {
@@ -149,7 +143,7 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
 
         // Update: Bổ sung xử lý background thay đổi theo hình của artist
         // get background framelayout
-        content_container = view.findViewById(R.id.content_container);
+        content_container = view.findViewById(R.id.frame_container);
         backgroundDrawable = content_container.getBackground();
 
     }

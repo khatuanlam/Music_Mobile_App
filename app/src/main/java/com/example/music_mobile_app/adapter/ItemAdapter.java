@@ -160,7 +160,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.TracksHolder> 
             albumFragment.setArguments(bundle);
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.addToBackStack(null);
-            manager.beginTransaction().replace(R.id.fragment, albumFragment).commit();
+            transaction.replace(R.id.fragment, albumFragment);
+            transaction.commit();
         }
     }
 

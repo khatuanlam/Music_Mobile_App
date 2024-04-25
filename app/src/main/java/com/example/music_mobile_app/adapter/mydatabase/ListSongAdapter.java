@@ -158,12 +158,21 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.SongVi
                 }
             });
 
+            itemView.setOnClickListener(v -> {
+                sendExtensionPlayer(song);
+            });
         }
 
         public void sendCustomBroadcast(String content) {
             Intent intent = new Intent("com.example.MY_DOWNLOAD_BROADCAST");
             intent.putExtra("content", content);
             context.sendBroadcast(intent);
+        }
+
+        public void sendExtensionPlayer(Song song) {
+            Intent intent = new Intent("ExtensionPlayTrack");
+            intent.putExtra("track", (CharSequence) song);
+            fragment.getActivity().startActivity(intent);
         }
 
         private void showPopupMenu(View view) {

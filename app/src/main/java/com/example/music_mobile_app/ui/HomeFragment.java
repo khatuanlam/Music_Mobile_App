@@ -7,12 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,6 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.FollowingAdapter;
 import com.example.music_mobile_app.adapter.ItemAdapter;
 import com.example.music_mobile_app.manager.ListManager;
-import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.util.HandleBackground;
 
@@ -41,21 +41,25 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsCursorPager;
 import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Recommendations;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.client.Response;
 
 public class HomeFragment extends Fragment {
     public final String TAG = this.getClass().getSimpleName();
-    private SpotifyService spotifyService = MainActivity.spotifyService;
+    private final SpotifyService spotifyService = MainActivity.spotifyService;
+    private LinearLayout fragment_container;
     private RecyclerView recommendationsRecyclerView;
     private RecyclerView topTracksRecyclerView;
     private RecyclerView albumsRecycleView;
     private RecyclerView followRecycleView;
-    private NestedScrollView homeView;
     private TextView title;
     private Drawable backgroundDrawable;
+
+    private ProgressBar loadingProgressBar;
+
+    private boolean loadingRecommends, loadingTopTracks, loadingAlbums, loadingFollowers = true;
+
     public final ListManager listManager = MainActivity.listManager;
 
     @Override
@@ -76,9 +80,24 @@ public class HomeFragment extends Fragment {
 
         handleBackground();
 
+        // Loading đợi xử lý data
+        handleLoading();
+
         updateUI();
 
         return view;
+    }
+
+    private void handleLoading() {
+        if (loadingRecommends || loadingTopTracks || loadingAlbums || loadingFollowers) {
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            fragment_container.setVisibility(View.GONE);
+        } else {
+            // Show loading progress bar
+            loadingProgressBar.setVisibility(View.GONE);
+            fragment_container.setVisibility(View.VISIBLE);
+        }
     }
 
     private void handleBackground() {
@@ -101,11 +120,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareData(View view) {
+        // recentlyTracksRecyclerView = view.findViewById(R.id.recentlyTracks);
+        fragment_container = view.findViewById(R.id.fragment_container);
         recommendationsRecyclerView = view.findViewById(R.id.recommendation);
         topTracksRecyclerView = view.findViewById(R.id.top_tracks);
         albumsRecycleView = view.findViewById(R.id.top_albums);
         followRecycleView = view.findViewById(R.id.follower_recyclerView);
-        homeView = view.findViewById(R.id.scroll_view_home);
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
 
         LinearLayoutManager recommendTracks_layout = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false);
@@ -125,30 +146,35 @@ public class HomeFragment extends Fragment {
         title = view.findViewById(R.id.title);
         backgroundDrawable = title.getBackground();
 
-        homeView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX,
-                                       int oldScrollY) {
-                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    // Gọi sự kiện khi kéo trang lên hết cỡ
-                    // Đặt mã hoặc phương thức bạn muốn gọi ở đây
-                    reloadPage();
-                }
-            }
-        });
+//        homeView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX,
+//                    int oldScrollY) {
+//                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+//                    // Gọi sự kiện khi kéo trang lên hết cỡ
+//                    // Đặt mã hoặc phương thức bạn muốn gọi ở đây
+//                    reloadPage();
+//                }
+//            }
+//        });
     }
 
-    private void updateUI() {
+    public void updateUI() {
         // setRecentlyTracks();
         setRecommendations();
         setTopTracks();
         setAlbums();
         setFollowArtist();
+        // handleLoading();
 
         // Get user's playlists
-        MethodsManager.getInstance().getUserPlaylists(false);
+        MethodsManager.getInstance().getUserPlaylists(true);
         // Get user's favorites
-        MethodsManager.getInstance().getUserFavorite(false);
+        MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
+            @Override
+            public void onFavoriteTracksLoaded(List<Track> trackList) {
+            }
+        });
     }
 
     private void setRecommendations() {
@@ -166,6 +192,8 @@ public class HomeFragment extends Fragment {
                     List<Track> mList = recommendations.tracks;
                     listManager.setRecommendTracks(mList);
                     setRecommendations();
+                    loadingRecommends = false;
+                    handleLoading();
                 }
 
                 @Override
@@ -194,6 +222,8 @@ public class HomeFragment extends Fragment {
                     List<Track> mList = trackPager.items;
                     listManager.setTopTracks(mList);
                     setTopTracks();
+                    loadingTopTracks = false;
+                    handleLoading();
                 }
 
                 @Override
@@ -205,11 +235,12 @@ public class HomeFragment extends Fragment {
             ItemAdapter adapter = new ItemAdapter(listTracks, new ArrayList<>(), getParentFragment());
             adapter.notifyDataSetChanged();
             topTracksRecyclerView.setAdapter(adapter);
+            loadingFollowers = false;
+            handleLoading();
         }
     }
 
     private void setAlbums() {
-
         List<AlbumSimple> listAlbums = listManager.getFavoriteAlbums();
         if (listAlbums.isEmpty()) {
             Map<String, Object> options = new HashMap<>();
@@ -227,12 +258,16 @@ public class HomeFragment extends Fragment {
                     List<AlbumSimple> mList = newReleases.albums.items;
                     listManager.setAlbums(mList);
                     setAlbums();
+                    loadingAlbums = false;
+                    handleLoading();
                 }
             });
         } else {
             ItemAdapter adapter = new ItemAdapter(new ArrayList<>(), listAlbums, getParentFragment());
             adapter.notifyDataSetChanged();
             albumsRecycleView.setAdapter(adapter);
+            loadingFollowers = false;
+            handleLoading();
         }
     }
 
@@ -259,6 +294,8 @@ public class HomeFragment extends Fragment {
                     List<Artist> followedArtists = artistsCursorPager.artists.items;
                     listManager.setFollowArtists(followedArtists);
                     setFollowArtist();
+                    loadingFollowers = false;
+                    handleLoading();
                 }
             });
         } else {
@@ -266,6 +303,8 @@ public class HomeFragment extends Fragment {
             FollowingAdapter adapter = new FollowingAdapter(followedArtists, getParentFragment());
             adapter.notifyDataSetChanged();
             followRecycleView.setAdapter(adapter);
+            loadingFollowers = false;
+            handleLoading();
         }
     }
 
