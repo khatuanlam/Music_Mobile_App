@@ -287,4 +287,25 @@ public class SongServiceImpl implements SongService {
         });
         return songs;
     }
+
+    @Override
+    public LiveData<Boolean> checkFavoriteSongToUser(long idSong, long idUser) {
+        final MutableLiveData<Boolean> result = new MutableLiveData<>();
+
+        Call<Boolean> call = RSongService.checkFavoriteSongToUser(idSong, idUser);
+
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(response.isSuccessful())
+                    result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
+    }
 }

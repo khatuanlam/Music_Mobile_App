@@ -2,7 +2,9 @@ package com.example.music_mobile_app;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.Window;
@@ -18,7 +20,6 @@ public class SplashActivity extends FragmentActivity {
         Window window = getWindow();
         window.setFormat(PixelFormat.RGBA_8888);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,14 +51,21 @@ public class SplashActivity extends FragmentActivity {
                         sleep(100);
                         waited += 100;
                     }
-
-                    Intent intent = new Intent(SplashActivity.this,
-                            AuthLoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.hold);
-
+                    SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
+                    String access_token = sharedPreferences.getString(AuthLoginActivity.AUTH_TOKEN, "");
+                    if (access_token == "") {
+                        Intent intent = new Intent(SplashActivity.this,
+                                AuthLoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.hold);
+                    } else {
+                        Intent intent = new Intent(SplashActivity.this,
+                                MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.hold);
+                    }
                     SplashActivity.this.finish();
                 } catch (InterruptedException e) {
                     // do nothing

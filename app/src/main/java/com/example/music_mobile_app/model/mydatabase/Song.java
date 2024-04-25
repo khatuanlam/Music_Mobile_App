@@ -33,12 +33,6 @@ public class Song {
     public String imageArtist;
 
 
-    public Song(String name, String artist, String imageTrack, String imageArtist, String urlSong) {
-        this.name = name;
-        this.artist = artist;
-        this.image = imageTrack;
-        this.imageArtist = imageArtist;
-        this.urlSong = urlSong;
-    }
+
 
 }

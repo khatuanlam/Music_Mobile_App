@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -56,7 +57,9 @@ public class ExtensionFragment extends Fragment {
     public static long userId = 1; // SET BIẾN NÀY THÀNH ID CỦA USER ĐƯỢC TRẢ VỀ KHI GỌI /SpotifyLogin/{idSpotify}
 
     public final String TAG = this.getClass().getSimpleName();
-    private EditText editText;
+//    private EditText editText;
+
+    private LinearLayout container_search;
     private Button btnViewAllFavoriteSongs, btnViewAllAlbums, btnViewAllPlaylists, btnViewAllPopularSongs,
             btnViewAllDownload;
     private FragmentManager manager;
@@ -100,7 +103,7 @@ public class ExtensionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mydb_fragment_search, container, false);
-        editText = view.findViewById(R.id.mydb_search_searchTextBox);
+        container_search = view.findViewById(R.id.mydb_search_container_search);
 
         prepareData(view);
         btnViewAllFavoriteSongs.setOnClickListener(new View.OnClickListener() {
@@ -177,14 +180,12 @@ public class ExtensionFragment extends Fragment {
         topPopularAlbumViewModel.loadAlbum();
         topPopularSongViewModel.loadSong();
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        container_search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-
-                    manager.beginTransaction().replace(R.id.fragment, new SubSearchFragment(userId, liteSongRepository))
-                            .commit();
-                }
+            public void onClick(View v) {
+                manager.beginTransaction()
+                        .replace(R.id.fragment, new com.example.music_mobile_app.ui.mydatabase.SubSearchFragment(userId, liteSongRepository))
+                        .commit();
             }
         });
 

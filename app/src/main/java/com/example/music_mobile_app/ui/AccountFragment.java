@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,6 +64,8 @@ public class AccountFragment extends Fragment {
     private LinearLayout layout_account;
     private Drawable backgroundDrawable;
 
+    private static ItemHorizontalAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +93,7 @@ public class AccountFragment extends Fragment {
         btnLogout.setOnClickListener(v -> {
             // Clear data save
             ListManager.getInstance().clear();
-            AuthorizationClient.clearCookies(getActivity());
+            AuthorizationClient.clearCookies(this.getActivity());
             Log.d(TAG, "Logging out...");
             Intent intent = new Intent(getActivity(), AuthLoginActivity.class);
             startActivity(intent);
@@ -189,17 +192,23 @@ public class AccountFragment extends Fragment {
         alertDialog.show();
     }
 
-    private void setUserPlaylist(boolean permission) {
+    public void setUserPlaylist(boolean permission) {
         List<PlaylistSimple> playlistsList = ListManager.getInstance().getPlaylistList();
         if (playlistsList.isEmpty() || permission == true) {
             // Nếu danh sách playlist chưa được lấy thì load lại để lấy
             MethodsManager.getInstance().getUserPlaylists(permission);
+            setUserPlaylist(false);
         }
-        ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(), this);
+        adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(), this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reset playlist
+        setUserPlaylist(true);
+    }
 }
 

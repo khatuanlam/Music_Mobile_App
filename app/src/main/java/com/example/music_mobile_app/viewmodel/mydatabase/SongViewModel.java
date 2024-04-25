@@ -17,13 +17,14 @@ public class SongViewModel extends ViewModel {
 
     private MutableLiveData<Song> song = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
+
     public SongViewModel() {
 
     }
 
     public void loadSong(Integer id)
     {
-//        songRepository.getSongById(id);
         songRepository.getSongById(id).observeForever(new Observer<Song>() {
             @Override
             public void onChanged(Song song) {
@@ -32,7 +33,20 @@ public class SongViewModel extends ViewModel {
         });
 
     }
+    public void checkFavorite(long idSong, long idUser)
+    {
+        songRepository.checkFavoriteSongToUser(idSong, idUser).observeForever(new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean result) {
+                isFavorite.setValue(result);
+            }
+        });
+
+    }
     public LiveData<Song> getSong() {
         return song;
+    }
+    public LiveData<Boolean> getIsFavorite() {
+        return isFavorite;
     }
 }

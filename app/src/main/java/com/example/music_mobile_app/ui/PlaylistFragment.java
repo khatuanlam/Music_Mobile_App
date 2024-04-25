@@ -41,8 +41,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.MainActivity;
+import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
+import com.example.music_mobile_app.manager.ListManager;
+import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.util.HandleBackground;
 import com.example.music_mobile_app.network.mSpotifyService;
@@ -73,6 +76,7 @@ public class PlaylistFragment extends Fragment {
     private SpotifyService spotifyService = MainActivity.spotifyService;
     private mSpotifyService mSpotifyService;
     private ImageView playlistImage, btnBack;
+    private ImageButton btn_play;
     private TextView playlistName, playlistOwner;
     public Button editPlaylist;
     private RecyclerView recyclerView;
@@ -80,6 +84,7 @@ public class PlaylistFragment extends Fragment {
     private PlaylistSimple playlistDetail;
     private FrameLayout fragment_container;
     private Drawable backgroundDrawable;
+    private List<Track> trackList = new ArrayList<>();
     private String baseImage = VariableManager.getVariableManager().baseImage;
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int GALLERY_REQUEST_CODE = 101;
@@ -145,6 +150,7 @@ public class PlaylistFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         btnBack = view.findViewById(R.id.backButton);
+        btn_play = view.findViewById(R.id.btn_play_playlist);
         editPlaylist = view.findViewById(R.id.btn_edit);
         editPlaylist.setOnClickListener(v -> {
             ShowDialogEdit();
@@ -181,6 +187,13 @@ public class PlaylistFragment extends Fragment {
                         }
                     }
                 });
+
+        btn_play.setOnClickListener(v -> {
+            Intent intent = new Intent(this.getActivity(), PlayTrackActivity.class);
+            intent.putParcelableArrayListExtra("ListTrack", (ArrayList<Track>) trackList);
+            intent.setAction("Play Playlist");
+            this.startActivity(intent);
+        });
     }
 
     private void initView() {
@@ -227,6 +240,8 @@ public class PlaylistFragment extends Fragment {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
+            alertDialog.dismiss();
+
         });
 
         // Xử lý khi người dùng nhấn đổi tên
@@ -247,6 +262,9 @@ public class PlaylistFragment extends Fragment {
                 String newName = input.getText().toString();
                 // Gọi phương thức để cập nhật tên playlist
                 changePlaylistName(newName);
+                //Reload
+                MethodsManager.getInstance().getUserPlaylists(true);
+                alertDialog.dismiss();
             });
 
             // Xử lý khi người dùng nhấn "Cancel"
@@ -275,6 +293,8 @@ public class PlaylistFragment extends Fragment {
                 Log.d(TAG, "Đổi tên playlist thành công");
                 Toast.makeText(getContext(), "Đã đổi tên playlist thành công", Toast.LENGTH_SHORT).show();
                 playlistName.setText(newPlaylistName);
+                ListManager.getListManager().setPlaylistList(null);
+//                MethodsManager.getInstance().getUserPlaylists(true);
             }
 
             @Override
@@ -313,6 +333,7 @@ public class PlaylistFragment extends Fragment {
                     // Cập nhật ảnh lên Spotify
                     updatePlaylistImageOnSpotify();
                     Log.d(TAG, "onActivityResult: Called updatePlaylistImageOnSpotify from GALLERY_REQUEST_CODE");
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -343,7 +364,7 @@ public class PlaylistFragment extends Fragment {
                             Log.e(TAG, "Success!!!");
                             Toast.makeText(getContext(), "Đã cập nhật ảnh thành công", Toast.LENGTH_SHORT).show();
                             updateImage(base64Image);
-                            setPlaylist();
+                            MethodsManager.getInstance().getUserPlaylists(true);
                         } else {
                             // Xử lý khi gặp lỗi
                             String errorMessage = "Cập nhật ảnh thất bại";
@@ -384,7 +405,7 @@ public class PlaylistFragment extends Fragment {
         if (bundle != null) {
             PlaylistSimple playlistDetail = (PlaylistSimple) bundle.getParcelable("PlaylistDetail");
             ArrayList<Parcelable> parcelableList = bundle.getParcelableArrayList("ListTrack");
-            List<Track> trackList = new ArrayList<>();
+            trackList = new ArrayList<>();
             // Chuyển đổi từ parcelableList sang List<Track>
             for (Parcelable parcelable : parcelableList) {
                 if (parcelable instanceof Track) {

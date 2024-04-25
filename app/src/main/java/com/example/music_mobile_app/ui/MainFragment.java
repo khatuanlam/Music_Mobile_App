@@ -60,8 +60,6 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         prepareData(view);
 
-
-
         // Home
         manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
         return view;

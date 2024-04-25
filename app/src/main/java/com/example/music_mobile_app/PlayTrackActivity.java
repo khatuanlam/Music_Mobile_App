@@ -89,6 +89,7 @@ public class PlayTrackActivity extends FragmentActivity implements ListTrackFrag
 
     private boolean isReplay = false;
 
+
     @Override
     protected void onStart() {
         manager = getSupportFragmentManager();
@@ -133,6 +134,7 @@ public class PlayTrackActivity extends FragmentActivity implements ListTrackFrag
                 queuePlayTrack.push(track);
                 detailTrack = queuePlayTrack.peek();
                 currentSongIndex = queuePlayTrack.search(queuePlayTrack.peek());
+                Toast.makeText(this, currentSongIndex + "", Toast.LENGTH_SHORT).show();
                 Toast.makeText(this, "Playing Track", Toast.LENGTH_SHORT).show();
                 break;
             case "Play Album":
@@ -150,13 +152,12 @@ public class PlayTrackActivity extends FragmentActivity implements ListTrackFrag
                 detailTrack = queuePlayTrack.get(currentSongIndex);
                 Toast.makeText(this, "Playing Artist", Toast.LENGTH_SHORT).show();
                 break;
+            case "Play Playlist":
             case "Play Favorite":
                 queuePlayTrack.clear();
                 List<Track> favoriteTracks = intent.getParcelableArrayListExtra("ListTrack");
                 queuePlayTrack.addAll(favoriteTracks);
                 detailTrack = queuePlayTrack.get(currentSongIndex);
-                break;
-            case "Play Playlist":
                 break;
             default:
                 Log.e(TAG, "No action found!!!");
@@ -233,11 +234,7 @@ public class PlayTrackActivity extends FragmentActivity implements ListTrackFrag
                     @Override
                     public void onComplete(boolean type) {
                         // Reload favorite fragment
-                        MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
-                            @Override
-                            public void onFavoriteTracksLoaded(List<Track> trackList) {
-                            }
-                        });
+                        ListManager.getInstance().setFavoriteTracks(null);
                         btn_add_to_favorite.setTag("Added");
                     }
 
@@ -294,7 +291,6 @@ public class PlayTrackActivity extends FragmentActivity implements ListTrackFrag
     @Override
     protected void onStop() {
         super.onStop();
-//        playbackManager.Disconnect();
     }
 
     //     Follow artist

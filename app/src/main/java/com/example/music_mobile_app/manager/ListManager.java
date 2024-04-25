@@ -5,15 +5,12 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class ListManager {
 
     private static ListManager listManager;
-
     private List<PlaylistSimple> playlistList;
 
     private List<Track> favoriteTracks;
@@ -24,8 +21,6 @@ public class ListManager {
     private List<AlbumSimple> albums;
 
     private List<Artist> followArtists;
-
-
 
     public static ListManager getInstance() {
         if (listManager == null) {
@@ -52,6 +47,9 @@ public class ListManager {
     }
 
     public List<PlaylistSimple> getPlaylistList() {
+        if (playlistList == null) {
+            playlistList = new ArrayList<>();
+        }
         return playlistList;
     }
 
@@ -72,6 +70,9 @@ public class ListManager {
     }
 
     public List<Track> getFavoriteTracks() {
+        if (favoriteTracks == null) {
+            favoriteTracks = new ArrayList<>();
+        }
         return favoriteTracks;
     }
 
@@ -80,6 +81,9 @@ public class ListManager {
     }
 
     public List<Track> getRecommendTracks() {
+        if (recommendTracks == null) {
+            recommendTracks = new ArrayList<>();
+        }
         return recommendTracks;
     }
 

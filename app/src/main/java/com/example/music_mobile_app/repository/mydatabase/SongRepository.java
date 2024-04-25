@@ -49,5 +49,8 @@ public class SongRepository {
     public LiveData<List<Song>> getFilteredSongsBySongName(String songName){
         return songService.getfilteredSongs(songName);
     }
+    public LiveData<Boolean> checkFavoriteSongToUser(long idSong, long idUser){
+        return songService.checkFavoriteSongToUser(idSong, idUser);
+    }
 
 }

@@ -9,6 +9,9 @@ import com.example.music_mobile_app.viewmodel.mydatabase.myinterface.favorite.Po
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.http.Path;
+
 public interface SongService {
     public MutableLiveData<List<Song>> getAllSongs();
 
@@ -22,4 +25,6 @@ public interface SongService {
     public LiveData<Song> postFavoriteSongToUser(long idSong, long idUser, PostCallback postCallback);
     public LiveData<Song> deleteFavoriteSongByIdUser(long idSong, long idUser, DeleteCallback deleteCallback);
     public LiveData<List<Song>> getfilteredSongs(String songName);
+    public LiveData<Boolean> checkFavoriteSongToUser(long idSong, long idUser);
+
 }

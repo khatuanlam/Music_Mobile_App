@@ -175,9 +175,6 @@ public class MethodsManager {
 
         // Load user's playlists
         List<PlaylistSimple> playlistList = ListManager.getInstance().getPlaylistList();
-        if(playlistList == null) {
-            playlistList = new ArrayList<>();
-        }
         ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistList, activity,
                 null);
         adapter.setSend(true);

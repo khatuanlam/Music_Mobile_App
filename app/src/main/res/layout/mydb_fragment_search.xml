@@ -5,26 +5,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.mydatabase.MainFragment">
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        >
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:fontFamily="@font/gotham_bold"
+            android:text="Tìm kiếm"
+            android:textColor="@color/white"
+            android:textSize="32dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:padding="8dp">
 
-            <EditText
-                android:id="@+id/mydb_search_searchTextBox"
+            <LinearLayout
+                android:id="@+id/mydb_search_container_search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:drawable/editbox_background"
-                android:padding="8dp"
-                android:drawableLeft="@android:drawable/ic_search_category_default"
-                android:hint="Bạn muốn tìm gì" />
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/button_white"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:src="@drawable/ic_search">
+
+
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="Bạn muốn nghe gì?"
+                    android:textColor="@color/colorGrayLight"
+                    android:textSize="20dp">
+
+                </TextView>
+            </LinearLayout>
+
 
         </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,27 +93,39 @@
                             android:orientation="vertical"
                             android:gravity="center">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="1dp"
-                                android:text="Album thịnh hành"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal"
+                                android:layout_gravity="center_vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="1dp"
+                                    android:layout_weight="1"
+                                    android:text="Album thịnh hành"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+                                <Button
+                                    android:id="@+id/mydb_search_viewTopPopularAlbums_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="15sp"
+                                    android:text="Xem tất cả" />
+
+                            </LinearLayout>
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/mydb_main_top_popular_albums_recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
                                 android:layout_margin="5dp" />
 
-                            <Button
-                                android:id="@+id/mydb_search_viewTopPopularAlbums_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Xem tất cả" />
+
 
                         </LinearLayout>
 
@@ -94,15 +144,30 @@
                             android:orientation="vertical"
                             android:gravity="center">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="1dp"
-                                android:text="Bài hát thịnh hành"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal"
+                                android:layout_gravity="center_vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="1dp"
+                                    android:text="Bài hát thịnh hành"
+                                    android:textAlignment="center"
+                                    android:layout_weight="1"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <Button
+                                    android:id="@+id/mydb_search_viewTopPopularSongs_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="15sp"
+                                    android:text="Xem tất cả" />
+                            </LinearLayout>
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/mydb_main_top_popular_songs_recyclerView"
@@ -110,11 +175,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp" />
 
-                            <Button
-                                android:id="@+id/mydb_search_viewTopPopularSongs_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Xem tất cả" />
+
 
                         </LinearLayout>
 
@@ -127,14 +188,30 @@
                         android:orientation="vertical"
                         android:padding="5dp"
                         android:gravity="center">
+                        <LinearLayout
+                            android:id="@+id/mydb_search_favorite_l"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center_vertical">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="1dp"
-                                android:text="Bài hát đã thích"
+                                android:layout_weight="1"
+                                android:text="Đã thích"
+                                android:textAlignment="center"
                                 android:textColor="@color/colorWhite"
-                                android:textSize="18sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
+                            <Button
+                                android:id="@+id/mydb_search_viewAllFavoriteSongs_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:text="Xem tất cả" />
+                        </LinearLayout>
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/mydb_main_favorite_songs_recyclerView"
@@ -142,11 +219,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp" />
 
-                            <Button
-                                android:id="@+id/mydb_search_viewAllFavoriteSongs_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Xem tất cả" />
+
 
 
                     </LinearLayout>
@@ -163,16 +236,29 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:gravity="center">
-
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="1dp"
-                                android:text="Playlist của bạn"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal"
+                                android:layout_gravity="center_vertical">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="1dp"
+                                    android:layout_weight="1"
+                                    android:text="Playlist của bạn"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+                                <Button
+                                    android:id="@+id/mydb_search_viewAllPlaylists_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="15sp"
+                                    android:text="Xem tất cả" />
+                            </LinearLayout>
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/mydb_main_playlists_recyclerView"
@@ -180,11 +266,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp" />
 
-                            <Button
-                                android:id="@+id/mydb_search_viewAllPlaylists_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Xem tất cả" />
+
 
                         </LinearLayout>
 
@@ -202,27 +284,36 @@
                             android:orientation="vertical"
                             android:gravity="center">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="1dp"
-                                android:text="Đã tải"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal"
+                                android:id="@+id/mydb_search_download_l"
+                                android:layout_gravity="center_vertical">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="1dp"
+                                    android:layout_weight="1"
+                                    android:text="Đã tải"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+                                <Button
+                                    android:id="@+id/mydb_search_viewAllDownload_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="15sp"
+                                    android:text="Xem tất cả" />
+                            </LinearLayout>
 
-<!--                            <androidx.recyclerview.widget.RecyclerView-->
-<!--                                android:id="@+id/mydb_main_playlists_recyclerView"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp" />-->
 
-                            <Button
-                                android:id="@+id/mydb_search_viewAllDownload_btn"
-                                android:layout_width="wrap_content"
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/mydb_main_download_recyclerView"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Xem tất cả" />
+                                android:layout_margin="5dp" />
 
                         </LinearLayout>
 

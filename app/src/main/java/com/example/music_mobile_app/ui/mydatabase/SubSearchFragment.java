@@ -27,11 +27,14 @@ import com.example.music_mobile_app.viewmodel.mydatabase.song.FilteredSongsViewM
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class SubSearchFragment extends Fragment {
     private FilteredSongsViewModel filteredSongsViewModel;
     private EditText editText;
     private ImageView imageView;
+    private CircleImageView avt;
     private FragmentManager manager;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
 
@@ -78,6 +81,8 @@ public class SubSearchFragment extends Fragment {
                 manager.beginTransaction()
                         .replace(R.id.fragment, mainFragment)
                         .commit();
+                if(avt != null)
+                    avt.setVisibility(View.VISIBLE);
 
             }
         });
@@ -131,9 +136,15 @@ public class SubSearchFragment extends Fragment {
                     });
                 }
             }
-
-
         });
+
+        com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
+
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
+
         return view;
     }
 

@@ -36,7 +36,7 @@ import java.util.List;
 
 public class ListDownloadSongAdapter extends RecyclerView.Adapter<ListDownloadSongAdapter.LiteSongViewHolder> implements OnPlaylistClickListener {
     private Fragment fragment;
-    private List<LiteSong> mDataList;
+    public List<LiteSong> mDataList;
     private Context context;
 
     private Playlist selectedPlaylist;
@@ -155,12 +155,10 @@ public class ListDownloadSongAdapter extends RecyclerView.Adapter<ListDownloadSo
                 public void onClick(View view) {
                     MediaPlayer mediaPlayer = new MediaPlayer();
                     try {
-                        String encodedFileName = URLEncoder.encode(song.getPath(), "UTF-8");
                         mediaPlayer.setDataSource(context, Uri.parse("file:///storage/emulated/0/Download/" +song.getId_mydb()+".mp3"));
                         mediaPlayer.prepare();
                         mediaPlayer.start();
                     } catch (IOException e) {
-                        Log.i("PHAT NHAC", "LOIIII");
                         throw new RuntimeException(e);
                     }
 

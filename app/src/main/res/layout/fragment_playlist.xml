@@ -94,7 +94,7 @@
                 android:background="@drawable/ic_baseline_edit_white_24" />
 
             <ImageButton
-                android:id="@+id/btn_play_playlists"
+                android:id="@+id/btn_play_playlist"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"

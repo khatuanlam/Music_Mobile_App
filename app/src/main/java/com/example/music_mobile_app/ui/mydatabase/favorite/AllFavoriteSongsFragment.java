@@ -1,11 +1,13 @@
 package com.example.music_mobile_app.ui.mydatabase.favorite;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_mobile_app.ExtensionPlayerActivity;
 import com.example.music_mobile_app.R;
 //import com.example.music_mobile_app.adapter.mydatabase.favorite.FavoriteSongsAdapter;
 import com.example.music_mobile_app.adapter.mydatabase.ListSongAdapter;
@@ -31,12 +34,17 @@ import com.example.music_mobile_app.viewmodel.mydatabase.playlist.SongsOfPlaylis
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AllFavoriteSongsFragment extends Fragment {
 
     private FavoriteSongsViewModel favoriteSongsViewModel;
     private SongsOfPlaylistViewModel songsOfPlaylistViewModel;
     private AllPlaylistViewModel allPlaylistViewModel;
     private TextView textView;
+
+    private CircleImageView avt;
+    private ImageButton btn_play;
     private ImageView imageViewBack;
     private FragmentManager manager;
 
@@ -57,12 +65,27 @@ public LiteSongRepository liteSongRepository;
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        favoriteSongsViewModel.getAllFavoriteSongsByUserId(id);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mydb_fragment_favorite_songs, container, false);
         imageViewBack = view.findViewById(R.id.mydb_favorite_songs_fragment_back);
+        btn_play = view.findViewById(R.id.mydb_fav_songs_btn_play);
+
+        btn_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ExtensionPlayerActivity.class);
+                intent.setAction("Play Favorite");
+                intent.putExtra("userIdMyDb", id );
+                getContext().startActivity(intent);
+            }
+        });
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +93,8 @@ public LiteSongRepository liteSongRepository;
                 manager.beginTransaction()
                         .replace(R.id.fragment, mainFragment)
                         .commit();
+                if(avt != null)
+                    avt.setVisibility(View.VISIBLE);
 
             }
         });
@@ -137,7 +162,12 @@ public LiteSongRepository liteSongRepository;
 
         favoriteSongsViewModel.getAllFavoriteSongsByUserId(id);
 
+        com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
 
+        if (mainFragment != null) {
+            avt = mainFragment.getView().findViewById(R.id.avt);
+            avt.setVisibility(View.GONE);
+        }
         return view;
     }
     @Override
