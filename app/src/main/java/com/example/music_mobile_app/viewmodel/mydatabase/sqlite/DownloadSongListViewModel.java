@@ -18,6 +18,7 @@ public class DownloadSongListViewModel extends ViewModel {
     private LiteSongRepository songRepository = new LiteSongRepository(MainActivity.musicDatabaseHelper);
 
     private MutableLiveData<List<LiteSong>> songs = new MutableLiveData<>();
+    private MutableLiveData<LiteSong> song = new MutableLiveData<>();
 
     public DownloadSongListViewModel() {
         songRepository.getAllSongs().observeForever(new Observer<List<LiteSong>>() {
@@ -32,7 +33,21 @@ public class DownloadSongListViewModel extends ViewModel {
     {
         songRepository.getAllSongs();
     }
+    public void loadSongById(String path)
+    {
+        songRepository.getSongByPath(path).observeForever(new Observer<LiteSong>() {
+            @Override
+            public void onChanged(LiteSong song) {
+                DownloadSongListViewModel.this.song.setValue(song);
+            }
+        });
+    }
+
+
     public LiveData<List<LiteSong>> getSongs() {
         return songs;
+    }
+    public LiveData<LiteSong> getSong() {
+        return song;
     }
 }

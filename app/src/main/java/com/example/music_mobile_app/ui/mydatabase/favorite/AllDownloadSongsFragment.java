@@ -159,7 +159,7 @@ public class AllDownloadSongsFragment extends Fragment {
             }
         });
         downloadSongListViewModel.loadSong();
-
+        allPlaylistViewModel.getAllPlaylistsByIdUser(id);
         com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
 
         if (mainFragment != null) {

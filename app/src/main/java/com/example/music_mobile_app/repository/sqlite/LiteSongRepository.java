@@ -81,7 +81,8 @@ public class LiteSongRepository {
         return songsLiveData;
     }
 
-    public LiteSong getSongByPath(String path) {
+    public LiveData<LiteSong> getSongByPath(String path) {
+        MutableLiveData<LiteSong> songLiveData = new MutableLiveData<>();
         SQLiteDatabase db = musicDatabaseHelper.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PATH + " = ?";
@@ -103,10 +104,11 @@ public class LiteSongRepository {
             song = new LiteSong(id, idMyDb, name, image, urlLyric, urlSong, releaseDate, path);
         }
 
+        Log.i("FUCK MY LIFE", song.toString());
         cursor.close();
         db.close();
-
-        return song;
+        songLiveData.setValue(song);
+        return songLiveData;
     }
 
 }
