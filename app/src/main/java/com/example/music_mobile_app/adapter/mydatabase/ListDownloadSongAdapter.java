@@ -3,6 +3,7 @@ package com.example.music_mobile_app.adapter.mydatabase;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.music_mobile_app.ExtensionPlayerActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.model.mydatabase.Playlist;
 import com.example.music_mobile_app.model.sqlite.LiteSong;
@@ -151,19 +153,26 @@ public class ListDownloadSongAdapter extends RecyclerView.Adapter<ListDownloadSo
             });
 
             imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    MediaPlayer mediaPlayer = new MediaPlayer();
+//                    try {
+//                        mediaPlayer.setDataSource(context, Uri.parse("file:///storage/emulated/0/Download/" +song.getId_mydb()+".mp3"));
+//                        mediaPlayer.prepare();
+//                        mediaPlayer.start();
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
                 @Override
                 public void onClick(View view) {
-                    MediaPlayer mediaPlayer = new MediaPlayer();
-                    try {
-                        mediaPlayer.setDataSource(context, Uri.parse("file:///storage/emulated/0/Download/" +song.getId_mydb()+".mp3"));
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-
+                    Intent intent = new Intent(fragment.getActivity(), ExtensionPlayerActivity.class);
+                    intent.setAction("Play Download Single");
+                    intent.putExtra("songId", song.getId());
+                    intent.putExtra("DLSongPath", song.getPath());
+                    fragment.getContext().startActivity(intent);
                 }
+
             });
 
         }

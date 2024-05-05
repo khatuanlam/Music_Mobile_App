@@ -23,7 +23,7 @@ public class MyDownloadReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "download's notification")
                 .setContentTitle("Download")
                 .setContentText("Đang tải bài hát: "+ intent.getStringExtra("content")+"\nVui lòng chờ trong giây lát ...\nSẽ có thông báo khi tải xong")
-                .setSmallIcon(R.drawable.ic_add_circle_white);
+                .setSmallIcon(R.drawable.logo_white);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

@@ -161,6 +161,7 @@ public LiteSongRepository liteSongRepository;
         });
 
         favoriteSongsViewModel.getAllFavoriteSongsByUserId(id);
+        allPlaylistViewModel.getAllPlaylistsByIdUser(id);
 
         com.example.music_mobile_app.ui.MainFragment mainFragment = (com.example.music_mobile_app.ui.MainFragment) getParentFragment();
 
