@@ -149,7 +149,7 @@ public class FavoriteFragment extends Fragment {
                                 ItemHorizontalAdapter adapter = new ItemHorizontalAdapter(mTrackList, null,
                                         new ArrayList<>(), getContext(), FavoriteFragment.this);
                                 adapter.notifyDataSetChanged();
-                                quantity.setText(mTrackList.size() + " bài hát");
+                                quantity.setText(adapter.getItemCount() + " bài hát");
                                 recyclerview.setAdapter(adapter);
                                 loading = false;
                                 handleLoading();

@@ -63,7 +63,6 @@ public class ArtistFragment extends Fragment implements ListenerManager.OnFollow
     private String baseImage = VariableManager.getVariableManager().baseImage;
     private ImageButton backButton;
     private FrameLayout fragment_container;
-    private View headerView;
     private boolean isFollowing = false;
 
     private List<Track> trackList = new ArrayList<>();

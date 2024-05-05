@@ -1,6 +1,8 @@
 package com.example.music_mobile_app.ui;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -11,10 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,35 +29,42 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.model.IconNavbar;
 import com.example.music_mobile_app.repository.sqlite.MusicDatabaseHelper;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import kaaes.spotify.webapi.android.models.Track;
 
 public class MainFragment extends Fragment {
 
     private static final String TAG = "Spotify MainFragment";
 
     private FragmentManager manager;
-    private TextView homeText;
-    private Button homeLayout;
-    private TextView favoriteText;
-    private Button favoriteLayout;
-    private TextView searchText;
-    private Button searchLayout;
-    private TextView extentionText;
-    private Button extensionLayout;
+    private TextView homeText, favoriteText, searchText, extensionText;
+    private Button homeLayout, searchLayout, extensionLayout, favoriteLayout;
+
     private CircleImageView account;
+    private LinearLayout player_field;
+    private TextView player_field_name;
+
+    private ImageView player_field_image;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getChildFragmentManager();
+        EventBus.getDefault().register(this); // Đăng ký Fragment với EventBus
+
     }
 
     @Nullable
@@ -99,7 +112,7 @@ public class MainFragment extends Fragment {
                     Log.d(TAG, "EXTENSION");
                     if (view.isActivated()) break;
                     manager.beginTransaction().replace(R.id.fragment, new com.example.music_mobile_app.ui.mydatabase.MainFragment()).commit();
-                    current_view = new IconNavbar(extensionLayout, view, extentionText, download);
+                    current_view = new IconNavbar(extensionLayout, view, extensionText, download);
                     setFocusMode(current_view);
                     break;
             }
@@ -160,12 +173,17 @@ public class MainFragment extends Fragment {
         homeText = view.findViewById(R.id.nav_home_text);
         favoriteText = view.findViewById(R.id.nav_favorite_text);
         searchText = view.findViewById(R.id.nav_search_text);
-        extentionText = view.findViewById(R.id.nav_extension_text);
+        extensionText = view.findViewById(R.id.nav_extension_text);
+        player_field = view.findViewById(R.id.player_field);
 
         homeLayout.setOnClickListener(mListener);
         favoriteLayout.setOnClickListener(mListener);
         searchLayout.setOnClickListener(mListener);
         extensionLayout.setOnClickListener(mListener);
+
+
+        player_field_name = view.findViewById(R.id.player_field_name);
+        player_field_image = view.findViewById(R.id.player_field_image);
 
         // Setting avt img value
         account = view.findViewById(R.id.avt);
@@ -179,7 +197,32 @@ public class MainFragment extends Fragment {
             fragmentTransaction.commit();
         });
 
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataEvent(Track detailTrack) {
+        // Nhận đối tượng từ Activity và xử lý
+        if (detailTrack != null) {
+            Track mTrack = detailTrack;
+            player_field.setVisibility(View.VISIBLE);
+            player_field_name.setText(detailTrack.name);
+            Glide.with(this).load(detailTrack.album.images.get(0).url).override(Target.SIZE_ORIGINAL).into(player_field_image);
+
+            player_field.setOnClickListener(v -> {
+                Intent intent = new Intent(this.getContext(), PlayTrackActivity.class);
+                intent.putExtra("Track", detailTrack);
+                intent.setAction("Play Track");
+                startActivity(intent);
+            });
+
+        }
     }
 
 
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

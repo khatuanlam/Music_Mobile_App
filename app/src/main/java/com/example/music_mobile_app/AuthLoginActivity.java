@@ -1,5 +1,6 @@
 package com.example.music_mobile_app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentActivity;
 
 import com.spotify.sdk.android.auth.AuthorizationClient;
@@ -97,6 +100,17 @@ public class AuthLoginActivity extends FragmentActivity {
         AuthLoginActivity.this.finish();
     }
 
+    // Khởi tạo một ActivityResultLauncher
+    private ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                AuthorizationClient.clearCookies(this);
+                SharedPreferences preferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear(); // Xóa tất cả các dữ liệu
+                editor.apply(); // Áp dụng thay đổi
+            });
+
     public void newIntent(String accessToken) {
         SharedPreferences sharedPreferences = getSharedPreferences("Authentication", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -105,6 +119,8 @@ public class AuthLoginActivity extends FragmentActivity {
         editor.commit();
         Intent intent = new Intent(AuthLoginActivity.this,
                 MainActivity.class);
-        startActivity(intent);
+        someActivityResultLauncher.launch(intent);
     }
+
+
 }

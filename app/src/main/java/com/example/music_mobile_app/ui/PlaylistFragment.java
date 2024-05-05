@@ -45,10 +45,13 @@ import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
+import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.manager.VariableManager;
 import com.example.music_mobile_app.util.HandleBackground;
 import com.example.music_mobile_app.network.mSpotifyService;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -80,7 +83,6 @@ public class PlaylistFragment extends Fragment {
     private TextView playlistName, playlistOwner;
     public Button editPlaylist;
     private RecyclerView recyclerView;
-    private FragmentManager manager;
     private PlaylistSimple playlistDetail;
     private FrameLayout fragment_container;
     private Drawable backgroundDrawable;
@@ -106,7 +108,6 @@ public class PlaylistFragment extends Fragment {
             Log.e(TAG, "Cannot get playlist detail");
         }
 
-        manager = getParentFragmentManager();
 
         // Khởi tạo Retrofit
         Retrofit retrofit = new Retrofit.Builder()
@@ -132,7 +133,7 @@ public class PlaylistFragment extends Fragment {
 
         // Onclick back
         btnBack.setOnClickListener(v -> {
-            manager.popBackStack();
+            getParentFragmentManager().popBackStack();
         });
 
         initView();
@@ -189,10 +190,15 @@ public class PlaylistFragment extends Fragment {
                 });
 
         btn_play.setOnClickListener(v -> {
-            Intent intent = new Intent(this.getActivity(), PlayTrackActivity.class);
-            intent.putParcelableArrayListExtra("ListTrack", (ArrayList<Track>) trackList);
-            intent.setAction("Play Playlist");
-            this.startActivity(intent);
+            if (trackList.size() > 0) {
+                Intent intent = new Intent(this.getActivity(), PlayTrackActivity.class);
+                intent.putParcelableArrayListExtra("ListTrack", (ArrayList<Track>) trackList);
+                intent.setAction("Play Playlist");
+                this.startActivity(intent);
+            } else {
+                Toast.makeText(this.getActivity(), "Playlist is empty!!!", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 
@@ -261,9 +267,28 @@ public class PlaylistFragment extends Fragment {
                 // Lấy tên mới từ EditText
                 String newName = input.getText().toString();
                 // Gọi phương thức để cập nhật tên playlist
-                changePlaylistName(newName);
-                //Reload
-                MethodsManager.getInstance().getUserPlaylists(true);
+                changePlaylistName(newName, new ListenerManager.OnGetPlaylistCompleteListener() {
+                    @Override
+                    public void onComplete(List<PlaylistSimple> playlistSimpleList) {
+                        //Reload
+                        MethodsManager.getInstance().getUserPlaylists(true, new ListenerManager.OnGetPlaylistCompleteListener() {
+                            @Override
+                            public void onComplete(List<PlaylistSimple> playlistSimpleList) {
+                            }
+
+                            @Override
+                            public void onError(Throwable error) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+
+                    }
+                });
+
                 alertDialog.dismiss();
             });
 
@@ -276,7 +301,7 @@ public class PlaylistFragment extends Fragment {
         alertDialog.show();
     }
 
-    private void changePlaylistName(String newPlaylistName) {
+    private void changePlaylistName(String newPlaylistName, ListenerManager.OnGetPlaylistCompleteListener listener) {
         // Lấy id của người dùng từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
@@ -293,8 +318,8 @@ public class PlaylistFragment extends Fragment {
                 Log.d(TAG, "Đổi tên playlist thành công");
                 Toast.makeText(getContext(), "Đã đổi tên playlist thành công", Toast.LENGTH_SHORT).show();
                 playlistName.setText(newPlaylistName);
-                ListManager.getListManager().setPlaylistList(null);
-//                MethodsManager.getInstance().getUserPlaylists(true);
+                listener.onComplete(null);
+
             }
 
             @Override
@@ -303,11 +328,11 @@ public class PlaylistFragment extends Fragment {
                 Log.e(TAG, "Đổi tên playlist thất bại: " + error.getMessage());
                 Toast.makeText(getContext(), "Đổi tên playlist thất bại: " + error.getMessage(), Toast.LENGTH_SHORT)
                         .show();
+                listener.onError(error);
             }
         });
     }
 
-    // Trong phương thức onActivityResult()
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -364,7 +389,17 @@ public class PlaylistFragment extends Fragment {
                             Log.e(TAG, "Success!!!");
                             Toast.makeText(getContext(), "Đã cập nhật ảnh thành công", Toast.LENGTH_SHORT).show();
                             updateImage(base64Image);
-                            MethodsManager.getInstance().getUserPlaylists(true);
+                            MethodsManager.getInstance().getUserPlaylists(true, new ListenerManager.OnGetPlaylistCompleteListener() {
+                                @Override
+                                public void onComplete(List<PlaylistSimple> playlistSimpleList) {
+                                    ListManager.getInstance().setPlaylistList(playlistSimpleList);
+                                }
+
+                                @Override
+                                public void onError(Throwable error) {
+
+                                }
+                            });
                         } else {
                             // Xử lý khi gặp lỗi
                             String errorMessage = "Cập nhật ảnh thất bại";

@@ -2,6 +2,8 @@ package com.example.music_mobile_app;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -110,10 +113,8 @@ public class MainActivity extends FragmentActivity {
 
         getUserProfile();
 
-        createNotificationChannel("firebase's notification", "Firsebase Notification",
-                NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
-        createNotificationChannel("download's notification", "Download Notification",
-                NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
+        createNotificationChannel("firebase's notification", "Firsebase Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Firebase");
+        createNotificationChannel("download's notification", "Download Notification", NotificationManager.IMPORTANCE_DEFAULT, "Kenh thong bao cua Download");
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -147,8 +148,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -214,8 +214,7 @@ public class MainActivity extends FragmentActivity {
                         loginService.loginWithMyDatabase(userProfile.id, new LoginCallback() {
                             @Override
                             public void onSuccess(com.example.music_mobile_app.model.mydatabase.User user) {
-                                SharedPreferences sharedPreferences = getSharedPreferences("UserIdInMyDatabase",
-                                        Context.MODE_PRIVATE);
+                                SharedPreferences sharedPreferences = getSharedPreferences("UserIdInMyDatabase", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putLong("userIdMyDb", user.getId());
                                 editor.apply();
@@ -258,24 +257,20 @@ public class MainActivity extends FragmentActivity {
         super.onStart();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (!PlaybackManager.checkSpotify(this)) {
-            builder.setTitle("Spotify Install")
-                    .setMessage("You should install Spotify to get full access!!!")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Xử lý khi nhấn nút OK
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music"));
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Xử lý khi nhấn nút Cancel
-                        }
-                    })
-                    .show();
+            builder.setTitle("Spotify Install").setMessage("You should install Spotify to get full access!!!").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Xử lý khi nhấn nút OK
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Xử lý khi nhấn nút Cancel
+                }
+            }).show();
         }
 
     }
@@ -288,8 +283,7 @@ public class MainActivity extends FragmentActivity {
             // vibration
             // pattern
 
-            NotificationManager notificationManager = (NotificationManager) getSystemService(
-                    Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -318,5 +312,7 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
         // Hủy đăng ký BroadcastReceiver ở đây
         unregisterReceiver(myDownloadReceiver);
+        PlaybackManager.Disconnect();
     }
+
 }

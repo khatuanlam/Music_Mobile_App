@@ -107,6 +107,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
         }
     }
 
+
     protected class ItemHorizontalHolder extends RecyclerView.ViewHolder {
         private Track mTrack;
         private PlaylistSimple mPlaylist;
@@ -183,7 +184,11 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
                                                 }
                                             });
                                 } else {
-
+                                    int position = getAbsoluteAdapterPosition();
+                                    if (position != RecyclerView.NO_POSITION) {
+                                        removeItem(position);
+//                                        Toast.makeText(fragment.getContext(), "Delete Complete", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                                 return true;
@@ -296,17 +301,7 @@ public class ItemHorizontalAdapter extends RecyclerView.Adapter<ItemHorizontalAd
             }
         }
 
-        public void addItem(int position, Object item) {
-            if (position >= 0) {
-                if (item instanceof Track) {
-                    trackList.add(position, (Track) item);
-                } else if (item instanceof PlaylistSimple) {
-                    playlistList.add(position, (PlaylistSimple) item);
-                }
-                notifyItemInserted(position);
-                notifyItemRangeChanged(position, getItemCount());
-            }
-        }
+
 
     }
 }

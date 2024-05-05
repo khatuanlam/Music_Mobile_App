@@ -27,8 +27,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 import com.example.music_mobile_app.AuthLoginActivity;
 import com.example.music_mobile_app.MainActivity;
+import com.example.music_mobile_app.PlayTrackActivity;
 import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.ItemHorizontalAdapter;
 import com.example.music_mobile_app.manager.ListManager;
@@ -36,6 +38,10 @@ import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.util.HandleBackground;
 import com.spotify.sdk.android.auth.AuthorizationClient;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +52,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.Track;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -63,13 +70,15 @@ public class AccountFragment extends Fragment {
     private FragmentManager manager;
     private LinearLayout layout_account;
     private Drawable backgroundDrawable;
+    private ItemHorizontalAdapter adapter;
 
-    private static ItemHorizontalAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = getParentFragmentManager();
+        EventBus.getDefault().register(this); // Đăng ký Fragment với EventBus
+
     }
 
     @Override
@@ -83,6 +92,13 @@ public class AccountFragment extends Fragment {
 
         prepareData(view);
 
+        getParentFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                setUserPlaylist(true);
+            }
+        });
+
         // Onclick back
         btnBack.setOnClickListener(v -> {
             header.setVisibility(View.VISIBLE);
@@ -93,7 +109,7 @@ public class AccountFragment extends Fragment {
         btnLogout.setOnClickListener(v -> {
             // Clear data save
             ListManager.getInstance().clear();
-            AuthorizationClient.clearCookies(this.getActivity());
+            AuthorizationClient.clearCookies(getActivity());
             Log.d(TAG, "Logging out...");
             Intent intent = new Intent(getActivity(), AuthLoginActivity.class);
             startActivity(intent);
@@ -196,19 +212,36 @@ public class AccountFragment extends Fragment {
         List<PlaylistSimple> playlistsList = ListManager.getInstance().getPlaylistList();
         if (playlistsList.isEmpty() || permission == true) {
             // Nếu danh sách playlist chưa được lấy thì load lại để lấy
-            MethodsManager.getInstance().getUserPlaylists(permission);
-            setUserPlaylist(false);
+            MethodsManager.getInstance().getUserPlaylists(permission, new ListenerManager.OnGetPlaylistCompleteListener() {
+                @Override
+                public void onComplete(List<PlaylistSimple> playlistSimpleList) {
+                    ListManager.getInstance().setPlaylistList(playlistSimpleList);
+                    setUserPlaylist(false);
+                }
+
+                @Override
+                public void onError(Throwable error) {
+
+                }
+            });
         }
         adapter = new ItemHorizontalAdapter(new ArrayList<>(), null, playlistsList, getContext(), this);
-        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Reset playlist
-        setUserPlaylist(true);
+    // Reload user's playlists
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataEvent(PlaylistSimple playlistSimpleList) {
+        Toast.makeText(this.getActivity(), playlistSimpleList.name, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+
 }
+
 

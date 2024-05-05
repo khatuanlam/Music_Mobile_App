@@ -80,16 +80,4 @@ public class VariableManager {
         this.track = track;
     }
 
-    public String getBaseImage() {
-        return baseImage;
-    }
-
-    public void setBaseImage(String baseImage) {
-        this.baseImage = baseImage;
-    }
-
-    public Track changSimpleToTrack(TrackSimple trackSimple) {
-        Track result = new Track();
-        return result;
-    }
 }

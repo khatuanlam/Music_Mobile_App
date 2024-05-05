@@ -23,6 +23,7 @@ import com.example.music_mobile_app.R;
 import com.example.music_mobile_app.adapter.FollowingAdapter;
 import com.example.music_mobile_app.adapter.ItemAdapter;
 import com.example.music_mobile_app.manager.ListManager;
+import com.example.music_mobile_app.manager.ListenerManager;
 import com.example.music_mobile_app.manager.MethodsManager;
 import com.example.music_mobile_app.util.HandleBackground;
 
@@ -41,6 +42,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsCursorPager;
 import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Recommendations;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.client.Response;
@@ -170,7 +172,17 @@ public class HomeFragment extends Fragment {
         // handleLoading();
 
         // Get user's playlists
-        MethodsManager.getInstance().getUserPlaylists(true);
+        MethodsManager.getInstance().getUserPlaylists(true, new ListenerManager.OnGetPlaylistCompleteListener() {
+            @Override
+            public void onComplete(List<PlaylistSimple> playlistSimpleList) {
+
+            }
+
+            @Override
+            public void onError(Throwable error) {
+
+            }
+        });
         // Get user's favorites
         MethodsManager.getInstance().getUserFavorite(true, new MethodsManager.OnFavoriteTracksLoadedListener() {
             @Override

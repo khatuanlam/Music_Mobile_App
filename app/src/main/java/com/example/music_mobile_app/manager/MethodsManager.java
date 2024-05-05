@@ -92,7 +92,17 @@ public class MethodsManager {
                 String playlistID = playlist.id;
                 Log.d(activity + "", "Create playlist success");
                 // Load
-                getUserPlaylists(true);
+                getUserPlaylists(true, new ListenerManager.OnGetPlaylistCompleteListener() {
+                    @Override
+                    public void onComplete(List<PlaylistSimple> playlistSimpleList) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+
+                    }
+                });
                 listener.onComplete(playlist);
             }
 
@@ -104,7 +114,7 @@ public class MethodsManager {
         });
     }
 
-    public void getUserPlaylists(Boolean permission) {
+    public void getUserPlaylists(Boolean permission, ListenerManager.OnGetPlaylistCompleteListener listener) {
         List<PlaylistSimple> playlistsList = ListManager.getInstance().getPlaylistList();
         if (playlistsList.isEmpty() || permission == true) {
             Map<String, Object> options = new HashMap<>();
@@ -113,6 +123,7 @@ public class MethodsManager {
                 @Override
                 public void failure(SpotifyError spotifyError) {
                     // Log.e(TAG, "failure: " + spotifyError.getMessage());
+                    listener.onError(spotifyError);
                 }
 
                 @Override
@@ -121,6 +132,7 @@ public class MethodsManager {
                     List<PlaylistSimple> mList = playlistSimplePager.items;
                     // Lưu giá trị về bộ nhớ
                     ListManager.getInstance().setPlaylistList(mList);
+                    listener.onComplete(mList);
                 }
             });
         }
@@ -220,31 +232,6 @@ public class MethodsManager {
         builder.show();
     }
 
-    // public void getUserFavorite(boolean type) {
-    // List<Track> favorite = ListManager.getInstance().getFavoriteTracks();
-    // if (favorite.isEmpty() || type == true) {
-    // Map<String, Object> options = new HashMap<>();
-    // options.put(SpotifyService.LIMIT, 20);
-    // spotifyService.getMySavedTracks(options, new
-    // SpotifyCallback<Pager<SavedTrack>>() {
-    // @Override
-    // public void failure(SpotifyError spotifyError) {
-    //// Log.e(TAG, "failure: " + spotifyError.getMessage());
-    // }
-    //
-    // @Override
-    // public void success(Pager<SavedTrack> savedTrackPager, Response response) {
-    // List<Track> trackList = new ArrayList<>();
-    // for (SavedTrack savedTrack : savedTrackPager.items) {
-    // trackList.add(savedTrack.track);
-    // }
-    // Log.e("xxx", "success: " + trackList.size() + "");
-    // // Lưu giá trị về bộ nhớ
-    // ListManager.getInstance().setFavoriteTracks(trackList);
-    // }
-    // });
-    // }
-    // }
 
     // MaiThy - Update getUserFavorite xử lý gọi callback khi hoàn thành
     public interface OnFavoriteTracksLoadedListener {
@@ -341,24 +328,23 @@ public class MethodsManager {
         TrackToRemove trackToRemove = new TrackToRemove();
         trackToRemove.uri = trackUri;
         tracksToRemove.tracks.add(trackToRemove);
-
-        SharedPreferences sharedPreferences = fragment.getActivity().getSharedPreferences("UserData",
-                Context.MODE_PRIVATE);
-        String USER_ID = sharedPreferences.getString("userId", "Not found UserId");
-
+//
+//        SharedPreferences sharedPreferences = fragment.getActivity().getSharedPreferences("UserData",
+//                Context.MODE_PRIVATE);
+        String USER_ID = VariableManager.getInstance().getUser().id;
         // Gọi service để xóa bài hát khỏi playlist
         spotifyService.removeTracksFromPlaylist(USER_ID, playlistId, tracksToRemove, new Callback<SnapshotId>() {
             @Override
             public void success(SnapshotId snapshotId, Response response) {
                 Log.d(fragment.getTag(), "Remove track from playlist success");
-                Toast.makeText(fragment.getContext(), "Đã xóa track thành công", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(fragment.getContext(), "Đã xóa track thành công", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(fragment.getTag(), "Remove track from playlist failed: " + error.getMessage());
-                Toast.makeText(fragment.getContext(), "Xóa track thất bại: " + error.getMessage(), Toast.LENGTH_SHORT)
-                        .show();
+//                Toast.makeText(fragment.getContext(), "Xóa track thất bại: " + error.getMessage(), Toast.LENGTH_SHORT)
+//                        .show();
             }
         });
     }
